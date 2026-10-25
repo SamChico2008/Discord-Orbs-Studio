@@ -1,0 +1,10 @@
+{
+  "name": "discord-orb-studio-workspace",
+  "private": true,
+  "scripts": {
+    "start": "npm --prefix desktop-app start",
+    "build": "npm --prefix desktop-app run build",
+    "dist": "npm --prefix desktop-app run dist",
+    "build:portable": "npm --prefix desktop-app run build:portable"
+  }
+}

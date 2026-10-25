@@ -1,0 +1,112 @@
+[
+  {
+    "id": "kernel-memory-inspector",
+    "title": "Kernel Memory Inspector",
+    "category": "security",
+    "categoryLabel": "Sécurité & Kernel",
+    "status": "stable",
+    "statusLabel": "Stable v1.4",
+    "date": "2026-03",
+    "shortDesc": "Mon driver Windows x64 pour inspecter la mémoire physique et virtuelle sans passer par les API userland surveillées.",
+    "fullDesc": "Un driver développé en C et ASM x64 pour explorer les structures internes du noyau Windows (EPROCESS, ActiveProcessLinks, tables de pages). Il permet de cartographier la mémoire de n'importe quel processus via MDL mapping sans ouvrir de HANDLE suspect en ring-3.",
+    "tags": ["C", "ASM x64", "Windows Kernel", "DKOM"],
+    "features": [
+      "Lecture/écriture mémoire physique et virtuelle via MDL",
+      "Traduction manuelle d'adresses virtuelles (CR3 -> PTE/PDE)",
+      "Détection des modules cachés hors InLoadOrderModuleList",
+      "Interface en ligne de commande ultra-rapide avec dump hexadécimal"
+    ],
+    "repoUrl": "https://github.com/votre-user/kernel-memory-inspector",
+    "demoUrl": "",
+    "downloadUrl": "#",
+    "instructions": "# Compilation avec WDK\nmsbuild /p:Configuration=Release /p:Platform=x64\n\n# Démarrage du service (mode TestSigning)\nsc create MemInspect type= kernel binPath= C:\\MemInspect.sys\nsc start MemInspect"
+  },
+  {
+    "id": "indirect-syscall-engine",
+    "title": "Moteur d'Appels Système Indirects",
+    "category": "security",
+    "categoryLabel": "Sécurité & Evasion",
+    "status": "stable",
+    "statusLabel": "Stable v2.1",
+    "date": "2026-02",
+    "shortDesc": "Bibliothèque C++20 pour exécuter des syscalls NT sans déclencher les alertes des agents de sécurité EDR.",
+    "fullDesc": "Ce composant implémente les techniques Halo's Gate et Tartarus' Gate pour extraire dynamiquement les System Service Numbers (SSN) des fonctions ntdll, même si les premiers octets ont été crochetés par un antivirus. Les appels sautent ensuite vers des instructions syscall légitimes pour préserver une pile d'appels réaliste.",
+    "tags": ["C++20", "Syscalls", "EDR Bypass", "x64"],
+    "features": [
+      "Résolution des fonctions par hachage ROR13 (zéro chaîne en clair)",
+      "Détection automatique des hooks et recherche du SSN voisin",
+      "Masquage du cadre de pile (callstack spoofing) vers ntdll",
+      "Compatible Windows 10 et 11 toutes versions récentes"
+    ],
+    "repoUrl": "https://github.com/votre-user/indirect-syscall-engine",
+    "demoUrl": "",
+    "downloadUrl": "#",
+    "instructions": "// Exemple d'utilisation dans vos projets\n#include \"syscalls.hpp\"\n\nPVOID allocBase = nullptr;\nSIZE_T allocSize = 0x1000;\nNtAllocateVirtualMemory((HANDLE)-1, &allocBase, 0, &allocSize, MEM_COMMIT, PAGE_READWRITE);"
+  },
+  {
+    "id": "dxgi-present-hook-renderer",
+    "title": "DirectX SwapChain Overlay Hook",
+    "category": "game-dev",
+    "categoryLabel": "Graphismes & Hooks",
+    "status": "update",
+    "statusLabel": "Mis à jour v3.0",
+    "date": "2026-01",
+    "shortDesc": "Intercepteur de flux DirectX 11/12 via VMT hooking pour injecter des overlays de débogage et télémétrie fluide.",
+    "fullDesc": "Un moteur d'affichage discret conçu pour intégrer ImGui directement dans la boucle de rendu de jeux et applications graphiques DirectX. La table virtuelle de la SwapChain est résolue via la création d'un périphérique temporaire, évitant ainsi toute altération de mémoire suspecte.",
+    "tags": ["C++", "DirectX 11", "DirectX 12", "ImGui"],
+    "features": [
+      "Compatible plein écran sans bordure et fenêtré",
+      "Intégration transparente avec ImGui (docking & viewport)",
+      "Gestion précise de la synchronisation verticale (VSync)",
+      "Aucun hook invasif sur les fichiers du système"
+    ],
+    "repoUrl": "https://github.com/votre-user/dxgi-present-engine",
+    "demoUrl": "",
+    "downloadUrl": "#",
+    "instructions": "// Hook de Present dans votre DLL\nIDXGISwapChain* swapChain = GetTargetSwapChain();\nInstallVMTHook(swapChain, 8 /* Present */, &hkPresent, &oPresent);"
+  },
+  {
+    "id": "pe-pack-unpacker",
+    "title": "Analyseur & Déballeur PE Automatisé",
+    "category": "tools",
+    "categoryLabel": "Outils & Analyse",
+    "status": "beta",
+    "statusLabel": "Bêta v0.9",
+    "date": "2025-12",
+    "shortDesc": "Outil Python utilisant l'émulateur Unicorn pour détecter le point d'entrée réel (OEP) et réparer l'IAT.",
+    "fullDesc": "Un utilitaire développé pour automatiser le déballage d'exécutables protégés. Il lance une émulation du stub de déchiffrement, détecte les transitions de sections mémoire et reconstruit automatiquement la table d'adresses d'importation (IAT) pour faciliter l'analyse dans Ghidra ou IDA Pro.",
+    "tags": ["Python", "Unicorn Engine", "Reverse", "PE Format"],
+    "features": [
+      "Émulation CPU x86/x64 sans exécution directe sur la machine",
+      "Détection heuristique des sauts vers le véritable code cible",
+      "Reconstruction automatique des imports corrompus",
+      "Génération de rapports clairs au format JSON"
+    ],
+    "repoUrl": "https://github.com/votre-user/pe-unpacker-suite",
+    "demoUrl": "",
+    "downloadUrl": "#",
+    "instructions": "python unpacker.py --input sample_obfuscated.exe --dump-oep --fix-iat"
+  },
+  {
+    "id": "portfolio-cloud-vault",
+    "title": "Ce Portfolio Personnel",
+    "category": "web",
+    "categoryLabel": "Web & Utilitaires",
+    "status": "stable",
+    "statusLabel": "En ligne",
+    "date": "2026-04",
+    "shortDesc": "Cette vitrine web conçue sur-mesure en HTML5/CSS3/Vanilla JS : légère, rapide et hébergeable gratuitement.",
+    "fullDesc": "J'ai développé ce site pour centraliser tous mes projets personnels sans usine à gaz (aucun framework lourd, zéro temps de compilation). Il intègre un système de recherche instantané, des fiches détaillées avec extrait de code et un outil visuel pour ajouter de nouvelles créations en quelques clics.",
+    "tags": ["HTML5", "CSS3", "JavaScript", "Zero-Dependency"],
+    "features": [
+      "Score de performance 100% sur Lighthouse (aucun bundle lourd)",
+      "Design sombre équilibré et reposant pour les yeux",
+      "Générateur intégré pour ajouter un projet et exporter le JSON",
+      "Déployable en 1 clic sur GitHub Pages, Vercel ou Netlify"
+    ],
+    "repoUrl": "https://github.com/votre-user/mon-portfolio-perso",
+    "demoUrl": "",
+    "downloadUrl": "#",
+    "instructions": "# Pour lancer le site en local\npython -m http.server 8080"
+  }
+]

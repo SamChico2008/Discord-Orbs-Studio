@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; style-src 'self'; script-src 'self';">
+  <title>Discord Orb Studio — Démarrage</title>
+  <link rel="stylesheet" href="launch.css">
+</head>
+<body>
+  <main class="launch-shell">
+    <aside class="launch-art" aria-label="Discord Orb Studio">
+      <div class="brand-lockup"><div class="brand-mark"><img src="../assets/icon.png" alt=""></div><span>Orb Studio</span></div>
+      <div class="orbital-composition" aria-hidden="true"><div class="orbit orbit-one"></div><div class="orbit orbit-two"></div><div class="orbit orbit-three"></div><div class="orbital-core"><img src="../assets/icon.png" alt=""></div><span class="satellite"></span></div>
+      <div class="art-caption"><span>Votre compagnon Discord</span><p>Un peu de jeu.<br>De belles récompenses.</p></div>
+      <span class="edition-label">Studio de bureau</span>
+    </aside>
+    <div class="launch-content" aria-live="polite">
+      <div class="window-grab" aria-hidden="true"></div>
+      <div class="launch-path">Votre espace <span>/</span> Démarrage</div>
+      <section class="launch-state" id="state-checking">
+        <div class="status-symbol"><span class="spinner"></span></div>
+        <h1>Un instant,<br>on prépare le studio.</h1>
+        <p class="state-copy">Nous recherchons les dernières mises à jour avant d’ouvrir votre espace.</p>
+        <div class="progress-track" role="progressbar" aria-label="Recherche de mises à jour"><span></span></div>
+        <p class="quiet-note">Vérification de la version installée…</p>
+      </section>
+      <section class="launch-state is-hidden" id="state-up-to-date">
+        <div class="status-symbol success-symbol" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></svg></div>
+        <h1>Le studio<br>est à jour.</h1>
+        <p class="state-copy">Vous disposez de la dernière version. Votre espace s’ouvre dans un instant.</p>
+        <div class="status-foot"><span class="status-dot"></span> Tout est prêt pour votre session</div>
+      </section>
+      <section class="launch-state is-hidden" id="state-offline">
+        <div class="status-symbol neutral-symbol" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 8v4m0 4h.01"/><circle cx="12" cy="12" r="9"/></svg></div>
+        <h1>Votre studio<br>reste disponible.</h1>
+        <p class="state-copy">Le service de mises à jour ne répond pas. Nous ouvrons la version installée.</p>
+        <div class="status-foot">Ouverture de votre espace…</div>
+      </section>
+      <section class="launch-state is-hidden" id="state-unavailable">
+        <div class="status-symbol neutral-symbol" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="4"/><path d="m8 12 3 3 5-6"/></svg></div>
+        <h1>À votre rythme.</h1>
+        <p class="state-copy">Les mises à jour de cette édition s’installent avec un nouvel installateur.</p>
+        <div class="status-foot">Ouverture de la version installée…</div>
+      </section>
+      <section class="launch-state is-hidden" id="state-update">
+        <div class="status-symbol update-symbol" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 16V4m-5 5 5-5 5 5M5 14v6h14v-6"/></svg></div>
+        <h1>Du nouveau<br>dans votre studio.</h1>
+        <p class="state-copy">Une nouvelle version est prête à être installée.</p>
+        <div class="update-list" id="update-list"></div>
+        <div class="button-row"><button class="button button-secondary" data-choice="later">Plus tard</button><button class="button button-primary" data-choice="install">Mettre à jour</button></div>
+        <p class="quiet-note">Le studio redémarrera après l’installation.</p>
+      </section>
+      <section class="launch-state is-hidden" id="state-installing">
+        <div class="status-symbol"><span class="spinner"></span></div>
+        <h1>Une nouvelle<br>version prend place.</h1>
+        <p class="state-copy">L’installation est en cours. Gardez cette fenêtre ouverte quelques instants.</p>
+        <div class="progress-track" role="progressbar" aria-label="Installation de la mise à jour"><span></span></div>
+        <p class="quiet-note">Le redémarrage sera automatique.</p>
+      </section>
+      <section class="launch-state is-hidden" id="state-restarting">
+        <div class="status-symbol success-symbol" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></svg></div>
+        <h1>Tout est installé.</h1>
+        <p class="state-copy">Le studio redémarre avec votre nouvelle version.</p>
+        <div class="status-foot"><span class="status-dot"></span> À tout de suite</div>
+      </section>
+      <section class="launch-state is-hidden" id="state-failed">
+        <div class="status-symbol error-symbol" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m8 8 8 8M16 8l-8 8"/><circle cx="12" cy="12" r="9"/></svg></div>
+        <h1>On reprend<br>avec votre version.</h1>
+        <p class="state-copy">La mise à jour a été interrompue. Réessayez au prochain lancement.</p>
+        <pre class="error-detail" id="error-detail"></pre>
+        <button class="button button-primary" data-choice="continue">Ouvrir le studio</button>
+      </section>
+      <footer class="launch-footer"><span>Discord Orb Studio</span><span>Windows</span></footer>
+    </div>
+  </main>
+  <script src="launch.js"></script>
+</body>
+</html>

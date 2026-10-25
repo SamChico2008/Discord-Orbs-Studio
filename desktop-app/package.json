@@ -1,0 +1,94 @@
+{
+  "name": "discord-orb-studio",
+  "productName": "Discord Orb Studio",
+  "version": "3.3.0",
+  "description": "Discord Quest Companion",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron . --no-sandbox",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder --win nsis",
+    "build": "electron-builder --win nsis",
+    "build:installer": "electron-builder --win nsis",
+    "build:portable": "electron-builder --win portable",
+    "build:all": "electron-builder --win nsis portable"
+  },
+  "keywords": [
+    "discord",
+    "quest",
+    "automation",
+    "heartbeat",
+    "orb",
+    "desktop"
+  ],
+  "author": "Byte & SamChico",
+  "license": "MIT",
+  "dependencies": {
+    "qrcode": "^1.5.4",
+    "ws": "^8.18.0"
+  },
+  "devDependencies": {
+    "electron": "^45.0.0",
+    "electron-builder": "^26.7.0"
+  },
+  "engines": {
+    "node": ">=24.22.1"
+  },
+  "build": {
+    "appId": "com.samchico.discordorbstudio",
+    "productName": "Discord Orb Studio",
+    "copyright": "Copyright © 2026 Discord Orb Studio",
+    "directories": {
+      "output": "../dist"
+    },
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "assets/icon.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": false,
+    "installerLanguages": ["fr_FR"],
+    "language": "1036",
+    "displayLanguageSelector": false,
+      "createDesktopShortcut": "always",
+      "createStartMenuShortcut": true,
+      "runAfterFinish": true,
+      "shortcutName": "Discord Orb Studio",
+      "installerSidebar": "assets/installerSidebar.bmp",
+      "uninstallerSidebar": "assets/installerSidebar.bmp",
+      "installerHeader": "assets/installerHeader.bmp",
+      "deleteAppDataOnUninstall": false,
+      "artifactName": "${productName} Setup.${ext}",
+      "include": "assets/installer.nsh"
+    },
+    "portable": {
+      "artifactName": "${productName}.${ext}"
+    },
+    "files": [
+      "main.js",
+      "update-manager.js",
+      "preload.js",
+      "preload-launch.js",
+      "quest-engine.js",
+      "qr-auth.js",
+      "token-detector.js",
+      "src/**/*",
+      "assets/**/*"
+    ]
+  }
+}

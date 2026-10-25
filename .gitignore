@@ -1,0 +1,25 @@
+# Dépendances
+node_modules/
+desktop-app/node_modules/
+discord-quest-bot/node_modules/
+
+# Builds & binaires volumineux
+dist/
+build/
+*.exe
+*.blockmap
+*.zip
+*.7z
+
+# Logs et tampons
+*.log
+.ag_buf.txt
+ag_*.txt
+work/
+.impeccable/
+.agents/
+
+# Système & OS
+Thumbs.db
+Desktop.ini
+.DS_Store

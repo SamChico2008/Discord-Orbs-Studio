@@ -1,0 +1,222 @@
+/* =========================================================
+   Orb Studio — couche visuelle (thèmes, animation live, pied de barre)
+   Fichier purement CSS : aucune logique applicative modifiée.
+   ========================================================= */
+
+/* ---------- 1. Thèmes complets (accent + secondaire + teinte) ---------- */
+:root, body[data-theme="default"] {
+  --blurple: #b8adf2; --blurple-hover: #cec5ff; --blurple-glow: #b8adf21c; --border-focus: #b8adf2;
+  --accent-2: #8fd3e8;
+  --accent-3: #e6a8d8;
+  --tint: #b8adf2;
+  --bg-dark: #161519; --bg-panel: #1b1a20; --bg-card: #211f27;
+}
+body[data-theme="emerald"] {
+  --blurple: #a8cbb4; --blurple-hover: #c5e4d0; --blurple-glow: #a8cbb41c; --border-focus: #a8cbb4;
+  --accent-2: #8fd3c4; --accent-3: #d9e3a1; --tint: #a8cbb4;
+  --bg-dark: #141816; --bg-panel: #191d1b; --bg-card: #1f2421;
+}
+body[data-theme="amber"] {
+  --blurple: #e2b69b; --blurple-hover: #f5d3bd; --blurple-glow: #e2b69b1c; --border-focus: #e2b69b;
+  --accent-2: #f0d08c; --accent-3: #e79a9a; --tint: #e2b69b;
+  --bg-dark: #181614; --bg-panel: #1e1b19; --bg-card: #25211e;
+}
+body[data-theme="crimson"] {
+  --blurple: #d8a8c4; --blurple-hover: #edc8df; --blurple-glow: #d8a8c41c; --border-focus: #d8a8c4;
+  --accent-2: #b8adf2; --accent-3: #f2b8a0; --tint: #d8a8c4;
+  --bg-dark: #181519; --bg-panel: #1e1a1f; --bg-card: #251f26;
+}
+body { transition: background-color 300ms ease; }
+body, #title-bar, #sidebar { background-color: var(--bg-dark) !important; }
+#main-content { background: radial-gradient(1100px 380px at 85% -10%, color-mix(in srgb, var(--tint) 7%, transparent), transparent 70%), var(--bg-panel) !important; }
+
+/* Menu latéral : dégradé multi-couleurs propre au thème */
+.studio-symbol { background: linear-gradient(135deg, color-mix(in srgb, var(--blurple) 18%, transparent), color-mix(in srgb, var(--accent-2) 12%, transparent)); border-color: color-mix(in srgb, var(--blurple) 30%, transparent); }
+.studio-name { background: linear-gradient(90deg, var(--text-main), var(--blurple-hover)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.nav-btn { position: relative; transition: background 160ms ease, color 160ms ease, border-color 160ms ease; }
+.nav-btn.active {
+  color: var(--text-main) !important;
+  background: linear-gradient(90deg, color-mix(in srgb, var(--blurple) 22%, transparent), color-mix(in srgb, var(--accent-2) 8%, transparent) 70%, transparent) !important;
+  border-color: color-mix(in srgb, var(--blurple) 22%, transparent) !important;
+}
+.nav-btn.active::before {
+  content: ""; position: absolute; left: -12px; top: 9px; bottom: 9px; width: 3px; border-radius: 0 3px 3px 0;
+  background: linear-gradient(180deg, var(--blurple), var(--accent-2));
+}
+.nav-btn.active svg { color: var(--blurple); }
+.nav-btn.active .nav-counter { color: var(--bg-dark) !important; background: var(--blurple) !important; font-weight: 600; }
+.sidebar-note svg { color: color-mix(in srgb, var(--blurple) 60%, #77737f); }
+.heading-orbit::before { border-color: color-mix(in srgb, var(--blurple) 25%, transparent); }
+.heading-orbit::after { border-color: color-mix(in srgb, var(--accent-2) 18%, transparent); }
+.orbit-satellite { background: var(--accent-3); box-shadow: 0 0 8px var(--accent-3); }
+
+/* Boutons principaux et barres de progression */
+.btn-primary, #btn-start-all, .btn-card-run {
+  background: linear-gradient(135deg, var(--blurple), color-mix(in srgb, var(--blurple) 60%, var(--accent-2))) !important;
+  color: #1b1820 !important; border-color: transparent !important;
+}
+.btn-primary:hover:not(:disabled), .btn-card-run:hover:not(:disabled) { filter: brightness(1.08); }
+.quest-progress-fill, .live-progress-fill { background: linear-gradient(90deg, var(--blurple), var(--accent-2)) !important; }
+.completed .quest-progress-fill { background: var(--emerald) !important; }
+.pill.active { color: var(--text-main) !important; border-image: linear-gradient(90deg, var(--blurple), var(--accent-2)) 1; }
+.quest-card { background: var(--bg-card); border-color: #ffffff12; transition: border-color 160ms, transform 160ms, box-shadow 160ms; }
+.quest-card:hover { border-color: color-mix(in srgb, var(--blurple) 40%, transparent); transform: translateY(-2px); box-shadow: 0 10px 28px #0000004d; }
+.quest-card-banner { background: linear-gradient(135deg, color-mix(in srgb, var(--blurple) 22%, #26242c), color-mix(in srgb, var(--accent-2) 12%, #1e1d23)) !important; background-size: cover !important; }
+.quest-reward-row { color: var(--accent-3); }
+
+/* Sélecteur de thème : pastilles bicolores pour montrer la palette */
+.theme-quick-btn, .theme-dot { transition: transform 150ms ease, box-shadow 150ms ease; }
+.theme-quick-btn { width: 11px !important; height: 11px !important; }
+.theme-quick-btn:hover, .theme-dot:hover { transform: scale(1.2); }
+[data-theme="default"].theme-quick-btn, [data-theme="default"].theme-dot { background: conic-gradient(#b8adf2 0 50%, #8fd3e8 0 75%, #e6a8d8 0) !important; }
+[data-theme="emerald"].theme-quick-btn, [data-theme="emerald"].theme-dot { background: conic-gradient(#a8cbb4 0 50%, #8fd3c4 0 75%, #d9e3a1 0) !important; }
+[data-theme="amber"].theme-quick-btn, [data-theme="amber"].theme-dot { background: conic-gradient(#e2b69b 0 50%, #f0d08c 0 75%, #e79a9a 0) !important; }
+[data-theme="crimson"].theme-quick-btn, [data-theme="crimson"].theme-dot { background: conic-gradient(#d8a8c4 0 50%, #b8adf2 0 75%, #f2b8a0 0) !important; }
+.theme-quick-btn.active, .theme-dot.active { outline: 1.5px solid var(--text-main) !important; outline-offset: 2px; box-shadow: 0 0 10px color-mix(in srgb, var(--blurple) 60%, transparent); }
+
+/* ---------- 2. Animation « quête en cours » ---------- */
+.orb-visualizer-wrap {
+  height: 210px !important; overflow: hidden;
+  background: radial-gradient(ellipse at 50% 55%, color-mix(in srgb, var(--blurple) 10%, transparent), transparent 65%) !important;
+}
+.orb-ring { border-color: color-mix(in srgb, var(--blurple) 28%, transparent) !important; animation: none !important; }
+.orb-ring-1 { transform: rotate(-28deg) scaleY(.4); }
+.orb-ring-2 { transform: rotate(40deg) scaleY(.6); border-color: color-mix(in srgb, var(--accent-2) 24%, transparent) !important; }
+.orb-ring-3 { border-style: dashed !important; }
+.orb-halo {
+  display: block !important; position: absolute; inset: 28px; border-radius: 50%;
+  background: radial-gradient(circle, color-mix(in srgb, var(--blurple) 35%, transparent), transparent 70%);
+  opacity: 0; transform: scale(.8); transition: opacity 400ms ease;
+}
+.orb-logo-img { transition: filter 400ms ease, transform 400ms ease; }
+
+/* Actif : on se base sur body.engine-active ET #live-orb.active (les deux sont posés au lancement) */
+body.engine-active .orb-ring-1, .orb-visualizer.active .orb-ring-1 { animation: orb-spin-a 9s linear infinite !important; }
+body.engine-active .orb-ring-2, .orb-visualizer.active .orb-ring-2 { animation: orb-spin-b 13s linear infinite reverse !important; }
+body.engine-active .orb-ring-3, .orb-visualizer.active .orb-ring-3 { animation: orb-spin-c 20s linear infinite !important; opacity: .7; }
+body.engine-active .orb-halo, .orb-visualizer.active .orb-halo { opacity: 1; animation: orb-breathe 2.4s ease-in-out infinite; }
+body.engine-active .orb-logo-img, .orb-visualizer.active .orb-logo-img { filter: saturate(1) drop-shadow(0 0 14px color-mix(in srgb, var(--blurple) 55%, transparent)); animation: orb-float 3.2s ease-in-out infinite; }
+
+@keyframes orb-spin-a { from { transform: rotate(-28deg) scaleY(.4); } to { transform: rotate(332deg) scaleY(.4); } }
+@keyframes orb-spin-b { from { transform: rotate(40deg) scaleY(.6); } to { transform: rotate(400deg) scaleY(.6); } }
+@keyframes orb-spin-c { to { transform: rotate(360deg); } }
+@keyframes orb-breathe { 0%, 100% { transform: scale(.8); opacity: .55; } 50% { transform: scale(1.08); opacity: 1; } }
+@keyframes orb-float { 0%, 100% { transform: translateY(0) scale(1); } 50% { transform: translateY(-5px) scale(1.04); } }
+
+/* Égaliseur : animé dès qu'une session tourne (ne dépend plus d'une classe jamais posée) */
+.orb-wave-container { gap: 5px !important; height: 26px !important; margin-top: -16px !important; }
+.wave-bar { width: 3px !important; height: 3px; background: linear-gradient(180deg, var(--accent-2), var(--blurple)) !important; opacity: .45; transition: opacity 300ms; }
+body.engine-active .wave-bar, .orb-wave-container.active .wave-bar { opacity: 1; animation: orb-wave 900ms ease-in-out infinite alternate !important; }
+.wave-bar:nth-child(1) { animation-delay: -100ms !important; }
+.wave-bar:nth-child(2) { animation-delay: -450ms !important; }
+.wave-bar:nth-child(3) { animation-delay: -250ms !important; }
+.wave-bar:nth-child(4) { animation-delay: -700ms !important; }
+.wave-bar:nth-child(5) { animation-delay: -50ms !important; }
+.wave-bar:nth-child(6) { animation-delay: -600ms !important; }
+.wave-bar:nth-child(7) { animation-delay: -300ms !important; }
+.wave-bar:nth-child(8) { animation-delay: -800ms !important; }
+@keyframes orb-wave { 0% { height: 3px; } 100% { height: 20px; } }
+
+/* Pause : tout se fige */
+.telemetry-card:has(.live-status-tag.paused) .orb-ring,
+.telemetry-card:has(.live-status-tag.paused) .orb-halo,
+.telemetry-card:has(.live-status-tag.paused) .orb-logo-img,
+.telemetry-card:has(.live-status-tag.paused) .wave-bar { animation-play-state: paused !important; }
+
+/* Pastille d'état */
+.live-status-tag.running { border-color: color-mix(in srgb, var(--emerald) 40%, transparent) !important; background: color-mix(in srgb, var(--emerald) 10%, transparent); }
+.live-status-tag.running::before { content: ""; display: inline-block; width: 6px; height: 6px; margin-right: 6px; border-radius: 50%; background: var(--emerald); vertical-align: 1px; animation: orb-dot 1.4s ease-in-out infinite; }
+.live-status-tag.paused { border-color: color-mix(in srgb, var(--amber) 40%, transparent) !important; background: color-mix(in srgb, var(--amber) 10%, transparent); }
+.title-engine-pill.running .title-pill-dot, .live-pulse-dot.active { animation: orb-dot 1.4s ease-in-out infinite; }
+@keyframes orb-dot { 0%, 100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--emerald) 60%, transparent); } 50% { box-shadow: 0 0 0 4px transparent; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .orb-ring, .orb-halo, .orb-logo-img, .wave-bar, .live-status-tag::before { animation: none !important; }
+}
+
+/* ---------- 3. Pied de barre : masquer « Client Windows · Build » ---------- */
+.sidebar-footer { display: flex; align-items: center; justify-content: space-between; gap: 6px; min-height: 22px; }
+.build-toggle-input { position: absolute; opacity: 0; pointer-events: none; }
+.build-toggle-btn {
+  display: inline-grid; place-items: center; width: 22px; height: 22px; flex-shrink: 0;
+  border-radius: 6px; color: var(--text-quiet); cursor: pointer; transition: background 150ms, color 150ms;
+}
+.build-toggle-btn:hover { background: #ffffff0c; color: var(--text-main); }
+.build-toggle-btn svg { width: 13px; height: 13px; }
+.build-toggle-btn .icon-show { display: none; }
+.spoof-status { transition: opacity 200ms ease, max-width 250ms ease; max-width: 200px; overflow: hidden; white-space: nowrap; }
+.build-toggle-input:checked ~ .spoof-status { opacity: 0; max-width: 0; }
+.build-toggle-input:checked ~ .build-toggle-btn .icon-hide { display: none; }
+.build-toggle-input:checked ~ .build-toggle-btn .icon-show { display: block; }
+.build-toggle-input:checked ~ .build-toggle-btn { margin-left: auto; }
+.build-toggle-input:focus-visible ~ .build-toggle-btn { outline: 1px solid var(--blurple); }
+
+/* ---------- 4. Bouton flottant centré : Enregistrer les préférences ---------- */
+.save-settings-bar {
+  position: sticky !important;
+  bottom: 22px !important;
+  left: 0 !important;
+  right: 0 !important;
+  width: 100% !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 10px !important;
+  padding: 0 !important;
+  margin: 32px auto 8px !important;
+  border: none !important;
+  border-top: none !important;
+  background: transparent !important;
+  background-color: transparent !important;
+  box-shadow: none !important;
+  pointer-events: none !important;
+  z-index: 100 !important;
+}
+
+#btn-save-settings {
+  pointer-events: auto !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  margin: 0 auto !important;
+  border-radius: 9999px !important;
+  padding: 12px 34px !important;
+  font-size: 13px !important;
+  font-weight: 650 !important;
+  letter-spacing: -0.2px !important;
+  color: #1b1820 !important;
+  background: linear-gradient(135deg, var(--blurple), color-mix(in srgb, var(--blurple) 65%, var(--accent-2))) !important;
+  border: 1px solid color-mix(in srgb, #ffffff 40%, transparent) !important;
+  box-shadow: 0 14px 38px rgba(0, 0, 0, 0.65), 0 0 24px color-mix(in srgb, var(--blurple) 45%, transparent) !important;
+  transition: transform 160ms cubic-bezier(0.2, 0, 0, 1), box-shadow 160ms cubic-bezier(0.2, 0, 0, 1), filter 160ms !important;
+  cursor: pointer !important;
+}
+
+#btn-save-settings:hover {
+  transform: translateY(-2px) scale(1.03) !important;
+  box-shadow: 0 18px 46px rgba(0, 0, 0, 0.75), 0 0 32px color-mix(in srgb, var(--blurple) 60%, transparent) !important;
+  filter: brightness(1.1) !important;
+}
+
+#btn-save-settings:active {
+  transform: translateY(0) scale(0.98) !important;
+}
+
+#settings-saved-indicator {
+  pointer-events: auto !important;
+  margin: 0 auto !important;
+  background: #17241ceb !important;
+  backdrop-filter: blur(14px) !important;
+  -webkit-backdrop-filter: blur(14px) !important;
+  border: 1px solid color-mix(in srgb, var(--emerald) 50%, transparent) !important;
+  border-radius: 9999px !important;
+  padding: 8px 18px !important;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.55) !important;
+  color: var(--emerald) !important;
+  font-weight: 600 !important;
+  font-size: 12px !important;
+  animation: toast-in 200ms ease-out !important;
+}
+
+
