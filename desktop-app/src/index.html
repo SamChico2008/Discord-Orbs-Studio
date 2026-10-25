@@ -1110,6 +1110,43 @@
     </form>
   </dialog>
 
+  <!-- Beta Version Disclaimer Modal -->
+  <div class="modal-backdrop" id="beta-modal" role="dialog" aria-modal="true" aria-labelledby="beta-modal-title" style="display: none;">
+    <div class="modal-card beta-modal-card">
+      <div class="modal-hero beta-hero">
+        <button class="modal-close-btn" id="btn-close-beta-modal" title="Close">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+        <div class="beta-hero-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        </div>
+        <div class="beta-hero-badge">BETA PREVIEW</div>
+      </div>
+      <div class="modal-body beta-modal-body">
+        <h2 class="modal-title" id="beta-modal-title">Application in Beta Stage</h2>
+        <div class="modal-subtitle">Version Bêta en cours de développement</div>
+        <p class="beta-modal-desc">
+          Discord Orb Studio is currently in active beta testing. Some features, protocols, or interfaces may evolve as new updates roll out.
+          <br><br>
+          <em>L'application est actuellement en phase de test bêta. Des fonctionnalités peuvent évoluer ou présenter des ajustements au fil des mises à jour.</em>
+        </p>
+
+        <div class="beta-checkbox-wrap">
+          <label class="beta-checkbox-label" for="checkbox-hide-beta-notice">
+            <input type="checkbox" id="checkbox-hide-beta-notice" />
+            <span>Don't show this again at startup (Ne plus afficher au démarrage)</span>
+          </label>
+        </div>
+
+        <div class="modal-actions beta-modal-actions">
+          <button class="btn btn-primary" id="btn-confirm-beta-notice" style="width: 100%; justify-content: center; font-weight: 600;">
+            I Understand • J'ai compris
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Notification Toast -->
   <div id="toast-container" role="status" aria-live="polite"></div>
 

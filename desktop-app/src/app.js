@@ -2544,8 +2544,65 @@ function formatMinutes(sec) {
   return `~${m} min`;
 }
 
+// ── Beta Version Disclaimer ──
+const betaModal = document.getElementById('beta-modal');
+const btnCloseBetaModal = document.getElementById('btn-close-beta-modal');
+const btnConfirmBetaNotice = document.getElementById('btn-confirm-beta-notice');
+const checkboxHideBetaNotice = document.getElementById('checkbox-hide-beta-notice');
+
+async function checkBetaNotice() {
+  const localDismissed = localStorage.getItem('orb_hide_beta_notice');
+  if (localDismissed === 'true') {
+    return;
+  }
+
+  try {
+    const config = await window.electronAPI.loadConfig();
+    if (config?.settings?.hideBetaNotice) {
+      localStorage.setItem('orb_hide_beta_notice', 'true');
+      return;
+    }
+  } catch (_) {}
+
+  if (betaModal) {
+    betaModal.style.display = 'flex';
+  }
+}
+
+function dismissBetaNotice() {
+  if (checkboxHideBetaNotice && checkboxHideBetaNotice.checked) {
+    localStorage.setItem('orb_hide_beta_notice', 'true');
+    window.electronAPI.updateSettings({ hideBetaNotice: true }).catch(() => {});
+  }
+  if (betaModal) {
+    betaModal.style.display = 'none';
+  }
+}
+
+if (btnConfirmBetaNotice) {
+  btnConfirmBetaNotice.addEventListener('click', () => {
+    playAudioChime('click');
+    dismissBetaNotice();
+  });
+}
+
+if (btnCloseBetaModal) {
+  btnCloseBetaModal.addEventListener('click', () => {
+    dismissBetaNotice();
+  });
+}
+
+if (betaModal) {
+  betaModal.addEventListener('click', (e) => {
+    if (e.target === betaModal) {
+      dismissBetaNotice();
+    }
+  });
+}
+
 // ── Application Startup ──
 window.addEventListener('DOMContentLoaded', () => {
   initAuth();
   loadSettings();
+  checkBetaNotice();
 });

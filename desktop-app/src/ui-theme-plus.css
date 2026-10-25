@@ -275,4 +275,113 @@ body.engine-active .wave-bar, .orb-wave-container.active .wave-bar { opacity: 1;
   animation: toast-in 200ms ease-out !important;
 }
 
+/* ── Beta Notice Modal ── */
+.beta-modal-card {
+  width: 500px !important;
+  max-width: 92vw !important;
+  border: 1px solid color-mix(in srgb, var(--blurple) 35%, transparent) !important;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.75), 0 0 35px color-mix(in srgb, var(--blurple) 20%, transparent) !important;
+  animation: beta-modal-in 220ms cubic-bezier(0.16, 1, 0.3, 1) !important;
+  border-radius: 20px !important;
+  overflow: hidden !important;
+}
+
+@keyframes beta-modal-in {
+  from {
+    opacity: 0;
+    transform: scale(0.96) translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.beta-hero {
+  position: relative !important;
+  height: 125px !important;
+  background: radial-gradient(circle at 50% 25%, color-mix(in srgb, var(--blurple) 25%, transparent) 0%, #1a1822 80%) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  border-bottom: 1px solid var(--border-subtle) !important;
+}
+
+.beta-hero-icon {
+  width: 44px !important;
+  height: 44px !important;
+  border-radius: 12px !important;
+  background: color-mix(in srgb, var(--blurple) 18%, transparent) !important;
+  border: 1px solid color-mix(in srgb, var(--blurple) 38%, transparent) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  color: var(--blurple) !important;
+}
+
+.beta-hero-badge {
+  font-size: 10px !important;
+  font-weight: 750 !important;
+  letter-spacing: 1.2px !important;
+  padding: 3px 10px !important;
+  border-radius: 9999px !important;
+  background: color-mix(in srgb, var(--blurple) 22%, transparent) !important;
+  border: 1px solid color-mix(in srgb, var(--blurple) 45%, transparent) !important;
+  color: #fff !important;
+}
+
+.beta-modal-body {
+  padding: 24px 26px !important;
+}
+
+.beta-modal-desc {
+  font-size: 13px !important;
+  color: var(--text-muted) !important;
+  line-height: 1.55 !important;
+  margin: 12px 0 18px !important;
+}
+
+.beta-modal-desc em {
+  font-size: 12px !important;
+  color: color-mix(in srgb, var(--text-muted) 80%, white) !important;
+}
+
+.beta-checkbox-wrap {
+  display: flex !important;
+  align-items: center !important;
+  background: rgba(255, 255, 255, 0.035) !important;
+  border: 1px solid var(--border-subtle) !important;
+  border-radius: 10px !important;
+  padding: 11px 14px !important;
+  margin-bottom: 20px !important;
+  cursor: pointer !important;
+  transition: background 150ms ease, border-color 150ms ease !important;
+}
+
+.beta-checkbox-wrap:hover {
+  background: rgba(255, 255, 255, 0.06) !important;
+  border-color: color-mix(in srgb, var(--blurple) 40%, transparent) !important;
+}
+
+.beta-checkbox-label {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  font-size: 12.5px !important;
+  color: var(--text-main) !important;
+  cursor: pointer !important;
+  user-select: none !important;
+  width: 100% !important;
+}
+
+.beta-checkbox-label input[type="checkbox"] {
+  width: 16px !important;
+  height: 16px !important;
+  accent-color: var(--blurple) !important;
+  cursor: pointer !important;
+}
+
+
 
