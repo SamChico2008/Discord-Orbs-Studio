@@ -22,7 +22,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
   scanLocalTokens: () => ipcRenderer.invoke('token-scan-local'),
 
   // QR Remote Auth
-  startQR: () => ipcRenderer.invoke('qr-auth-start'),
+  startQR: (force = false) => ipcRenderer.invoke('qr-auth-start', force),
   stopQR: () => ipcRenderer.invoke('qr-auth-stop'),
 
   // Quests API & Engine

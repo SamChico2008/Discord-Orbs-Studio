@@ -15,6 +15,8 @@ class QRAuthClient extends EventEmitter {
     this.keyPair = null;
     this.active = false;
     this.isAuthenticating = false;
+    this.lastQrDataUrl = null;
+    this.handshakeTimeout = null;
   }
 
   safeSend(payload) {
@@ -29,6 +31,15 @@ class QRAuthClient extends EventEmitter {
     this.stop();
     this.active = true;
     this.isAuthenticating = false;
+    this.lastQrDataUrl = null;
+
+    // Timeout watchdog: emit error if no QR received within 12 seconds
+    this.handshakeTimeout = setTimeout(() => {
+      if (this.active && !this.lastQrDataUrl) {
+        this.emit('error', 'Gateway timeout. Click to retry.');
+        this.stop();
+      }
+    }, 12000);
 
     // Generate RSA 2048 keypair
     this.keyPair = crypto.generateKeyPairSync('rsa', {
@@ -109,6 +120,10 @@ class QRAuthClient extends EventEmitter {
     }
 
     else if (msg.op === 'fingerprint' || msg.op === 'pending_remote_init') {
+      if (this.handshakeTimeout) {
+        clearTimeout(this.handshakeTimeout);
+        this.handshakeTimeout = null;
+      }
       const qrData = `https://discord.com/ra/${msg.fingerprint}`;
       // High-contrast, standard black-on-white QR with high error correction
       // Matches official Discord client so mobile camera scanner detects it instantly
@@ -122,6 +137,7 @@ class QRAuthClient extends EventEmitter {
         }
       });
 
+      this.lastQrDataUrl = qrDataUrl;
       this.emit('qr', {
         url: qrData,
         dataUrl: qrDataUrl,
@@ -227,6 +243,10 @@ class QRAuthClient extends EventEmitter {
   stop() {
     this.active = false;
     this.isAuthenticating = false;
+    if (this.handshakeTimeout) {
+      clearTimeout(this.handshakeTimeout);
+      this.handshakeTimeout = null;
+    }
     if (this.heartbeatTimer) {
       clearInterval(this.heartbeatTimer);
       this.heartbeatTimer = null;

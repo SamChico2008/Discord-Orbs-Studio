@@ -899,14 +899,15 @@ function startQrFlow(forceRefresh = false) {
   if (!forceRefresh && qrSessionActive) return;
   if (qrCooldown) return;
   qrCooldown = true;
-  setTimeout(() => { qrCooldown = false; }, 1500);
+  setTimeout(() => { qrCooldown = false; }, 800);
 
+  qrSessionActive = false;
   qrImage.style.display = 'none';
   qrPlaceholder.style.display = 'flex';
   if (qrExpiredOverlay) qrExpiredOverlay.style.display = 'none';
   if (qrScannedOverlay) qrScannedOverlay.style.display = 'none';
   qrStatusText.textContent = "Connecting to Discord…";
-  window.electronAPI.startQR();
+  window.electronAPI.startQR(forceRefresh);
 }
 
 btnRefreshQr.addEventListener('click', () => {
@@ -928,6 +929,7 @@ window.electronAPI.onQR((dataUrl) => {
   qrImage.style.display = 'block';
   qrPlaceholder.style.display = 'none';
   if (qrExpiredOverlay) qrExpiredOverlay.style.display = 'none';
+  if (qrScannedOverlay) qrScannedOverlay.style.display = 'none';
 });
 
 window.electronAPI.onQRStatus((statusObj) => {
@@ -942,12 +944,15 @@ window.electronAPI.onQRStatus((statusObj) => {
 
   if (qrStatusText && text) qrStatusText.textContent = text;
 
-  if (state === 'expired' || state === 'closed') {
+  if (state === 'expired' || state === 'closed' || state === 'cancelled') {
     qrSessionActive = false;
+    qrPlaceholder.style.display = 'none';
+    qrImage.style.display = 'none';
     if (qrExpiredOverlay) qrExpiredOverlay.style.display = 'flex';
     if (qrScannedOverlay) qrScannedOverlay.style.display = 'none';
   } else if (state === 'waiting_scan') {
     qrSessionActive = true;
+    qrPlaceholder.style.display = 'none';
     if (qrExpiredOverlay) qrExpiredOverlay.style.display = 'none';
   }
 });
@@ -986,6 +991,7 @@ window.electronAPI.onQRAuthenticated(async (payload) => {
 });
 
 window.electronAPI.onQRError((err) => {
+  qrSessionActive = false;
   let msg = '';
   if (typeof err === 'string') {
     msg = err;
@@ -994,8 +1000,10 @@ window.electronAPI.onQRError((err) => {
   } else if (err) {
     msg = JSON.stringify(err);
   }
-  if (qrStatusText) qrStatusText.textContent = `Error: ${msg}. Please refresh the code.`;
+  if (qrStatusText) qrStatusText.textContent = `Error: ${msg}. Click to retry.`;
   showToast(msg || "Mobile QR login failed.", "error");
+  qrPlaceholder.style.display = 'none';
+  qrImage.style.display = 'none';
   if (qrExpiredOverlay) qrExpiredOverlay.style.display = 'flex';
   if (qrScannedOverlay) qrScannedOverlay.style.display = 'none';
 });

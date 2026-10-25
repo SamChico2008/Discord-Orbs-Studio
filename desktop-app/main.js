@@ -305,46 +305,60 @@ ipcMain.handle('token-scan-local', async () => {
 });
 
 // ── IPC Handlers: QR Remote Auth ──
-let qrStarting = false;
-ipcMain.handle('qr-auth-start', () => {
-  if (qrStarting) return true;
-  qrStarting = true;
-  setTimeout(() => { qrStarting = false; }, 1200);
-
-  if (qrClient && qrClient.active) {
+ipcMain.handle('qr-auth-start', (event, force = false) => {
+  // If not forcing refresh and an active client already has a valid QR code, resend it immediately
+  if (!force && qrClient && qrClient.active && qrClient.lastQrDataUrl) {
+    if (mainWindow && !mainWindow.isDestroyed()) {
+      mainWindow.webContents.send('qr-code', qrClient.lastQrDataUrl);
+    }
     return true;
   }
 
-  console.log('[QR] qr-auth-start invoked');
-  if (qrClient) qrClient.stop();
+  console.log('[QR] qr-auth-start invoked (force =', force, ')');
+  if (qrClient) {
+    qrClient.stop();
+    qrClient.removeAllListeners();
+    qrClient = null;
+  }
+
   qrClient = new QRAuthClient();
 
   qrClient.on('qr', (data) => {
     console.log('[QR] qr event received, dataUrl length:', data?.dataUrl?.length || 'raw');
-    if (mainWindow) mainWindow.webContents.send('qr-code', data?.dataUrl || data);
+    if (mainWindow && !mainWindow.isDestroyed()) {
+      mainWindow.webContents.send('qr-code', data?.dataUrl || data);
+    }
   });
 
   qrClient.on('status', (data) => {
     const message = typeof data === 'object' && data?.message ? data.message : String(data);
     console.log('[QR] status event:', message);
-    if (mainWindow) mainWindow.webContents.send('qr-status', data);
+    if (mainWindow && !mainWindow.isDestroyed()) {
+      mainWindow.webContents.send('qr-status', data);
+    }
   });
 
   qrClient.on('scanned', (data) => {
     console.log('[QR] scanned event:', data?.username);
-    if (mainWindow) mainWindow.webContents.send('qr-scanned', data);
+    if (mainWindow && !mainWindow.isDestroyed()) {
+      mainWindow.webContents.send('qr-scanned', data);
+    }
   });
 
   qrClient.on('authenticated', (data) => {
     const token = typeof data === 'object' && data?.token ? data.token : data;
     console.log('[QR] authenticated event, token prefix:', String(token).slice(0, 10));
-    if (mainWindow) mainWindow.webContents.send('qr-authenticated', token);
+    if (mainWindow && !mainWindow.isDestroyed()) {
+      mainWindow.webContents.send('qr-authenticated', token);
+    }
   });
 
   qrClient.on('error', (err) => {
     const errMsg = typeof err === 'object' && err?.message ? err.message : String(err);
     console.log('[QR] error event:', errMsg);
-    if (mainWindow) mainWindow.webContents.send('qr-error', errMsg);
+    if (mainWindow && !mainWindow.isDestroyed()) {
+      mainWindow.webContents.send('qr-error', errMsg);
+    }
   });
 
   qrClient.start();
