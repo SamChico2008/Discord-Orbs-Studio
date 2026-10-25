@@ -6,11 +6,12 @@
   <p>A lightweight, modern desktop application designed to track, automate, and claim Discord quests and rewards without launching or installing heavy game clients.</p>
 
   <p>
-    <img src="https://img.shields.io/badge/Platform-Windows_x64-blue?style=flat-square&logo=windows" alt="Platform Windows" />
-    <img src="https://img.shields.io/badge/Electron-v45.0.0-47848F?style=flat-square&logo=electron" alt="Electron" />
-    <img src="https://img.shields.io/badge/Node.js-%3E%3D24.22.1-339933?style=flat-square&logo=node.js" alt="Node.js" />
-    <img src="https://img.shields.io/badge/Version-3.3.2-b8adf2?style=flat-square" alt="Version 3.3.2" />
-    <img src="https://img.shields.io/badge/License-MIT-green?style=flat-square" alt="License MIT" />
+    <a href="https://github.com/SamChico2008/Discord-Orbs-Studio/releases/latest"><img src="https://img.shields.io/badge/Platform-Windows_x64-0078D6?style=flat-square&logo=windows&logoColor=white" alt="Platform Windows" /></a>
+    <a href="https://github.com/SamChico2008/Discord-Orbs-Studio/releases/tag/v3.3.2"><img src="https://img.shields.io/badge/Release-v3.3.2-5865F2?style=flat-square&logo=github&logoColor=white" alt="Release v3.3.2" /></a>
+    <a href="https://www.electronjs.org/"><img src="https://img.shields.io/badge/Electron-v45.0.0-47848F?style=flat-square&logo=electron&logoColor=white" alt="Electron" /></a>
+    <a href="https://nodejs.org/"><img src="https://img.shields.io/badge/Node.js-%3E%3D24.0.0-339933?style=flat-square&logo=node.js&logoColor=white" alt="Node.js" /></a>
+    <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-brightgreen?style=flat-square" alt="License MIT" /></a>
+    <a href="https://github.com/SamChico2008"><img src="https://img.shields.io/badge/Developer-Helios-blueviolet?style=flat-square" alt="Developer Helios" /></a>
   </p>
 </div>
 
@@ -23,7 +24,7 @@
 - **Dynamic Multi-Color Themes**: Personalize the workspace with four color schemes (*Periwinkle*, *Sage*, *Peach*, *Rose*) that dynamically adapt accent glows, button states, and progress indicators.
 - **Refined Ergonomics**: Centered floating action button for saving preferences, on-demand client build info toggle, and smooth view transitions.
 - **Multi-Account & Privacy Controls**: Multiple operational modes (*Turbo* or *Balanced*), fingerprint management, and secure multi-account switching with password or QR code login.
-- **Modern Full-Screen Setup Wizard**: Custom Windows 10 & 11 installer featuring native DWM dark mode, high-definition vector graphics, and integrated directory selection.
+- **Streamlined Native Installer**: Windows 10 & 11 setup wizard with custom branding, English localization, and destination directory selection.
 
 ---
 
@@ -39,12 +40,13 @@ DISCORD ORB APP/
 │   │   └── ui-theme-plus.css # Dynamic themes, animations, and floating controls
 │   ├── assets/               # Application icons, graphics, and NSIS scripts
 │   │   ├── icon.ico / .png   # Brand identity assets
-│   │   ├── installer.nsh     # Modern NSIS custom wizard script
-│   │   └── installerBanner.bmp
+│   │   ├── installer.nsh     # NSIS installer hooks
+│   │   ├── installerHeader.bmp
+│   │   └── installerSidebar.bmp
 │   ├── main.js               # Electron main process
 │   ├── quest-engine.js       # Autonomous quest execution engine
 │   └── qr-auth.js            # QR code authentication module
-├── research/                 # Reverse-engineering and API inspection scripts
+├── research/                 # Inspection scripts and protocol testing
 │   ├── inspect_heartbeat.js  # Telemetry and session monitoring
 │   └── test_increment.js
 ├── dummy-games/              # Game simulation mocks for local verification
@@ -70,7 +72,6 @@ npm install
 ```bash
 npm start
 ```
-*Alternatively, run `Lancer-Discord-Orb-Studio.bat` from the root directory.*
 
 ---
 
@@ -82,7 +83,6 @@ To package the standalone installer:
 cd desktop-app
 npm run build
 ```
-*Or execute `Compiler-Nouveau-Exe.bat` directly.*
 
 The generated executable will be placed in:
 `dist/Discord Orb Studio Setup.exe`
@@ -97,6 +97,8 @@ The generated executable will be placed in:
 
 ---
 
-## License
+## License & Author
 
-Developed by: Helios
+This project is open-source software licensed under the **[MIT License](LICENSE)**.
+
+Developed and maintained by **Helios** (2026).
