@@ -248,13 +248,20 @@ class QuestEngine extends EventEmitter {
 
     // Asset & Banner URLs
     const assets = config.assets || {};
-    let iconUrl = null;
-    if (assets.hero) {
-      iconUrl = `https://cdn.discordapp.com/assets/quests/${q.id}/${assets.hero}`;
-    } else if (assets.quest_bar_hero) {
-      iconUrl = `https://cdn.discordapp.com/assets/quests/${q.id}/${assets.quest_bar_hero}`;
-    } else if (config.application?.icon) {
-      iconUrl = `https://cdn.discordapp.com/app-icons/${config.application.id}/${config.application.icon}.png?size=128`;
+    const resolveCdnAsset = (val) => {
+      if (!val || typeof val !== 'string' || val === 'PLACEHOLDER') return null;
+      if (val.startsWith('http://') || val.startsWith('https://')) return val;
+      if (val.startsWith('quests/')) return `https://cdn.discordapp.com/${val}`;
+      return `https://cdn.discordapp.com/quests/${q.id}/${val}`;
+    };
+
+    const bannerUrl = resolveCdnAsset(assets.hero) || resolveCdnAsset(assets.quest_bar_hero);
+    const tileUrl = resolveCdnAsset(assets.game_tile_dark) || resolveCdnAsset(assets.game_tile_light) || resolveCdnAsset(assets.game_tile);
+    const logoUrl = resolveCdnAsset(assets.logotype_light) || resolveCdnAsset(assets.logotype_dark) || resolveCdnAsset(assets.logotype);
+
+    let iconUrl = bannerUrl || tileUrl;
+    if (!iconUrl && config.application?.id && config.application?.icon) {
+      iconUrl = `https://cdn.discordapp.com/app-icons/${config.application.id}/${config.application.icon}.png?size=256`;
     }
 
     const isClaimed = !!claimedAt || (userStatus.orb_quantity_claimed != null && userStatus.orb_quantity_claimed > 0);
@@ -280,6 +287,9 @@ class QuestEngine extends EventEmitter {
       rewardName,
       rewardType,
       iconUrl,
+      bannerUrl,
+      tileUrl,
+      logoUrl,
       expiresAt,
       claimCode: userStatus.claim_code || userStatus.code || userStatus.gift_code || userStatus.claimed_tier || null,
       raw: q

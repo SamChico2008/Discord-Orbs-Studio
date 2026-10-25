@@ -1364,14 +1364,16 @@ function renderQuests() {
     }
 
     card.innerHTML = `
-      <div class="quest-card-banner" ${bannerBg}>
-        <div class="quest-banner-overlay"></div>
-        <div class="banner-watermark">
+      <div class="quest-card-banner">
+        ${q.iconUrl ? `<img class="quest-banner-img" src="${escapeHtml(q.iconUrl)}" alt="${escapeHtml(q.questName)}" loading="lazy" onerror="this.style.display='none'; const wm = this.parentElement.querySelector('.banner-watermark'); if (wm) wm.style.display='flex';">` : ''}
+        <div class="banner-watermark" style="${q.iconUrl ? 'display: none;' : ''}">
           <svg width="46" height="46" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
             <rect x="2" y="6" width="20" height="12" rx="4"/>
             <path d="M6 12h4m-2-2v4m9-2h.01m3 0h.01"/>
           </svg>
         </div>
+        <div class="quest-banner-overlay"></div>
+        ${q.logoUrl ? `<img class="quest-logo-img" src="${escapeHtml(q.logoUrl)}" alt="${escapeHtml(q.gameTitle)}" loading="lazy">` : ''}
         <div class="quest-badge-type ${badgeClass}">
           <span class="badge-dot"></span>
           <span>${escapeHtml(badgeText)}</span>
