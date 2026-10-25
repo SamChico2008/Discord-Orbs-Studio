@@ -1,9 +1,9 @@
-# ✦ Discord Orb Studio
+# Discord Orb Studio
 
 <div align="center">
   <img src="desktop-app/assets/icon.png" width="96" height="96" alt="Discord Orb Studio Logo" />
-  <h3>Votre compagnon Discord pour vos quêtes et récompenses</h3>
-  <p>Application de bureau moderne et fluide conçue pour automatiser, suivre et réclamer vos quêtes Discord sans lancer ni installer de jeux volumineux.</p>
+  <h3>Desktop Companion for Discord Quests & Rewards</h3>
+  <p>A lightweight, modern desktop application designed to track, automate, and claim Discord quests and rewards without launching or installing heavy game clients.</p>
 
   <p>
     <img src="https://img.shields.io/badge/Platform-Windows_x64-blue?style=flat-square&logo=windows" alt="Platform Windows" />
@@ -16,90 +16,90 @@
 
 ---
 
-## 🌟 Points Clés
+## Key Features
 
-- **⚡ Automatisation des quêtes en tâche de fond** : Terminez vos quêtes de jeux ou de vidéos Discord avec émulation intelligente des sessions d'activité et des paquets de heartbeat.
-- **🌌 Visualiseur orbital interactif** : Suivi de la progression en temps réel avec anneaux orbitaux animés et égaliseur dynamique.
-- **🎨 Thèmes dynamiques multi-couleurs** : Personnalisez l'ambiance avec 4 palettes exclusives (*Pervenche*, *Sauge*, *Pêche*, *Rose*) modifiant les reflets d'accentuation, boutons et barres de progression.
-- **🔘 Ergonomie soignée** : Bouton d'enregistrement des préférences flottant centré, masquage à la demande des détails système et transition fluide entre les vues.
-- **🛡️ Sécurité & Discrétion** : Mode furtif configurable (*Turbo* ou *Équilibré*), rotation d'empreintes et support multi-comptes sécurisé (connexion par mot de passe ou scan QR).
-- **📦 Installateur sur mesure haute définition** : Installation plein écran sous Windows 10 & 11 avec thème sombre natif DWM, bannière graphique et sélecteur de dossier direct.
+- **Background Quest Processing**: Complete gaming and video quests autonomously with heartbeat packet scheduling and activity session simulation.
+- **Interactive Orbital Visualizer**: Real-time progress monitoring featuring rotating orbital rings and a synchronized live equalizer.
+- **Dynamic Multi-Color Themes**: Personalize the workspace with four color schemes (*Periwinkle*, *Sage*, *Peach*, *Rose*) that dynamically adapt accent glows, button states, and progress indicators.
+- **Refined Ergonomics**: Centered floating action button for saving preferences, on-demand client build info toggle, and smooth view transitions.
+- **Multi-Account & Privacy Controls**: Multiple operational modes (*Turbo* or *Balanced*), fingerprint management, and secure multi-account switching with password or QR code login.
+- **Modern Full-Screen Setup Wizard**: Custom Windows 10 & 11 installer featuring native DWM dark mode, high-definition vector graphics, and integrated directory selection.
 
 ---
 
-## 🖥️ Organisation du Projet
+## Project Structure
 
 ```text
 DISCORD ORB APP/
-├── desktop-app/              # Application principale (Electron)
-│   ├── src/                  # Interfaces, styles et logique de rendu
-│   │   ├── index.html        # Vue principale du studio
-│   │   ├── app.js            # Contrôleur d'interface et événements
-│   │   ├── ui-redesign.css   # Styles de base du studio
-│   │   └── ui-theme-plus.css # Thèmes dynamiques, animations et bouton flottant
-│   ├── assets/               # Icônes, bannières et scripts de l'installateur
-│   │   ├── icon.ico / .png   # Identité visuelle du studio
-│   │   ├── installer.nsh     # Personnalisation NSIS moderne (plein écran, dark mode)
+├── desktop-app/              # Main desktop application (Electron)
+│   ├── src/                  # User interface, styles, and renderer logic
+│   │   ├── index.html        # Main application layout
+│   │   ├── app.js            # UI controller and event bindings
+│   │   ├── ui-redesign.css   # Base application styles
+│   │   └── ui-theme-plus.css # Dynamic themes, animations, and floating controls
+│   ├── assets/               # Application icons, graphics, and NSIS scripts
+│   │   ├── icon.ico / .png   # Brand identity assets
+│   │   ├── installer.nsh     # Modern NSIS custom wizard script
 │   │   └── installerBanner.bmp
-│   ├── main.js               # Processus principal Electron
-│   ├── quest-engine.js       # Moteur autonome d'exécution des quêtes
-│   └── qr-auth.js            # Système d'authentification par QR code
-├── research/                 # Scripts d'analyse, d'inspection et de tests
-│   ├── inspect_heartbeat.js  # Télémétrie et analyse de flux
+│   ├── main.js               # Electron main process
+│   ├── quest-engine.js       # Autonomous quest execution engine
+│   └── qr-auth.js            # QR code authentication module
+├── research/                 # Reverse-engineering and API inspection scripts
+│   ├── inspect_heartbeat.js  # Telemetry and session monitoring
 │   └── test_increment.js
-├── dummy-games/              # Utilitaires de simulation de jeux locaux
-├── Compiler-Nouveau-Exe.bat  # Script rapide de compilation .exe
-├── Lancer-Discord-Orb-Studio.bat # Script de lancement rapide en local
+├── dummy-games/              # Game simulation mocks for local verification
+├── Compiler-Nouveau-Exe.bat  # Automated production build script
+├── Lancer-Discord-Orb-Studio.bat # Local development launcher
 └── README.md
 ```
 
 ---
 
-## 🚀 Démarrage Rapide
+## Quick Start
 
-### Prérequis
-- **Node.js** (version >= 24 recommandée)
-- **npm** (inclus avec Node.js)
-- Système d'exploitation : **Windows 10 / 11 (64 bits)**
+### Prerequisites
+- **Node.js** (version 24 or newer recommended)
+- **npm** (included with Node.js)
+- Operating System: **Windows 10 / 11 (64-bit)**
 
-### 1. Installation des dépendances
+### 1. Install Dependencies
 ```bash
 cd desktop-app
 npm install
 ```
 
-### 2. Lancer l'application en développement
+### 2. Run in Development
 ```bash
 npm start
 ```
-*Ou double-cliquez simplement sur `Lancer-Discord-Orb-Studio.bat` à la racine.*
+*Alternatively, run `Lancer-Discord-Orb-Studio.bat` from the root directory.*
 
 ---
 
-## 🏗️ Compilation & Déploiement
+## Building & Distribution
 
-### Générer l'installateur Windows (`Setup.exe`)
-Pour créer le package d'installation complet autonome sous `dist/` :
+### Generate Production Installer (`Setup.exe`)
+To package the standalone installer:
 ```bash
 cd desktop-app
 npm run build
 ```
-*Ou exécutez `Compiler-Nouveau-Exe.bat`.*
+*Or execute `Compiler-Nouveau-Exe.bat` directly.*
 
-Le fichier d'installation généré est :
+The generated executable will be placed in:
 `dist/Discord Orb Studio Setup.exe`
 
 ---
 
-## 🔒 Confidentialité & Sécurité
+## Privacy & Security
 
-- Les identifiants et jetons de session sont chiffrés et stockés localement sur votre ordinateur.
-- Aucune donnée personnelle ni télémétrie externe n'est collectée par des tiers.
-- Le mode de simulation respecte scrupuleusement la structure des échanges officiels Discord pour assurer une progression sécurisée.
+- User credentials and session tokens are encrypted and retained locally on your machine.
+- No personal data or telemetry is transmitted to third-party servers.
+- Heartbeat emulation matches official Discord protocol structures to ensure account safety and stability.
 
 ---
 
-## 📄 Licence
+## License
 
-Ce projet est distribué sous licence [MIT](LICENSE).
-Développé par **Byte & SamChico** (2026).
+This project is licensed under the [MIT License](LICENSE).
+Developed by **Byte & SamChico** (2026).
