@@ -9,7 +9,7 @@
     <img src="https://img.shields.io/badge/Platform-Windows_x64-blue?style=flat-square&logo=windows" alt="Platform Windows" />
     <img src="https://img.shields.io/badge/Electron-v45.0.0-47848F?style=flat-square&logo=electron" alt="Electron" />
     <img src="https://img.shields.io/badge/Node.js-%3E%3D24.22.1-339933?style=flat-square&logo=node.js" alt="Node.js" />
-    <img src="https://img.shields.io/badge/Version-3.3.1-b8adf2?style=flat-square" alt="Version 3.3.1" />
+    <img src="https://img.shields.io/badge/Version-3.3.2-b8adf2?style=flat-square" alt="Version 3.3.2" />
     <img src="https://img.shields.io/badge/License-MIT-green?style=flat-square" alt="License MIT" />
   </p>
 </div>

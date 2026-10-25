@@ -1,7 +1,7 @@
 {
   "name": "discord-orb-studio",
   "productName": "Discord Orb Studio",
-  "version": "3.3.1",
+  "version": "3.3.2",
   "description": "Discord Quest Companion",
   "main": "main.js",
   "scripts": {
@@ -62,6 +62,11 @@
       "oneClick": false,
       "perMachine": false,
       "allowToChangeInstallationDirectory": true,
+      "language": "1033",
+      "installerLanguages": [
+        "en_US"
+      ],
+      "displayLanguageSelector": false,
       "createDesktopShortcut": "always",
       "createStartMenuShortcut": true,
       "runAfterFinish": true,
