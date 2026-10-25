@@ -21,7 +21,7 @@
     "orb",
     "desktop"
   ],
-  "author": "Byte & SamChico",
+  "author": "Helios",
   "license": "MIT",
   "dependencies": {
     "qrcode": "^1.5.4",

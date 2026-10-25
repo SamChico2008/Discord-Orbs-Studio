@@ -99,5 +99,4 @@ The generated executable will be placed in:
 
 ## License
 
-This project is licensed under the [MIT License](LICENSE).
-Developed by **Byte & SamChico** (2026).
+Developed by: Helios
