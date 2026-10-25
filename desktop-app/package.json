@@ -1,7 +1,7 @@
 {
   "name": "discord-orb-studio",
   "productName": "Discord Orb Studio",
-  "version": "3.3.3",
+  "version": "3.3.4",
   "description": "Discord Quest Companion",
   "main": "main.js",
   "scripts": {

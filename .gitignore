@@ -1,4 +1,4 @@
-# Dépendances
+# Dependances
 node_modules/
 desktop-app/node_modules/
 discord-quest-bot/node_modules/
@@ -19,11 +19,13 @@ work/
 .impeccable/
 .agents/
 
-# Sous-dépôts indépendants
+# Dossiers hors de l'application principale
 discord-quest-bot/
+portfolio/
+research/
+dummy-games/
 
-# Système & OS
+# Systeme & OS
 Thumbs.db
 Desktop.ini
 .DS_Store
-

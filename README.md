@@ -7,7 +7,7 @@
 
   <p>
     <a href="https://github.com/SamChico2008/Discord-Orbs-Studio/releases/latest"><img src="https://img.shields.io/badge/Platform-Windows_x64-0078D6?style=flat-square&logo=windows&logoColor=white" alt="Platform Windows" /></a>
-    <a href="https://github.com/SamChico2008/Discord-Orbs-Studio/releases/tag/v3.3.3"><img src="https://img.shields.io/badge/Release-v3.3.3-5865F2?style=flat-square&logo=github&logoColor=white" alt="Release v3.3.3" /></a>
+    <a href="https://github.com/SamChico2008/Discord-Orbs-Studio/releases/tag/v3.3.4"><img src="https://img.shields.io/badge/Release-v3.3.4-5865F2?style=flat-square&logo=github&logoColor=white" alt="Release v3.3.4" /></a>
     <a href="https://www.electronjs.org/"><img src="https://img.shields.io/badge/Electron-v45.0.0-47848F?style=flat-square&logo=electron&logoColor=white" alt="Electron" /></a>
     <a href="https://nodejs.org/"><img src="https://img.shields.io/badge/Node.js-%3E%3D24.0.0-339933?style=flat-square&logo=node.js&logoColor=white" alt="Node.js" /></a>
     <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-brightgreen?style=flat-square" alt="License MIT" /></a>
@@ -46,10 +46,7 @@ DISCORD ORB APP/
 │   ├── main.js               # Electron main process
 │   ├── quest-engine.js       # Autonomous quest execution engine
 │   └── qr-auth.js            # QR code authentication module
-├── research/                 # Inspection scripts and protocol testing
-│   ├── inspect_heartbeat.js  # Telemetry and session monitoring
-│   └── test_increment.js
-├── dummy-games/              # Game simulation mocks for local verification
+├── LICENSE                   # Open-source MIT license
 └── README.md
 ```
 
