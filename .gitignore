@@ -19,7 +19,11 @@ work/
 .impeccable/
 .agents/
 
+# Sous-dépôts indépendants
+discord-quest-bot/
+
 # Système & OS
 Thumbs.db
 Desktop.ini
 .DS_Store
+
