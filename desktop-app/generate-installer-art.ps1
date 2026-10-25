@@ -88,15 +88,15 @@ $brushMuted = [Drawing.SolidBrush]::new($textMuted)
 $brushAcc   = [Drawing.SolidBrush]::new($accent)
 
 $bg.DrawString('Discord Orb Studio', $fontTitle, $brushMain, 94, 22)
-$bg.DrawString(('Votre compagnon d''automatisation des qu' + [char]0xEA + 'tes & r' + [char]0xE9 + 'compenses Discord.'), $fontSub, $brushMuted, 96, 47)
+$bg.DrawString('Your automated companion for Discord quests & rewards.', $fontSub, $brushMuted, 96, 47)
 
-# Pill badge "INSTALLATEUR OFFICIEL · V3.3"
+# Pill badge "OFFICIAL INSTALLER · V3.3.1"
 $pillBg = [Drawing.SolidBrush]::new([Drawing.Color]::FromArgb(255, 34, 31, 46))
 $pillBorder = [Drawing.Pen]::new([Drawing.Color]::FromArgb(100, $accent), 1)
 $rect = [Drawing.Rectangle]::new(96, 68, 175, 18)
 $bg.FillRectangle($pillBg, $rect)
 $bg.DrawRectangle($pillBorder, $rect)
-$bg.DrawString('INSTALLATEUR OFFICIEL  -  V3.3.0', $fontBadge, $brushAcc, 102, 70)
+$bg.DrawString('OFFICIAL INSTALLER  -  V3.3.1', $fontBadge, $brushAcc, 102, 70)
 $pillBg.Dispose()
 $pillBorder.Dispose()
 
@@ -133,8 +133,8 @@ $emPen.Dispose()
 
 $fg.DrawImage($icon, 24, 22, 56, 56)
 
-$fg.DrawString('Votre studio est install' + [char]0xE9 + ' !', $fontTitle, $brushMain, 94, 22)
-$fg.DrawString('Tout est pr' + [char]0xEA + 't. Connectez votre compte Discord pour d' + [char]0xE9 + 'marrer.', $fontSub, $brushMuted, 96, 47)
+$fg.DrawString('Your Studio is Installed!', $fontTitle, $brushMain, 94, 22)
+$fg.DrawString('Setup complete. Connect your Discord account to get started.', $fontSub, $brushMuted, 96, 47)
 
 # Pill badge
 $pillBg2 = [Drawing.SolidBrush]::new([Drawing.Color]::FromArgb(255, 26, 38, 30))
@@ -143,7 +143,7 @@ $rect2 = [Drawing.Rectangle]::new(96, 68, 160, 18)
 $fg.FillRectangle($pillBg2, $rect2)
 $fg.DrawRectangle($pillBorder2, $rect2)
 $brushEm = [Drawing.SolidBrush]::new($emerald)
-$fg.DrawString(('SUCC' + [char]0xC8 + 'S  -  APPLICATION PR' + [char]0xCA + 'TE'), $fontBadge, $brushEm, 102, 70)
+$fg.DrawString('SUCCESS  -  STUDIO READY', $fontBadge, $brushEm, 102, 70)
 $brushEm.Dispose()
 $pillBg2.Dispose()
 $pillBorder2.Dispose()
@@ -195,10 +195,10 @@ $fontCaption = [Drawing.Font]::new('Segoe UI', 8, [Drawing.FontStyle]::Regular, 
 $fontTagline = [Drawing.Font]::new('Segoe UI', 12, [Drawing.FontStyle]::Bold, [Drawing.GraphicsUnit]::Pixel)
 $brushQuiet  = [Drawing.SolidBrush]::new($textQuiet)
 
-$sg.DrawString('Votre compagnon Discord', $fontCaption, $brushQuiet, 18, 200)
-$sg.DrawString('Un peu de jeu.', $fontTagline, $brushMain, 18, 220)
-$sg.DrawString('De belles', $fontTagline, $brushMain, 18, 238)
-$sg.DrawString(('r' + [char]0xE9 + 'compenses.'), $fontTagline, $brushMain, 18, 256)
+$sg.DrawString('Your Discord Companion', $fontCaption, $brushQuiet, 18, 200)
+$sg.DrawString('Play a bit.', $fontTagline, $brushMain, 18, 220)
+$sg.DrawString('Earn great', $fontTagline, $brushMain, 18, 238)
+$sg.DrawString('rewards.', $fontTagline, $brushMain, 18, 256)
 
 $subtleLine = [Drawing.Pen]::new([Drawing.Color]::FromArgb(25, $accent), 1)
 $sg.DrawLine($subtleLine, 18, 290, 146, 290)
@@ -217,7 +217,7 @@ $hBmp = $hdrArt[0]
 $hg   = $hdrArt[1]
 $hg.DrawImage($icon, 108, 11, 34, 34)
 $hg.DrawString('Orb Studio', $fontSideTitle, $brushMain, 8, 13)
-$hg.DrawString(('Votre espace se pr' + [char]0xE9 + 'pare.'), $fontCaption, $brushMuted, 8, 32)
+$hg.DrawString('Preparing your workspace.', $fontCaption, $brushMuted, 8, 32)
 $hBmp.Save((Join-Path $assets 'installerHeader.bmp'), [Drawing.Imaging.ImageFormat]::Bmp)
 $hBmp.Save((Join-Path $assets 'installerHeader.png'), [Drawing.Imaging.ImageFormat]::Png)
 $hg.Dispose()
@@ -229,4 +229,4 @@ foreach ($r in @($fontTitle, $fontSub, $fontBadge, $fontSideTitle, $fontCaption,
   $r.Dispose()
 }
 
-Write-Output "Artwork generation complete: banners, sidebar and headers in high-definition."
+Write-Output "Artwork generation complete: banners, sidebar and headers in high-definition (English)."

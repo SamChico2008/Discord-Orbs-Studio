@@ -50,7 +50,7 @@ body, #title-bar, #sidebar { background-color: var(--bg-dark) !important; }
 .heading-orbit::after { border-color: color-mix(in srgb, var(--accent-2) 18%, transparent); }
 .orbit-satellite { background: var(--accent-3); box-shadow: 0 0 8px var(--accent-3); }
 
-/* Boutons principaux et barres de progression */
+/* Primary buttons and progress indicators */
 .btn-primary, #btn-start-all, .btn-card-run {
   background: linear-gradient(135deg, var(--blurple), color-mix(in srgb, var(--blurple) 60%, var(--accent-2))) !important;
   color: #1b1820 !important; border-color: transparent !important;
@@ -151,7 +151,7 @@ body.engine-active .wave-bar, .orb-wave-container.active .wave-bar { opacity: 1;
 .build-toggle-input:checked ~ .build-toggle-btn { margin-left: auto; }
 .build-toggle-input:focus-visible ~ .build-toggle-btn { outline: 1px solid var(--blurple); }
 
-/* ---------- 4. Bouton flottant centré : Enregistrer les préférences ---------- */
+/* ---------- 4. Centered Floating Pill: Save Preferences ---------- */
 .save-settings-bar {
   position: sticky !important;
   bottom: 22px !important;

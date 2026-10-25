@@ -8,39 +8,35 @@ web
 
 ## Users
 
-Les personnes qui utilisent Discord Orb Studio pour consulter et traiter des quêtes Discord. L’usage de l’application de bureau et la priorité donnée aux quêtes ont été confirmés par le demandeur; le profil plus précis du public est déduit des écrans existants.
+Users who run Discord Orb Studio to view, monitor, and automate Discord quests. The desktop application experience and priority on quests are the focal points of the app.
 
 ## Product Purpose
 
-D’après le code existant, l’application regroupe la consultation des quêtes, leur suivi et leur exécution, la gestion des récompenses obtenues, des comptes et des préférences dans un client de bureau.
+According to the codebase architecture, the application aggregates quest inspection, automated progression, rewards claiming, multi-account management, and custom timing settings in a dedicated desktop client.
 
 ## Positioning
 
-Compagnon de bureau centré sur le parcours des quêtes : choisir une quête, suivre son état, puis retrouver les récompenses dans le même espace. Cette formulation décrit les fonctions visibles, sans revendiquer de relation officielle avec Discord.
+A desktop companion centered on the quest journey: choose a quest, track its execution, and collect rewards in a unified workspace. This describes visible features without claiming official Discord endorsement.
 
 ## Operating Context
 
-Application Electron sur ordinateur. L’écran Quêtes doit être le point d’entrée et permettre de voir et traiter les quêtes en priorité. Les autres surfaces visibles comprennent le suivi en direct, le coffre de récompenses, les comptes et les réglages.
+Electron desktop application. The Quests screen is the primary entry point, allowing users to inspect and execute quests with priority. Other core views include live session monitoring, rewards vault, multi-account manager, and settings.
 
 ## Capabilities and Constraints
 
-- Le demandeur veut une refonte visuelle complète des interfaces, sans modifier le fonctionnement du système de l’application.
-- Préserver les flux, contrôles, données, intégrations, sessions, stockage et comportements existants; ne pas changer la logique métier.
-- Les interfaces exposent actuellement les quêtes, l’exécution et son suivi, les récompenses, les comptes et les réglages. Les détails sont vérifiables dans `desktop-app/src/index.html` et `desktop-app/src/app.js`.
-- Le contexte confirmé n’autorise pas à ajouter de nouvelles fonctions ni à supprimer des comportements existants.
+- Visual redesign with modern dark palette, preserving all underlying system behaviors and integrations.
+- Preserves existing workflows, controls, session management, local storage, and IPC interfaces; no breaking changes to business logic.
+- UI views expose Quests, Live tracking, Vault rewards, Accounts, and Settings.
+- Clean execution boundary with dummy game simulators and Discord API integration.
 
 ## Brand Commitments
 
-Nom « Discord Orb Studio » et logo d’orbe conservés. Direction visuelle demandée : sombre, premium et orbitale. Cette direction s’applique à l’application, au lancement/mises à jour et à l’installateur.
-
-## Evidence on Hand
-
-Les écrans et comportements actuels sont présents dans `desktop-app/src/index.html`, `desktop-app/src/app.js`, `desktop-app/src/style.css` et `desktop-app/main.js`. Ne pas inventer de métriques, de témoignages ni de disponibilité de mises à jour qui ne soient pas vérifiables.
+"Discord Orb Studio" name and orbital sphere mark preserved. Dark, premium, orbital aesthetic across main app, launch/updater, and NSIS installer.
 
 ## Product Principles
 
-1. Les quêtes sont immédiatement visibles et prioritaires.
-2. Les états et prochaines actions restent explicites.
-3. La refonte ne casse ni ne modifie les flux existants.
-4. Les récompenses, comptes et réglages restent accessibles sans détour inutile.
-5. Les erreurs et limites techniques sont présentées clairement.
+1. Quests are immediately visible and actionable.
+2. Status and next steps remain explicit and observable.
+3. Redesign maintains all underlying workflows without breaking compatibility.
+4. Vault rewards, accounts, and preferences remain accessible within one click.
+5. Errors and limitations are communicated with clear diagnostic guidance.

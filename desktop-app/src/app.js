@@ -390,7 +390,7 @@ function renderAccountsDropdown() {
   dropdownAccountsList.innerHTML = '';
 
   if (!savedAccounts || savedAccounts.length === 0) {
-    dropdownAccountsList.innerHTML = '<div class="dropdown-empty">Aucun autre compte enregistré</div>';
+    dropdownAccountsList.innerHTML = '<div class="dropdown-empty">No other saved accounts</div>';
     return;
   }
 
@@ -404,7 +404,7 @@ function renderAccountsDropdown() {
         <div class="dropdown-acc-name">${escapeHtml(acc.global_name || acc.username)}</div>
         <div class="dropdown-acc-tag">@${escapeHtml(acc.username)}</div>
       </div>
-      <button class="dropdown-acc-remove" title="Retirer ce compte">
+      <button class="dropdown-acc-remove" title="Remove account">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
       </button>
     `;
@@ -414,16 +414,16 @@ function renderAccountsDropdown() {
       if (discordProfilePopout) discordProfilePopout.style.display = 'none';
       if (isCurrent) return;
 
-      addTerminalLog(`Connexion au compte @${acc.username}...`, 'info');
+      addTerminalLog(`Switching to account @${acc.username}...`, 'info');
       await window.electronAPI.saveToken(acc.token);
       const valRes = await window.electronAPI.validateToken(acc.token);
       if (valRes.ok) {
         setAuthenticatedUser(valRes.user, acc.token);
         loadQuests();
-        showToast(`Compte actif : ${acc.global_name || acc.username}`, 'success');
+        showToast(`Active account: ${acc.global_name || acc.username}`, 'success');
         playAudioChime('start');
       } else {
-        showToast(`La session a expiré pour @${acc.username}`, 'error');
+        showToast(`Session expired for @${acc.username}`, 'error');
       }
     });
 
@@ -432,7 +432,7 @@ function renderAccountsDropdown() {
       savedAccounts = await window.electronAPI.removeAccount(acc.id);
       renderAccountsDropdown();
       renderSavedAccountsHub();
-      showToast(`Compte @${acc.username} retiré`, 'info');
+      showToast(`Account @${acc.username} removed`, 'info');
     });
 
     dropdownAccountsList.appendChild(item);
@@ -445,13 +445,13 @@ function renderSavedAccountsHub() {
 
   const count = savedAccounts ? savedAccounts.length : 0;
   if (hubAccountsCount) {
-    hubAccountsCount.textContent = `${count} compte${count > 1 ? 's' : ''}`;
+    hubAccountsCount.textContent = `${count} account${count > 1 ? 's' : ''}`;
   }
 
   if (!savedAccounts || savedAccounts.length === 0) {
     savedAccountsGrid.innerHTML = `
       <div style="grid-column: 1 / -1; padding: 20px; text-align: center; color: var(--text-muted); font-size: 13px;">
-        Vos comptes enregistrés apparaîtront ici.
+        Saved accounts will appear here.
       </div>
     `;
     return;
@@ -467,11 +467,11 @@ function renderSavedAccountsHub() {
       <div class="saved-acc-info">
         <div class="saved-acc-name">${escapeHtml(acc.global_name || acc.username)}</div>
         <div class="saved-acc-tag">@${escapeHtml(acc.username)}</div>
-        ${isCurrent ? '<div class="saved-acc-status"><span class="pulse-dot-green"></span> Session active</div>' : ''}
+        ${isCurrent ? '<div class="saved-acc-status"><span class="pulse-dot-green"></span> Active Session</div>' : ''}
       </div>
       <div class="saved-acc-actions">
-        ${!isCurrent ? `<button class="btn-acc-switch" data-acc-id="${acc.id}">Utiliser</button>` : ''}
-        <button class="btn-acc-remove" data-acc-del="${acc.id}" title="Retirer ce compte">
+        ${!isCurrent ? `<button class="btn-acc-switch" data-acc-id="${acc.id}">Use Account</button>` : ''}
+        <button class="btn-acc-remove" data-acc-del="${acc.id}" title="Remove account">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
         </button>
       </div>
@@ -480,16 +480,16 @@ function renderSavedAccountsHub() {
     const btnSwitch = card.querySelector(`[data-acc-id="${acc.id}"]`);
     if (btnSwitch) {
       btnSwitch.addEventListener('click', async () => {
-        addTerminalLog(`Connexion à @${acc.username}...`, 'info');
+        addTerminalLog(`Switching to @${acc.username}...`, 'info');
         await window.electronAPI.saveToken(acc.token);
         const valRes = await window.electronAPI.validateToken(acc.token);
         if (valRes.ok) {
           setAuthenticatedUser(valRes.user, acc.token);
           loadQuests();
-          showToast(`Compte actif : ${acc.global_name || acc.username}`, 'success');
+          showToast(`Active account: ${acc.global_name || acc.username}`, 'success');
           playAudioChime('start');
         } else {
-          showToast(`La session de @${acc.username} a expiré`, 'error');
+          showToast(`Session for @${acc.username} has expired`, 'error');
         }
       });
     }
@@ -500,7 +500,7 @@ function renderSavedAccountsHub() {
         savedAccounts = await window.electronAPI.removeAccount(acc.id);
         renderAccountsDropdown();
         renderSavedAccountsHub();
-        showToast(`Compte @${acc.username} retiré`, 'info');
+        showToast(`Account @${acc.username} removed`, 'info');
       });
     }
 
@@ -545,7 +545,7 @@ if (btnCopyUserIdPopout) {
     e.stopPropagation();
     if (currentUser) {
       navigator.clipboard.writeText(currentUser.id);
-      showToast("Identifiant copié", 'success');
+      showToast("User ID copied", 'success');
       playAudioChime('click');
     }
   });
@@ -556,7 +556,7 @@ if (btnCopyUserTokenPopout) {
     e.stopPropagation();
     if (currentToken) {
       navigator.clipboard.writeText(currentToken);
-      showToast("Jeton copié", 'success');
+      showToast("Token copied", 'success');
       playAudioChime('click');
     }
   });
@@ -580,7 +580,7 @@ if (btnPopoutLogout) {
     updateStats();
     renderQuests();
     switchTab('tab-account');
-    showToast("Vous êtes déconnecté", 'info');
+    showToast("You have been logged out", 'info');
     playAudioChime('click');
   });
 }
@@ -595,7 +595,7 @@ if (btnQuickLogout) {
     updateStats();
     renderQuests();
     switchTab('tab-account');
-    showToast("Vous êtes déconnecté", 'info');
+    showToast("You have been logged out", 'info');
     playAudioChime('click');
   });
 }
@@ -627,7 +627,7 @@ function getDiscordCreationDate(snowflakeId) {
     if (!snowflakeId) return '--';
     const timestamp = Number((BigInt(snowflakeId) >> 22n) + 1420070400000n);
     const date = new Date(timestamp);
-    return date.toLocaleDateString('fr-FR', {
+    return date.toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'short',
       day: 'numeric'
@@ -641,7 +641,7 @@ function updateAccountQuestsSummary() {
   if (!accountQuestsSummary) return;
   const eligible = allQuests.filter(q => !q.isCompleted && !q.isExpired);
   const completed = allQuests.filter(q => q.isCompleted);
-  accountQuestsSummary.textContent = `${eligible.length} disponible(s) / ${completed.length} terminée(s)`;
+  accountQuestsSummary.textContent = `${eligible.length} available / ${completed.length} completed`;
 }
 
 // ── Account & Auth Management ──
@@ -650,13 +650,13 @@ async function initAuth() {
   await loadSavedAccounts();
   const config = await window.electronAPI.loadConfig();
   if (config.token) {
-    addTerminalLog("Connexion avec la session enregistrée…", 'info');
+    addTerminalLog("Connecting with saved session…", 'info');
     const valRes = await window.electronAPI.validateToken(config.token);
     if (valRes.ok) {
       setAuthenticatedUser(valRes.user, config.token);
       loadQuests();
     } else {
-      addTerminalLog("La session enregistrée a expiré.", 'warn');
+      addTerminalLog("Saved session token has expired.", 'warn');
       setUnauthenticatedUser();
       switchTab('tab-account', true);
     }
@@ -725,8 +725,8 @@ async function setAuthenticatedUser(user, token) {
     if (isBravery) popoutBadgesShelf.innerHTML += `<span class="badge-pill" title="HypeSquad Bravery" style="background:#9c84ef; color:#fff; font-size:9px; padding:2px 5px; border-radius:4px; font-weight:700; margin-right: 4px;">Bravery</span>`;
     if (isBrilliance) popoutBadgesShelf.innerHTML += `<span class="badge-pill" title="HypeSquad Brilliance" style="background:#f47b67; color:#fff; font-size:9px; padding:2px 5px; border-radius:4px; font-weight:700; margin-right: 4px;">Brilliance</span>`;
     if (isBalance) popoutBadgesShelf.innerHTML += `<span class="badge-pill" title="HypeSquad Balance" style="background:#45ddc0; color:#111; font-size:9px; padding:2px 5px; border-radius:4px; font-weight:700; margin-right: 4px;">Balance</span>`;
-    if (isActiveDev) popoutBadgesShelf.innerHTML += `<span class="badge-pill" title="Active Developer" style="background:#5865f2; color:#fff; font-size:9px; padding:2px 5px; border-radius:4px; font-weight:700; margin-right: 4px;">Développeur</span>`;
-    if (isEarly) popoutBadgesShelf.innerHTML += `<span class="badge-pill" title="Early Supporter" style="background:#fee75c; color:#111; font-size:9px; padding:2px 5px; border-radius:4px; font-weight:700;">Soutien</span>`;
+    if (isActiveDev) popoutBadgesShelf.innerHTML += `<span class="badge-pill" title="Active Developer" style="background:#5865f2; color:#fff; font-size:9px; padding:2px 5px; border-radius:4px; font-weight:700; margin-right: 4px;">Developer</span>`;
+    if (isEarly) popoutBadgesShelf.innerHTML += `<span class="badge-pill" title="Early Supporter" style="background:#fee75c; color:#111; font-size:9px; padding:2px 5px; border-radius:4px; font-weight:700;">Supporter</span>`;
   }
 
   // Update Account Card Hero
@@ -768,7 +768,7 @@ async function setAuthenticatedUser(user, token) {
     activeTokenField.type = 'password';
   }
   if (btnToggleActiveTokenText) {
-    btnToggleActiveTokenText.textContent = 'Afficher';
+    btnToggleActiveTokenText.textContent = 'Show';
   }
 
   // Display Cards
@@ -776,8 +776,8 @@ async function setAuthenticatedUser(user, token) {
   if (accountsHubCard) accountsHubCard.style.display = 'block';
   loginCard.style.display = 'block';
 
-  if (loginCardHeading) loginCardHeading.textContent = "Ajouter un compte Discord";
-  if (loginCardDesc) loginCardDesc.textContent = "Connectez une autre session pour passer facilement d’un compte à l’autre.";
+  if (loginCardHeading) loginCardHeading.textContent = "Add Discord Account";
+  if (loginCardDesc) loginCardDesc.textContent = "Connect another account to switch sessions seamlessly.";
 
   // Auto-save to saved accounts list
   const accountProfile = {
@@ -791,7 +791,7 @@ async function setAuthenticatedUser(user, token) {
   renderAccountsDropdown();
   renderSavedAccountsHub();
 
-  addTerminalLog(`Connecté en tant que @${user.username} (${user.id}).`, 'success');
+  addTerminalLog(`Connected as @${user.username} (${user.id}).`, 'success');
 }
 
 function setUnauthenticatedUser() {
@@ -799,9 +799,9 @@ function setUnauthenticatedUser() {
   currentToken = null;
 
   navAvatar.src = '../assets/avatar-placeholder.svg';
-  navUsername.textContent = 'Non connecté';
+  navUsername.textContent = 'Not Connected';
   navUsername.removeAttribute('title');
-  navSubtext.textContent = 'Se connecter';
+  navSubtext.textContent = 'Click to connect';
   navStatusIndicator.classList.remove('online');
 
   if (navNitroBadge) navNitroBadge.style.display = 'none';
@@ -814,8 +814,8 @@ function setUnauthenticatedUser() {
 
   renderQuests();
   updateStats();
-  if (loginCardHeading) loginCardHeading.textContent = "Bienvenue dans votre studio.";
-  if (loginCardDesc) loginCardDesc.textContent = "Choisissez comment connecter votre compte Discord.";
+  if (loginCardHeading) loginCardHeading.textContent = "Welcome to Orb Studio.";
+  if (loginCardDesc) loginCardDesc.textContent = "Select how you would like to connect your Discord account.";
 }
 
 btnLogout.addEventListener('click', async () => {
@@ -826,14 +826,14 @@ btnLogout.addEventListener('click', async () => {
   updateStats();
   renderQuests();
   switchTab('tab-account');
-  showToast("Vous êtes déconnecté", 'info');
+  showToast("You have been logged out", 'info');
   playAudioChime('click');
 });
 
 btnCopyUserId.addEventListener('click', () => {
   if (currentUser) {
     navigator.clipboard.writeText(currentUser.id);
-    showToast("Identifiant copié", 'info');
+    showToast("User ID copied", 'info');
     playAudioChime('click');
   }
 });
@@ -844,10 +844,10 @@ btnRefreshProfile.addEventListener('click', async () => {
   const valRes = await window.electronAPI.validateToken(currentToken);
   if (valRes.ok) {
     setAuthenticatedUser(valRes.user, currentToken);
-    showToast("Profil actualisé", 'success');
+    showToast("Profile refreshed", 'success');
     playAudioChime('click');
   } else {
-    showToast("Votre session a expiré. Reconnectez votre compte.", 'error');
+    showToast("Session expired. Please reconnect your account.", 'error');
   }
 });
 
@@ -855,10 +855,10 @@ if (btnToggleActiveToken && activeTokenField) {
   btnToggleActiveToken.addEventListener('click', () => {
     if (activeTokenField.type === 'password') {
       activeTokenField.type = 'text';
-      if (btnToggleActiveTokenText) btnToggleActiveTokenText.textContent = 'Masquer';
+      if (btnToggleActiveTokenText) btnToggleActiveTokenText.textContent = 'Hide';
     } else {
       activeTokenField.type = 'password';
-      if (btnToggleActiveTokenText) btnToggleActiveTokenText.textContent = 'Afficher';
+      if (btnToggleActiveTokenText) btnToggleActiveTokenText.textContent = 'Show';
     }
     playAudioChime('click');
   });
@@ -868,7 +868,7 @@ if (btnCopyActiveToken) {
   btnCopyActiveToken.addEventListener('click', () => {
     if (currentToken) {
       navigator.clipboard.writeText(currentToken);
-      showToast("Jeton copié", 'success');
+      showToast("Token copied", 'success');
       playAudioChime('click');
     }
   });
@@ -905,7 +905,7 @@ function startQrFlow(forceRefresh = false) {
   qrPlaceholder.style.display = 'flex';
   if (qrExpiredOverlay) qrExpiredOverlay.style.display = 'none';
   if (qrScannedOverlay) qrScannedOverlay.style.display = 'none';
-  qrStatusText.textContent = "Connexion à Discord…";
+  qrStatusText.textContent = "Connecting to Discord…";
   window.electronAPI.startQR();
 }
 
@@ -954,8 +954,8 @@ window.electronAPI.onQRStatus((statusObj) => {
 
 window.electronAPI.onQRScanned((user) => {
   const uname = user?.username || 'User';
-  if (qrStatusText) qrStatusText.innerHTML = `Code scanné par <b>@${escapeHtml(uname)}</b>. Confirmez la connexion sur votre téléphone…`;
-  showToast(`Code scanné par @${uname}`, 'info');
+  if (qrStatusText) qrStatusText.innerHTML = `Code scanned by <b>@${escapeHtml(uname)}</b>. Approve login on your mobile device…`;
+  showToast(`Code scanned by @${uname}`, 'info');
 
   if (qrScannedOverlay) {
     if (qrScannedAvatar) qrScannedAvatar.src = user?.avatarUrl || '../assets/avatar-placeholder.svg';
@@ -969,7 +969,7 @@ window.electronAPI.onQRScanned((user) => {
 window.electronAPI.onQRAuthenticated(async (payload) => {
   const token = typeof payload === 'string' ? payload : (payload?.token || '');
   if (!token) return;
-  if (qrStatusText) qrStatusText.textContent = "Connexion réussie. Chargement de votre profil…";
+  if (qrStatusText) qrStatusText.textContent = "Login successful. Loading profile…";
   if (qrScannedOverlay) qrScannedOverlay.style.display = 'none';
   if (qrExpiredOverlay) qrExpiredOverlay.style.display = 'none';
 
@@ -981,7 +981,7 @@ window.electronAPI.onQRAuthenticated(async (payload) => {
     switchTab('tab-quests');
     playAudioChime('success');
   } else {
-    showToast(valRes.error || "La session n’a pas pu être vérifiée.", "error");
+    showToast(valRes.error || "Failed to validate session token.", "error");
   }
 });
 
@@ -994,8 +994,8 @@ window.electronAPI.onQRError((err) => {
   } else if (err) {
     msg = JSON.stringify(err);
   }
-  if (qrStatusText) qrStatusText.textContent = `Erreur : ${msg}. Générez un nouveau code.`;
-  showToast(msg || "La connexion par code QR a échoué.", "error");
+  if (qrStatusText) qrStatusText.textContent = `Error: ${msg}. Please refresh the code.`;
+  showToast(msg || "Mobile QR login failed.", "error");
   if (qrExpiredOverlay) qrExpiredOverlay.style.display = 'flex';
   if (qrScannedOverlay) qrScannedOverlay.style.display = 'none';
 });
@@ -1009,12 +1009,12 @@ btnScanLocalTokens.addEventListener('click', async () => {
   localTokensContainer.innerHTML = '';
 
   if (!found || found.length === 0) {
-    localTokensContainer.innerHTML = '<p class="empty-hint">Aucune session locale détectée. Utilisez le code QR ou votre jeton de session.</p>';
-    addTerminalLog("Aucune session locale détectée.", 'warn');
+    localTokensContainer.innerHTML = '<p class="empty-hint">No local sessions detected. Use Mobile QR scan or paste your token manually.</p>';
+    addTerminalLog("No local sessions detected.", 'warn');
     return;
   }
 
-  addTerminalLog(`${found.length} compte(s) détecté(s) sur cet ordinateur.`, 'success');
+  addTerminalLog(`${found.length} account(s) detected on this PC.`, 'success');
 
   found.forEach(item => {
     const el = document.createElement('div');
@@ -1025,7 +1025,7 @@ btnScanLocalTokens.addEventListener('click', async () => {
         <div class="local-account-name">${escapeHtml(item.user.global_name || item.user.username)}</div>
         <div class="local-account-id">@${escapeHtml(item.user.username)} · ID: ${item.user.id}</div>
       </div>
-      <button class="btn btn-primary btn-sm">Utiliser ce compte</button>
+      <button class="btn btn-primary btn-sm">Use this Account</button>
     `;
 
     el.querySelector('button').addEventListener('click', async () => {
@@ -1048,16 +1048,16 @@ btnToggleTokenEye.addEventListener('click', () => {
 btnSubmitToken.addEventListener('click', async () => {
   const token = manualTokenInput.value.trim();
   if (!token) {
-    showToast("Saisissez votre jeton", "error");
+    showToast("Please enter your token", "error");
     return;
   }
 
   btnSubmitToken.disabled = true;
-  btnSubmitToken.textContent = "Vérification…";
+  btnSubmitToken.textContent = "Verifying…";
 
   const valRes = await window.electronAPI.validateToken(token);
   btnSubmitToken.disabled = false;
-  btnSubmitToken.textContent = "Se connecter";
+  btnSubmitToken.textContent = "Log In";
 
   if (valRes.ok) {
     await window.electronAPI.saveToken(token);
@@ -1067,8 +1067,8 @@ btnSubmitToken.addEventListener('click', async () => {
     switchTab('tab-quests');
     playAudioChime('start');
   } else {
-    showToast("Ce jeton est invalide ou a été refusé par Discord", "error");
-    addTerminalLog("Jeton invalide.", "error");
+    showToast("Token is invalid or rejected by Discord", "error");
+    addTerminalLog("Invalid token.", "error");
   }
 });
 
@@ -1079,7 +1079,7 @@ async function loadQuests() {
   questsContainer.innerHTML = `
     <div class="loading-state">
       <div class="spinner"></div>
-      <p>Synchronisation de vos quêtes…</p>
+      <p>Synchronizing your quests…</p>
     </div>
   `;
 
@@ -1106,15 +1106,15 @@ async function loadQuests() {
 
     updateStats();
     renderQuests();
-    addTerminalLog(`${allQuests.length} quête(s) synchronisée(s).`, 'info');
+    addTerminalLog(`${allQuests.length} quest(s) synchronized.`, 'info');
   } catch (err) {
     questsContainer.innerHTML = `
       <div class="empty-state">
-        <p style="color: var(--ruby);">Les quêtes n’ont pas pu être chargées : ${escapeHtml(err.message)}</p>
-        <button class="btn btn-secondary" onclick="loadQuests()">Réessayer</button>
+        <p style="color: var(--ruby);">Quests could not be loaded: ${escapeHtml(err.message)}</p>
+        <button class="btn btn-secondary" onclick="loadQuests()">Retry</button>
       </div>
     `;
-    addTerminalLog(`Erreur de chargement : ${err.message}`, 'error');
+    addTerminalLog(`Loading error: ${err.message}`, 'error');
   }
 }
 
@@ -1146,7 +1146,7 @@ function updateStats() {
   if (pillCountClaimable) pillCountClaimable.textContent = unclaimed.length;
 
   if (btnClaimAllCompleted && claimAllBtnLabel) {
-    claimAllBtnLabel.textContent = `Récupérer (${unclaimed.length})`;
+    claimAllBtnLabel.textContent = `Claim (${unclaimed.length})`;
     btnClaimAllCompleted.disabled = unclaimed.length === 0 || isEngineRunning;
   }
 
@@ -1157,7 +1157,7 @@ function updateStats() {
 function updateStartButton() {
   const count = selectedQuestIds.size;
   btnStartSelected.disabled = count === 0 || isEngineRunning;
-  startBtnLabel.textContent = `Lancer (${count})`;
+  startBtnLabel.textContent = `Start (${count})`;
 
   const eligibleCount = allQuests.filter(q => !q.isCompleted && !q.isExpired).length;
   btnCompleteAll.disabled = eligibleCount === 0 || isEngineRunning;
@@ -1265,7 +1265,7 @@ function renderQuests() {
 
   if (filtered.length === 0) {
     if (!currentUser && allQuests.length === 0) {
-      questsContainer.innerHTML = `<div class="state-card"><svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="12" cy="12" r="8"/><ellipse cx="12" cy="12" rx="11" ry="4" transform="rotate(-30 12 12)"/></svg><h3>Votre prochaine récompense vous attend.</h3><p class="state-copy">Connectez votre compte Discord pour retrouver les quêtes disponibles dans votre studio.</p><button class="btn btn-primary" id="btn-empty-connect">Connecter mon compte</button></div>`;
+      questsContainer.innerHTML = `<div class="state-card"><svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="12" cy="12" r="8"/><ellipse cx="12" cy="12" rx="11" ry="4" transform="rotate(-30 12 12)"/></svg><h3>Your next reward is waiting.</h3><p class="state-copy">Connect your Discord account to view available quests in your studio.</p><button class="btn btn-primary" id="btn-empty-connect">Connect Account</button></div>`;
       document.getElementById('btn-empty-connect').addEventListener('click', () => switchTab('tab-account'));
       return;
     }
@@ -1276,20 +1276,20 @@ function renderQuests() {
       questsContainer.innerHTML = `
         <div class="all-completed-celebration">
           <div class="celebration-icon">✓</div>
-          <h3 class="celebration-title">Tout est terminé. Bien joué.</h3>
-          <p class="celebration-desc">Vous avez terminé les quêtes disponibles. Retrouvez votre historique ou profitez de vos récompenses dans le coffre.</p>
+          <h3 class="celebration-title">All Quests Completed!</h3>
+          <p class="celebration-desc">You have completed all available quests. View your history or check out your reward codes in the vault.</p>
           <div class="celebration-actions">
             <button class="btn btn-primary" id="btn-celebrate-view-completed">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
-              <span>Voir les quêtes terminées (${completedCount})</span>
+              <span>View Completed Quests (${completedCount})</span>
             </button>
             <button class="btn btn-secondary" id="btn-celebrate-view-vault">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-              <span>Ouvrir le Coffre-fort (${vaultCount})</span>
+              <span>Open Rewards Vault (${vaultCount})</span>
             </button>
             <button class="btn btn-secondary" id="btn-celebrate-refresh">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
-              <span>Actualiser</span>
+              <span>Refresh</span>
             </button>
           </div>
         </div>
@@ -1310,7 +1310,7 @@ function renderQuests() {
     questsContainer.innerHTML = `
       <div class="empty-state">
         <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M8 12h8"/></svg>
-        <p>Aucune quête pour le moment. Essayez un autre filtre ou actualisez la liste.</p>
+        <p>No quests found. Try a different filter or refresh the list.</p>
       </div>
     `;
     return;
@@ -1343,24 +1343,24 @@ function renderQuests() {
       if (diff > 0) {
         const days = Math.floor(diff / (1000 * 60 * 60 * 24));
         const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        expText = days > 0 ? `Encore ${days}j ${hours}h` : `Encore ${hours}h`;
+        expText = days > 0 ? `${days}d ${hours}h left` : `${hours}h left`;
       } else {
-        expText = `Expirée`;
+        expText = `Expired`;
       }
     }
 
     // Reward type tag
     let rTagClass = 'reward-tag-orbs';
-    let rTagText = 'Orbes';
+    let rTagText = 'Orbs';
     if (q.rewardType === 'DECORATION') {
       rTagClass = 'reward-tag-decoration';
-      rTagText = 'Décoration';
+      rTagText = 'Decoration';
     } else if (q.rewardType === 'NITRO') {
       rTagClass = 'reward-tag-nitro';
       rTagText = 'Nitro';
     } else if (q.rewardType === 'CODE') {
       rTagClass = 'reward-tag-code';
-      rTagText = 'Code de jeu';
+      rTagText = 'Game Code';
     }
 
     card.innerHTML = `
@@ -1395,7 +1395,7 @@ function renderQuests() {
 
         <div class="quest-progress-wrap">
           <div class="quest-progress-header">
-            <span>${q.isCompleted ? 'Terminée' : `Reste ${formatSeconds(q.remainingSeconds)}`}</span>
+            <span>${q.isCompleted ? 'Completed' : `${formatSeconds(q.remainingSeconds)} left`}</span>
             <span>${q.percentage}%</span>
           </div>
           <div class="quest-progress-bar">
@@ -1409,11 +1409,11 @@ function renderQuests() {
             <span>${expText}</span>
           </div>
           <div class="quest-card-actions">
-            ${!q.isCompleted && !q.isExpired ? `<button class="btn-card-run" data-run-id="${q.id}"><svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>Lancer</button>` : ''}
-            ${q.isCompleted && !q.isClaimed ? `<button class="btn-card-claim" data-claim-id="${q.id}"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 12v10H4V12"/><path d="M2 7h20v5H2z"/></svg>Réclamer</button>` : ''}
+            ${!q.isCompleted && !q.isExpired ? `<button class="btn-card-run" data-run-id="${q.id}"><svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>Start</button>` : ''}
+            ${q.isCompleted && !q.isClaimed ? `<button class="btn-card-claim" data-claim-id="${q.id}"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 12v10H4V12"/><path d="M2 7h20v5H2z"/></svg>Claim</button>` : ''}
             ${q.isCompleted && q.claimCode ? `<button class="btn-card-claim"  data-code-id="${q.id}">Code</button>` : ''}
-            <button class="btn-card-details" data-details-id="${q.id}">Détails</button>
-            <button class="btn-card-details" data-discord-id="${q.id}" title="Ouvrir dans l'application Discord">
+            <button class="btn-card-details" data-details-id="${q.id}">Details</button>
+            <button class="btn-card-details" data-discord-id="${q.id}" title="Open in Discord App">
               <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994.021-.041.001-.09-.041-.106a13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.929 1.793 8.18 1.793 12.061 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.894.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028z"/></svg>
               <span>Discord</span>
             </button>
@@ -1449,7 +1449,7 @@ function renderQuests() {
       btnRun.addEventListener('click', (e) => {
         e.stopPropagation();
         if (isEngineRunning) {
-          showToast("Une session est déjà en cours.", "warn");
+          showToast("A session is already running.", "warn");
           return;
         }
         selectedQuestIds.clear();
@@ -1492,7 +1492,7 @@ function renderQuests() {
 function openQuestModal(q) {
   activeModalQuest = q;
   modalQuestTitle.textContent = q.questName;
-  modalQuestSub.textContent = `${q.gameTitle} • Identifiant du jeu : ${q.applicationId || 'N/A'}`;
+  modalQuestSub.textContent = `${q.gameTitle} • Application ID: ${q.applicationId || 'N/A'}`;
   modalTaskBadge.textContent = q.taskLabel;
 
   if (q.iconUrl) {
@@ -1508,9 +1508,9 @@ function openQuestModal(q) {
   if (q.expiresAt) {
     const diff = q.expiresAt - Date.now();
     const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-    modalExpiration.textContent = days > 0 ? `${days} jours restants` : `Expire bientôt`;
+    modalExpiration.textContent = days > 0 ? `${days} days remaining` : `Expires soon`;
   } else {
-    modalExpiration.textContent = "Sans limite";
+    modalExpiration.textContent = "No expiration";
   }
 
   if (q.claimCode) {
@@ -1544,7 +1544,7 @@ questModal.addEventListener('click', (e) => {
 btnCopyPromoCode.addEventListener('click', () => {
   if (modalPromoCode.value) {
     navigator.clipboard.writeText(modalPromoCode.value);
-    showToast("Code de récompense copié", "success");
+    showToast("Reward code copied to clipboard", "success");
     playAudioChime('click');
   }
 });
@@ -1552,7 +1552,7 @@ btnCopyPromoCode.addEventListener('click', () => {
 btnCopyQuestId.addEventListener('click', () => {
   if (activeModalQuest) {
     navigator.clipboard.writeText(activeModalQuest.id);
-    showToast("Identifiant de la quête copié", "info");
+    showToast("Quest ID copied to clipboard", "info");
     playAudioChime('click');
   }
 });
@@ -1569,8 +1569,8 @@ btnModalClaim.addEventListener('click', async () => {
 });
 
 async function triggerSingleClaim(quest) {
-  showToast(`Réclamation de la récompense pour ${quest.questName}...`, 'info');
-  addTerminalLog(`Réclamation de la récompense pour "${quest.questName}"...`, 'info');
+  showToast(`Claiming reward for ${quest.questName}...`, 'info');
+  addTerminalLog(`Claiming reward for "${quest.questName}"...`, 'info');
 
   const res = await window.electronAPI.claimSingleQuest(quest);
   if (res && res.ok) {
@@ -1582,21 +1582,21 @@ async function triggerSingleClaim(quest) {
         questName: quest.questName,
         gameTitle: quest.gameTitle
       });
-      showToast(`Code promo débloqué : ${res.code}`, 'success');
+      showToast(`Promo code unlocked: ${res.code}`, 'success');
       playAudioChime('success');
       openQuestModal(quest);
     } else {
-      showToast(`Récompense créditée avec succès sur votre compte Discord !`, 'success');
+      showToast(`Reward successfully credited to your Discord account!`, 'success');
       playAudioChime('success');
     }
     renderQuests();
     updateStats();
   } else if (res && res.captchaRequired) {
-    showToast("Captcha Discord requis. Cliquez sur 'Discord' pour réclamer.", 'warn');
-    addTerminalLog(`Captcha Discord requis pour "${quest.questName}". Réclamation directe possible dans Discord > Paramètres > Inventaire des cadeaux.`, 'warn');
+    showToast("Discord captcha required. Click 'Discord' to claim.", 'warn');
+    addTerminalLog(`Discord captcha required for "${quest.questName}". Can be claimed directly in Discord > User Settings > Gift Inventory.`, 'warn');
     window.electronAPI.openExternal(`https://discord.com/quests/${quest.id}`);
   } else {
-    showToast(`Réclamation : ${res?.message || 'Vérifiez sur Discord'}`, 'warn');
+    showToast(`Claim: ${res?.message || 'Check on Discord'}`, 'warn');
   }
 }
 
@@ -1607,7 +1607,7 @@ if (btnClaimAllCompleted) {
     if (unclaimed.length === 0) return;
 
     btnClaimAllCompleted.disabled = true;
-    showToast(`Récupération de ${unclaimed.length} récompense(s)…`, 'info');
+    showToast(`Claiming ${unclaimed.length} reward(s)…`, 'info');
     addTerminalLog(`Claiming batch rewards for ${unclaimed.length} quest(s)...`, 'info');
 
     const resList = await window.electronAPI.claimAllQuests(unclaimed);
@@ -1629,7 +1629,7 @@ if (btnClaimAllCompleted) {
 
     renderQuests();
     updateStats();
-    showToast(`${successCount} récompense(s) récupérée(s) sur ${unclaimed.length}`, 'success');
+    showToast(`Successfully claimed ${successCount} of ${unclaimed.length} reward(s)`, 'success');
     playAudioChime('success');
     if (savedClaimedCodes.length > 0) openVaultModal();
   });
@@ -1660,8 +1660,8 @@ async function saveClaimedCode(entry) {
     const codeObj = {
       id: entry.id || String(Date.now()),
       code: entry.code,
-      questName: entry.questName || entry.rewardName || 'Quête Discord',
-      gameTitle: entry.gameTitle || 'Jeu Discord',
+      questName: entry.questName || entry.rewardName || 'Discord Quest',
+      gameTitle: entry.gameTitle || 'Discord Game',
       rewardName: entry.rewardName || 'Reward',
       rewardType: entry.rewardType || 'PROMO',
       claimedAt: new Date().toISOString(),
@@ -1707,8 +1707,8 @@ function renderVaultPage() {
     vaultPageItems.innerHTML = `
       <div class="state-card">
         <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="1.5" style="margin-bottom: 12px;"><path d="M20 12v10H4V12"/><path d="M2 7h20v5H2z"/><path d="M12 22V7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg>
-        <h3 >Votre collection commence ici.</h3>
-        <p class="state-copy">Les codes, cadeaux et récompenses de vos quêtes terminées seront réunis ici.</p>
+        <h3>Your collection starts here.</h3>
+        <p class="state-copy">Codes, gifts, and rewards from completed quests will be collected here.</p>
       </div>
     `;
     return;
@@ -1721,26 +1721,26 @@ function renderVaultPage() {
       <div class="vault-card-top">
         <div class="vault-card-game-wrap">
           <div class="vault-card-titles">
-            <div class="vault-card-title">${escapeHtml(item.questName || 'Quête Discord')}</div>
-            <div class="vault-card-game">${escapeHtml(item.gameTitle || 'Jeu Discord')}</div>
+            <div class="vault-card-title">${escapeHtml(item.questName || 'Discord Quest')}</div>
+            <div class="vault-card-game">${escapeHtml(item.gameTitle || 'Discord Game')}</div>
           </div>
         </div>
         <span class="vault-card-badge">${escapeHtml(item.rewardType || 'PROMO')}</span>
       </div>
 
       <div class="vault-code-box">
-        <span class="vault-code-string" title="Cliquer pour copier">${escapeHtml(item.code)}</span>
+        <span class="vault-code-string" title="Click to copy">${escapeHtml(item.code)}</span>
         <button class="btn-code-copy" data-copy-code="${escapeHtml(item.code)}">
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-          <span>Copier</span>
+          <span>Copy</span>
         </button>
       </div>
 
       <div class="vault-card-footer">
-        <span>Récupéré le ${item.claimedAt ? new Date(item.claimedAt).toLocaleDateString() : (item.date || 'Récemment')}</span>
+        <span>Claimed on ${item.claimedAt ? new Date(item.claimedAt).toLocaleDateString() : (item.date || 'Recently')}</span>
         <div class="vault-card-btns">
-          <button class="btn-vault-redeem" data-redeem-code="${escapeHtml(item.code)}">Utiliser</button>
-          <button class="btn-vault-del" data-del-id="${item.id || item.code}" title="Retirer ce code">
+          <button class="btn-vault-redeem" data-redeem-code="${escapeHtml(item.code)}">Redeem</button>
+          <button class="btn-vault-del" data-del-id="${item.id || item.code}" title="Remove this code">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg>
           </button>
         </div>
@@ -1751,11 +1751,11 @@ function renderVaultPage() {
     const codeString = card.querySelector('.vault-code-string');
     const copyHandler = () => {
       navigator.clipboard.writeText(item.code);
-      showToast(`Code copié : ${item.code}`, 'success');
+      showToast(`Code copied: ${item.code}`, 'success');
       playAudioChime('click');
       if (copyBtn) {
-        copyBtn.querySelector('span').textContent = 'Copié';
-        setTimeout(() => { if (copyBtn) copyBtn.querySelector('span').textContent = 'Copier'; }, 1500);
+        copyBtn.querySelector('span').textContent = 'Copied';
+        setTimeout(() => { if (copyBtn) copyBtn.querySelector('span').textContent = 'Copy'; }, 1500);
       }
     };
     if (copyBtn) copyBtn.addEventListener('click', copyHandler);
@@ -1778,7 +1778,7 @@ function renderVaultPage() {
         updateVaultBadge();
         renderVaultPage();
         renderVaultItems();
-        showToast("Code retiré du coffre", "info");
+        showToast("Code removed from vault", "info");
       });
     }
 
@@ -1795,7 +1795,7 @@ if (vaultSearchInput) {
 if (btnVaultExportTxt) {
   btnVaultExportTxt.addEventListener('click', async () => {
     if (!savedClaimedCodes || savedClaimedCodes.length === 0) {
-      showToast("Votre coffre est vide.", "info");
+      showToast("Your vault is empty.", "info");
       return;
     }
     const lines = [
@@ -1810,7 +1810,7 @@ if (btnVaultExportTxt) {
 
     const res = await window.electronAPI.exportLogs(lines);
     if (res && res.ok) {
-      showToast(`Export enregistré : ${res.filePath}`, "success");
+      showToast(`Export saved: ${res.filePath}`, "success");
       playAudioChime('click');
     }
   });
@@ -1819,12 +1819,12 @@ if (btnVaultExportTxt) {
 if (btnVaultCopyAllPage) {
   btnVaultCopyAllPage.addEventListener('click', () => {
     if (!savedClaimedCodes || savedClaimedCodes.length === 0) {
-      showToast("Votre coffre est vide.", "info");
+      showToast("Your vault is empty.", "info");
       return;
     }
     const txt = savedClaimedCodes.map(c => `${c.questName || 'Quest'}: ${c.code}`).join("\n");
     navigator.clipboard.writeText(txt);
-    showToast(`${savedClaimedCodes.length} codes copiés`, "success");
+    showToast(`${savedClaimedCodes.length} codes copied`, "success");
     playAudioChime('click');
   });
 }
@@ -1839,7 +1839,7 @@ if (btnVaultClearAll) {
       updateVaultBadge();
       renderVaultPage();
       renderVaultItems();
-      showToast("Le coffre a été vidé.", "info");
+      showToast("Vault cleared.", "info");
     }
   });
 }
@@ -1866,7 +1866,7 @@ function renderVaultItems() {
   if (!savedClaimedCodes || savedClaimedCodes.length === 0) {
     vaultItemsContainer.innerHTML = `
       <div class="empty-state" style="padding: 30px;">
-        <p style="color: var(--text-muted);">Les codes de vos prochaines récompenses apparaîtront ici.</p>
+        <p style="color: var(--text-muted);">Reward codes from your next quests will appear here.</p>
       </div>
     `;
     return;
@@ -1889,7 +1889,7 @@ function renderVaultItems() {
     row.querySelector('[data-copy-code]').addEventListener('click', (e) => {
       e.stopPropagation();
       navigator.clipboard.writeText(item.code);
-      showToast(`Code copié : ${item.code}`, 'success');
+      showToast(`Code copied: ${item.code}`, 'success');
       playAudioChime('click');
     });
 
@@ -1910,12 +1910,12 @@ if (vaultModal) {
 if (btnVaultCopyAll) {
   btnVaultCopyAll.addEventListener('click', () => {
     if (!savedClaimedCodes || savedClaimedCodes.length === 0) {
-      showToast("Aucun code à copier.", 'info');
+      showToast("No codes to copy.", 'info');
       return;
     }
     const txt = savedClaimedCodes.map(c => `${c.questName} (${c.gameTitle}): ${c.code}`).join("\n");
     navigator.clipboard.writeText(txt);
-    showToast(`${savedClaimedCodes.length} code(s) copié(s)`, 'success');
+    showToast(`${savedClaimedCodes.length} code(s) copied`, 'success');
     playAudioChime('click');
   });
 }
@@ -1929,12 +1929,12 @@ if (btnVaultOpenDiscord) {
 // ── One-Click "Complete All" Action ──
 btnCompleteAll.addEventListener('click', async () => {
   if (isEngineRunning) {
-    showToast("Une session est déjà en cours.", "warn");
+    showToast("A session is already running.", "warn");
     return;
   }
   const incompleteQuests = allQuests.filter(q => !q.isCompleted && !q.isExpired);
   if (incompleteQuests.length === 0) {
-    showToast("Toutes vos quêtes disponibles sont terminées.", "info");
+    showToast("All your available quests are completed.", "info");
     return;
   }
 
@@ -1944,7 +1944,7 @@ btnCompleteAll.addEventListener('click', async () => {
   updateStartButton();
 
   playAudioChime('start');
-  showToast(`Lancement de ${incompleteQuests.length} quête(s)…`, "info");
+  showToast(`Starting ${incompleteQuests.length} quest(s)…`, "info");
 
   switchTab('tab-live');
   btnStartSelected.click();
@@ -1953,7 +1953,7 @@ btnCompleteAll.addEventListener('click', async () => {
 // ── Launching Engine & Telemetry ──
 btnStartSelected.addEventListener('click', async () => {
   if (isEngineRunning) {
-    showToast("Une session est déjà en cours.", "warn");
+    showToast("A session is already running.", "warn");
     return;
   }
   const toRun = allQuests.filter(q => selectedQuestIds.has(q.id));
@@ -1966,13 +1966,13 @@ btnStartSelected.addEventListener('click', async () => {
 
   liveOrb.classList.add('active');
   liveEngineStatus.classList.add('running');
-  liveEngineStatus.textContent = "En cours";
+  liveEngineStatus.textContent = "Running";
   btnStopEngine.disabled = false;
   liveIndicatorDot.classList.add('active');
 
   if (titleEnginePill) {
     titleEnginePill.classList.add('running');
-    titlePillText.textContent = `En cours (${toRun.length})`;
+    titlePillText.textContent = `Running (${toRun.length})`;
   }
   document.body.classList.add('engine-active');
 
@@ -2038,7 +2038,7 @@ if (modeBtnStealth && modeBtnTurbo) {
     modeBtnStealth.classList.add('active');
     modeBtnTurbo.classList.remove('active');
     window.electronAPI.updateSettings({ executionMode: 'stealth' });
-    showToast("Mode séquentiel activé", 'info');
+    showToast("Stealth mode active", 'info');
     playAudioChime('click');
   });
 
@@ -2046,7 +2046,7 @@ if (modeBtnStealth && modeBtnTurbo) {
     modeBtnTurbo.classList.add('active');
     modeBtnStealth.classList.remove('active');
     window.electronAPI.updateSettings({ executionMode: 'turbo' });
-    showToast("Mode accéléré activé", 'warn');
+    showToast("Turbo mode active", 'warn');
     playAudioChime('click');
   });
 }
@@ -2056,15 +2056,15 @@ if (btnSkipEngine) {
   btnSkipEngine.addEventListener('click', async () => {
     if (!isEngineRunning) return;
     playAudioChime('click');
-    addTerminalLog("Passage manuel de la quête active demandé...", 'warn');
+    addTerminalLog("Manual skip requested for active quest...", 'warn');
     await window.electronAPI.skipQuest();
   });
 }
 
 if (window.electronAPI.onEngineQuestSkipped) {
   window.electronAPI.onEngineQuestSkipped((data) => {
-    showToast(`Quête sautée : ${data.quest?.questName || 'En cours'}`, 'warn');
-    addTerminalLog(`Quête sautée : ${data.quest?.questName}`, 'warn');
+    showToast(`Quest skipped: ${data.quest?.questName || 'Active'}`, 'warn');
+    addTerminalLog(`Quest skipped: ${data.quest?.questName}`, 'warn');
     playAudioChime('click');
   });
 }
@@ -2083,7 +2083,7 @@ window.electronAPI.onEngineQuestStart((data) => {
   liveProgressSec.textContent = `${data.quest.currentSeconds}s / ${data.quest.targetSeconds}s`;
 
   if (titleEnginePill) {
-    titlePillText.textContent = `Quête ${data.index + 1}/${data.total}`;
+    titlePillText.textContent = `Quest ${data.index + 1}/${data.total}`;
   }
 
   if (btnSkipEngine) btnSkipEngine.disabled = false;
@@ -2133,13 +2133,13 @@ window.electronAPI.onEngineProgress((data) => {
     const header = card.querySelector('.quest-progress-header span:first-child');
     const pctSpan = card.querySelector('.quest-progress-header span:last-child');
     if (fill) fill.style.width = `${data.pct}%`;
-    if (header) header.textContent = `Reste ${formatSeconds(remainingSec)}`;
+    if (header) header.textContent = `${formatSeconds(remainingSec)} remaining`;
     if (pctSpan) pctSpan.textContent = `${data.pct}%`;
   }
 });
 
 window.electronAPI.onEngineQuestComplete((data) => {
-  showToast(`Quête terminée : ${data.quest.questName}`, 'success');
+  showToast(`Quest completed: ${data.quest.questName}`, 'success');
   playAudioChime('success');
 
   data.quest.isCompleted = true;
@@ -2151,7 +2151,7 @@ window.electronAPI.onEngineQuestComplete((data) => {
 
   if (settingDesktopNotify && settingDesktopNotify.checked) {
     window.electronAPI.notifyDesktop({
-      title: "Quête Discord Completed!",
+      title: "Discord Quest Completed!",
       body: `"${data.quest.questName}" was completed successfully.`
     });
   }
@@ -2159,27 +2159,27 @@ window.electronAPI.onEngineQuestComplete((data) => {
 
 window.electronAPI.onEngineQuestFail((data) => {
   totalErrorsEncountered++;
-  showToast(`Échec de la quête : ${data.quest.questName} (${data.reason})`, 'error');
+  showToast(`Quest failed: ${data.quest.questName} (${data.reason})`, 'error');
 });
 
 window.electronAPI.onEnginePaused(() => {
   isEnginePaused = true;
-  liveEngineStatus.textContent = 'En pause';
+  liveEngineStatus.textContent = 'Paused';
   liveEngineStatus.classList.remove('running');
   liveEngineStatus.classList.add('paused');
-  if (labelPauseBtn) labelPauseBtn.textContent = 'Reprendre';
-  if (titlePillText) titlePillText.textContent = 'En pause';
-  showToast("Session en pause", "warn");
+  if (labelPauseBtn) labelPauseBtn.textContent = 'Resume';
+  if (titlePillText) titlePillText.textContent = 'Paused';
+  showToast("Session paused", "warn");
 });
 
 window.electronAPI.onEngineResumed(() => {
   isEnginePaused = false;
-  liveEngineStatus.textContent = 'En cours';
+  liveEngineStatus.textContent = 'Running';
   liveEngineStatus.classList.add('running');
   liveEngineStatus.classList.remove('paused');
   if (labelPauseBtn) labelPauseBtn.textContent = 'Pause';
-  if (titlePillText) titlePillText.textContent = 'En cours';
-  showToast("Session reprise", "info");
+  if (titlePillText) titlePillText.textContent = 'Running';
+  showToast("Session resumed", "info");
 });
 
 window.electronAPI.onEngineFinished((data) => {
@@ -2190,24 +2190,24 @@ window.electronAPI.onEngineFinished((data) => {
   liveOrb.classList.remove('active');
   liveEngineStatus.classList.remove('running');
   liveEngineStatus.classList.remove('paused');
-  liveEngineStatus.textContent = 'Terminée';
+  liveEngineStatus.textContent = 'Finished';
   btnStopEngine.disabled = true;
   if (btnPauseEngine) btnPauseEngine.disabled = true;
   if (btnSkipEngine) btnSkipEngine.disabled = true;
-  if (rpcSimGame) rpcSimGame.textContent = "Session en attente";
+  if (rpcSimGame) rpcSimGame.textContent = "Session Idle";
   if (rpcSimAppId) rpcSimAppId.textContent = "--";
   if (rpcSimNextHb) rpcSimNextHb.textContent = "--";
   liveIndicatorDot.classList.remove('active');
 
   if (titleEnginePill) {
     titleEnginePill.classList.remove('running');
-    titlePillText.textContent = 'En attente';
+    titlePillText.textContent = 'Idle';
   }
   document.body.classList.remove('engine-active');
 
   updateStartButton();
   playAudioChime('success');
-  showToast(`Session terminée : ${data.completedList?.length || 0} quête(s) terminée(s)`, 'success');
+  showToast(`Session finished: ${data.completedList?.length || 0} quest(s) completed`, 'success');
 
   if (settingDesktopNotify && settingDesktopNotify.checked) {
     window.electronAPI.notifyDesktop({
@@ -2227,23 +2227,23 @@ window.electronAPI.onEngineStopped(() => {
   liveOrb.classList.remove('active');
   liveEngineStatus.classList.remove('running');
   liveEngineStatus.classList.remove('paused');
-  liveEngineStatus.textContent = 'Arrêté';
+  liveEngineStatus.textContent = 'Stopped';
   btnStopEngine.disabled = true;
   if (btnPauseEngine) btnPauseEngine.disabled = true;
   if (btnSkipEngine) btnSkipEngine.disabled = true;
-  if (rpcSimGame) rpcSimGame.textContent = "Session en attente";
+  if (rpcSimGame) rpcSimGame.textContent = "Session Idle";
   if (rpcSimAppId) rpcSimAppId.textContent = "--";
   if (rpcSimNextHb) rpcSimNextHb.textContent = "--";
   liveIndicatorDot.classList.remove('active');
 
   if (titleEnginePill) {
     titleEnginePill.classList.remove('running');
-    titlePillText.textContent = 'En attente';
+    titlePillText.textContent = 'Idle';
   }
   document.body.classList.remove('engine-active');
 
   updateStartButton();
-  showToast("Session arrêtée", "warn");
+  showToast("Session stopped", "warn");
 });
 
 window.electronAPI.onEngineRewardClaimed((data) => {
@@ -2258,12 +2258,12 @@ window.electronAPI.onEngineRewardClaimed((data) => {
     });
     if (settingAutoCopy && settingAutoCopy.checked) {
       navigator.clipboard.writeText(data.code);
-      showToast(`Code copié : ${data.code}`, 'success');
+      showToast(`Code copied: ${data.code}`, 'success');
     } else {
-      showToast(`Récompense débloquée : ${data.code}`, 'success');
+      showToast(`Reward unlocked: ${data.code}`, 'success');
     }
   } else {
-    showToast(`Récompense récupérée pour ${data.quest?.questName || 'quête'}`, 'success');
+    showToast(`Reward claimed for ${data.quest?.questName || 'quest'}`, 'success');
   }
   playAudioChime('success');
   updateVaultBadge();
@@ -2278,11 +2278,11 @@ if (btnCopyTerminal) {
       return `${ts} ${msg}`;
     });
     if (lines.length === 0) {
-      showToast("Le journal est vide.", "info");
+      showToast("Log is empty.", "info");
       return;
     }
     navigator.clipboard.writeText(lines.join("\n"));
-    showToast(`${lines.length} événement(s) copié(s)`, "success");
+    showToast(`${lines.length} event(s) copied`, "success");
     playAudioChime('click');
   });
 }
@@ -2346,7 +2346,7 @@ btnExportLogs.addEventListener('click', async () => {
   });
 
   if (lines.length === 0) {
-    showToast("Le journal est vide.", "info");
+    showToast("Log is empty.", "info");
     return;
   }
 
@@ -2361,7 +2361,7 @@ btnExportLogs.addEventListener('click', async () => {
 
   const res = await window.electronAPI.exportLogs(fileContent);
   if (res && res.ok) {
-    showToast(`Journal enregistré : ${res.filePath}`, 'success');
+    showToast(`Log saved: ${res.filePath}`, 'success');
     playAudioChime('click');
   }
 });
@@ -2414,7 +2414,7 @@ if (btnQuickMute) {
     if (settingAudioSfx) {
       settingAudioSfx.checked = !settingAudioSfx.checked;
       updateMuteButtonVisual();
-      showToast(settingAudioSfx.checked ? "Sons activés" : "Sons coupés", 'info');
+      showToast(settingAudioSfx.checked ? "Audio cues enabled" : "Audio cues muted", 'info');
       playAudioChime('click');
     }
   });
@@ -2439,7 +2439,7 @@ function setupAutoRefresh(enabled) {
   if (enabled) {
     autoRefreshTimer = setInterval(() => {
       if (currentUser && !isEngineRunning) {
-        addTerminalLog("Recherche de nouvelles quêtes…", "info");
+        addTerminalLog("Checking for new quests…", "info");
         loadQuests();
       }
     }, 5 * 60 * 1000);
@@ -2510,7 +2510,7 @@ btnSaveSettings.addEventListener('click', async () => {
   }, 3000);
 
   playAudioChime('click');
-  showToast("Préférences enregistrées", "success");
+  showToast("Preferences saved", "success");
 });
 
 // ── Time Formatting Helpers ──

@@ -41,7 +41,7 @@
       card.tabIndex = 0;
       card.setAttribute('role', 'group');
       const title = card.querySelector('.quest-title');
-      card.setAttribute('aria-label', (title ? title.textContent : 'Quête') + (card.classList.contains('selected') ? ', sélectionnée' : ''));
+      card.setAttribute('aria-label', (title ? title.textContent : 'Quest') + (card.classList.contains('selected') ? ', selected' : ''));
     });
   };
   document.querySelector('.login-tabs').setAttribute('role', 'tablist');

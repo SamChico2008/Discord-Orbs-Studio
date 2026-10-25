@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="color-scheme" content="dark">
-  <title>Discord Orb Studio — Votre studio de quêtes</title>
+  <title>Discord Orb Studio — Your Discord Quest Companion</title>
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="ui-redesign.css">
   <link rel="stylesheet" href="ui-theme-plus.css">
@@ -22,39 +22,39 @@
       </div>
       <div class="title-engine-pill" id="title-engine-pill">
         <span class="title-pill-dot" id="title-pill-dot"></span>
-        <span class="title-pill-text" id="title-pill-text">En attente</span>
+        <span class="title-pill-text" id="title-pill-text">Idle</span>
       </div>
     </div>
 
     <!-- Center Quick Tools -->
     <div class="window-center-tools">
-      <button class="win-tool-btn" id="btn-quick-vault" title="Ouvrir le coffre de récompenses">
+      <button class="win-tool-btn" id="btn-quick-vault" title="Open rewards vault">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 12v10H4V12"/><path d="M2 7h20v5H2z"/><path d="M12 22V7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg>
-        <span>Coffre</span>
+        <span>Vault</span>
         <span class="tool-badge" id="title-vault-badge">0</span>
       </button>
 
-      <button class="win-tool-btn" id="btn-quick-mute" title="Activer ou couper les sons">
+      <button class="win-tool-btn" id="btn-quick-mute" title="Toggle audio cues">
         <svg id="icon-sound-on" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
         <svg id="icon-sound-off" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none;"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>
       </button>
 
-      <div class="quick-theme-picker" title="Couleur du studio">
-        <button class="theme-quick-btn active" data-theme="default" title="Pervenche" style="background: #b8adf2;"></button>
-        <button class="theme-quick-btn" data-theme="emerald" title="Sauge" style="background: #a8cbb4;"></button>
-        <button class="theme-quick-btn" data-theme="amber" title="Pêche" style="background: #e2b69b;"></button>
+      <div class="quick-theme-picker" title="Studio accent color">
+        <button class="theme-quick-btn active" data-theme="default" title="Periwinkle" style="background: #b8adf2;"></button>
+        <button class="theme-quick-btn" data-theme="emerald" title="Sage" style="background: #a8cbb4;"></button>
+        <button class="theme-quick-btn" data-theme="amber" title="Peach" style="background: #e2b69b;"></button>
         <button class="theme-quick-btn" data-theme="crimson" title="Rose" style="background: #d8a8c4;"></button>
       </div>
     </div>
     
     <div class="window-actions">
-      <button class="win-btn" id="btn-minimize" title="Réduire">
+      <button class="win-btn" id="btn-minimize" title="Minimize">
         <svg width="12" height="12" viewBox="0 0 12 12"><path d="M1 6h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
       </button>
-      <button class="win-btn" id="btn-maximize" title="Agrandir">
+      <button class="win-btn" id="btn-maximize" title="Maximize">
         <svg width="12" height="12" viewBox="0 0 12 12"><rect x="1.5" y="1.5" width="9" height="9" rx="1.5" stroke="currentColor" stroke-width="1.2" fill="none"/></svg>
       </button>
-      <button class="win-btn win-btn-close" id="btn-close" title="Fermer">
+      <button class="win-btn win-btn-close" id="btn-close" title="Close">
         <svg width="12" height="12" viewBox="0 0 12 12"><path d="M2 2l8 8M10 2l-8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
       </button>
     </div>
@@ -64,45 +64,45 @@
   <div id="app-container">
     <!-- Sidebar Navigation -->
     <aside id="sidebar">
-      <div class="sidebar-header"><div class="studio-lockup"><div class="studio-symbol"><img src="../assets/icon.png" alt=""></div><div><div class="studio-name">Orb Studio</div><span class="studio-caption">Compagnon Discord</span></div></div></div>
+      <div class="sidebar-header"><div class="studio-lockup"><div class="studio-symbol"><img src="../assets/icon.png" alt=""></div><div><div class="studio-name">Orb Studio</div><span class="studio-caption">Discord Companion</span></div></div></div>
 
-      <nav class="nav-links" aria-label="Navigation principale">
-        <div class="nav-group-label">Votre espace</div>
+      <nav class="nav-links" aria-label="Main Navigation">
+        <div class="nav-group-label">Workspace</div>
         <button class="nav-btn active" data-tab="tab-quests">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
-          <span>Quêtes</span>
+          <span>Quests</span>
           <span class="nav-counter" id="nav-quest-count">0</span>
         </button>
 
         <button class="nav-btn" data-tab="tab-live">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-          <span>En direct</span>
+          <span>Live Monitor</span>
           <span class="live-pulse-dot" id="live-indicator-dot"></span>
         </button>
 
         <button class="nav-btn" data-tab="tab-vault">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 12v10H4V12"/><path d="M2 7h20v5H2z"/><path d="M12 22V7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg>
-          <span>Récompenses</span>
+          <span>Rewards</span>
           <span class="nav-counter" id="nav-vault-count">0</span>
         </button>
 
         <div class="nav-divider" aria-hidden="true"></div>
-        <div class="nav-group-label">Personnel</div>
+        <div class="nav-group-label">Personal</div>
         <button class="nav-btn" data-tab="tab-account">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-          <span>Comptes</span>
+          <span>Accounts</span>
         </button>
 
         <button class="nav-btn" data-tab="tab-settings">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-          <span>Préférences</span>
+          <span>Settings</span>
         </button>
       </nav>
 
-      <div class="sidebar-note" aria-hidden="true"><svg viewBox="0 0 100 70" fill="none"><ellipse cx="50" cy="35" rx="42" ry="14" stroke="currentColor" transform="rotate(-25 50 35)"/><ellipse cx="50" cy="35" rx="28" ry="25" stroke="currentColor" opacity=".45"/><circle cx="50" cy="35" r="13" stroke="currentColor"/><circle cx="13" cy="47" r="3" fill="#e2b69b"/></svg><p>Un peu de jeu.<br>De belles récompenses.</p></div>
+      <div class="sidebar-note" aria-hidden="true"><svg viewBox="0 0 100 70" fill="none"><ellipse cx="50" cy="35" rx="42" ry="14" stroke="currentColor" transform="rotate(-25 50 35)"/><ellipse cx="50" cy="35" rx="28" ry="25" stroke="currentColor" opacity=".45"/><circle cx="50" cy="35" r="13" stroke="currentColor"/><circle cx="13" cy="47" r="3" fill="#e2b69b"/></svg><p>Play a bit.<br>Earn great rewards.</p></div>
 
       <!-- Sidebar Bottom: Native Discord User Bar -->
-      <div class="sidebar-user-panel" id="user-pill" title="Afficher le profil Discord">
+      <div class="sidebar-user-panel" id="user-pill" title="View Discord Profile">
         <div class="panel-user-clickable" id="btn-user-popout">
           <div class="user-avatar-wrap">
             <img id="nav-avatar" src="../assets/avatar-placeholder.svg" alt="Avatar">
@@ -110,17 +110,17 @@
           </div>
           <div class="user-pill-info">
             <div class="user-pill-name-row">
-              <span class="user-pill-name" id="nav-username">Non connecté</span>
+              <span class="user-pill-name" id="nav-username">Not Connected</span>
               <span class="nitro-pill-badge" id="nav-nitro-badge" style="display: none;">NITRO</span>
             </div>
-            <span class="user-pill-sub" id="nav-subtext">Se connecter</span>
+            <span class="user-pill-sub" id="nav-subtext">Click to connect</span>
           </div>
         </div>
         <div class="panel-user-actions">
-          <button class="user-action-btn" id="btn-account-switch" title="Changer de compte">
+          <button class="user-action-btn" id="btn-account-switch" title="Switch Account">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 16V4m0 0L3 8m4-4l4 4m6 4v12m0 0l4-4m-4 4l-4-4"/></svg>
           </button>
-          <button class="user-action-btn user-action-danger" id="btn-quick-logout" title="Se déconnecter" style="display: none;">
+          <button class="user-action-btn user-action-danger" id="btn-quick-logout" title="Log Out" style="display: none;">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
           </button>
         </div>
@@ -129,7 +129,7 @@
       <!-- Floating Discord Profile Popout Card -->
       <div class="discord-profile-popout" id="discord-profile-popout" style="display: none;">
         <div class="popout-banner" id="popout-banner">
-          <button class="popout-close-btn" id="btn-close-popout" title="Fermer">&times;</button>
+          <button class="popout-close-btn" id="btn-close-popout" title="Close">&times;</button>
         </div>
         <div class="popout-avatar-row">
           <div class="popout-avatar-wrap">
@@ -142,51 +142,51 @@
         </div>
         <div class="popout-body">
           <div class="popout-names">
-            <div class="popout-global-name" id="popout-name">Non connecté</div>
+            <div class="popout-global-name" id="popout-name">Not Connected</div>
             <div class="popout-handle" id="popout-handle">@username</div>
           </div>
           <div class="popout-divider"></div>
           
           <div class="popout-field">
-            <span class="popout-field-label">Membre depuis</span>
+            <span class="popout-field-label">Member Since</span>
             <span class="popout-field-val" id="popout-created-date">--</span>
           </div>
 
           <div class="popout-field">
-            <span class="popout-field-label">Abonnement</span>
+            <span class="popout-field-label">Subscription</span>
             <span class="popout-field-val text-nitro" id="popout-nitro-text">Standard</span>
           </div>
 
           <div class="popout-meta-row">
             <div class="popout-meta-box">
-              <span class="meta-label">Identifiant</span>
+              <span class="meta-label">User ID</span>
               <div class="meta-val-wrap">
                 <span class="meta-val" id="popout-user-id">--</span>
-                <button class="btn-micro-copy" id="btn-copy-popout-user-id" title="Copier l’identifiant">Copier</button>
+                <button class="btn-micro-copy" id="btn-copy-popout-user-id" title="Copy User ID">Copy</button>
               </div>
             </div>
             <div class="popout-meta-box">
-              <span class="meta-label">Session active</span>
+              <span class="meta-label">Active Session</span>
               <div class="meta-val-wrap">
                 <span class="meta-val" id="popout-token-masked">••••••••••••</span>
-                <button class="btn-micro-copy" id="btn-copy-user-token" title="Copier le jeton">Copier</button>
+                <button class="btn-micro-copy" id="btn-copy-user-token" title="Copy Session Token">Copy</button>
               </div>
             </div>
           </div>
 
           <div class="popout-accounts-section">
             <div class="popout-accounts-head">
-              <span>Comptes enregistrés</span>
-              <button class="btn-micro-add" id="btn-dropdown-add-account">+ Ajouter</button>
+              <span>Saved Accounts</span>
+              <button class="btn-micro-add" id="btn-dropdown-add-account">+ Add</button>
             </div>
             <div class="popout-accounts-list" id="dropdown-accounts-list">
-              <div class="dropdown-empty">Aucun compte enregistré</div>
+              <div class="dropdown-empty">No saved accounts</div>
             </div>
           </div>
 
           <div class="popout-footer">
-            <button class="btn btn-secondary btn-full" id="btn-popout-manage-accounts">Gérer les comptes</button>
-            <button class="btn btn-danger btn-full" id="btn-popout-logout">Déconnexion</button>
+            <button class="btn btn-secondary btn-full" id="btn-popout-manage-accounts">Manage Accounts</button>
+            <button class="btn btn-danger btn-full" id="btn-popout-logout">Log Out</button>
           </div>
         </div>
       </div>
@@ -195,9 +195,9 @@
         <input type="checkbox" id="toggle-build-info" class="build-toggle-input">
         <div class="spoof-status">
           <span class="spoof-dot"></span>
-          <span>Client Windows · Build 606747</span>
+          <span>Windows Client · Build 606747</span>
         </div>
-        <label for="toggle-build-info" class="build-toggle-btn" title="Afficher / masquer les infos du client">
+        <label for="toggle-build-info" class="build-toggle-btn" title="Toggle client info display">
           <svg class="icon-hide" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
           <svg class="icon-show" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
         </label>
@@ -209,32 +209,32 @@
       
       <!-- TAB 1: QUESTS DASHBOARD -->
       <section class="tab-pane active" id="tab-quests">
-        <div class="page-path"><span>Votre espace</span><svg viewBox="0 0 16 16" fill="none" stroke="currentColor"><path d="m6 4 4 4-4 4"/></svg><span>Quêtes</span></div>
+        <div class="page-path"><span>Workspace</span><svg viewBox="0 0 16 16" fill="none" stroke="currentColor"><path d="m6 4 4 4-4 4"/></svg><span>Quests</span></div>
         <header class="page-heading">
           <div>
-            <h1>Vos prochaines quêtes.</h1>
-            <p>Un seul espace pour vos quêtes et vos récompenses Discord.</p>
+            <h1>Your Discord Quests.</h1>
+            <p>A unified workspace for all your Discord quests and rewards.</p>
           </div>
           <div class="heading-orbit" aria-hidden="true"><img src="../assets/icon.png" alt=""><span class="orbit-satellite"></span></div>
         </header>
         <!-- Top Statistics Grid -->
         <div class="stats-grid">
-          <div class="stat-card clickable-stat" id="stat-card-available" title="Afficher les quêtes à terminer">
+          <div class="stat-card clickable-stat" id="stat-card-available" title="View available quests">
             <div class="stat-icon-wrap icon-purple">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
             </div>
             <div class="stat-content">
-              <span class="stat-label">À découvrir</span>
+              <span class="stat-label">Available</span>
               <span class="stat-value" id="stat-total-quests">0</span>
             </div>
           </div>
 
-          <div class="stat-card clickable-stat" id="stat-card-completed" title="Afficher les quêtes terminées">
+          <div class="stat-card clickable-stat" id="stat-card-completed" title="View completed quests">
             <div class="stat-icon-wrap icon-green">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
             </div>
             <div class="stat-content">
-              <span class="stat-label">Terminées</span>
+              <span class="stat-label">Completed</span>
               <span class="stat-value" id="stat-completed-quests">0</span>
             </div>
           </div>
@@ -244,18 +244,18 @@
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
             </div>
             <div class="stat-content">
-              <span class="stat-label">Temps restant</span>
+              <span class="stat-label">Time Remaining</span>
               <span class="stat-value" id="stat-estimated-time">0 min</span>
             </div>
           </div>
 
-          <div class="stat-card clickable-stat" id="stat-card-vault" title="Ouvrir les récompenses">
+          <div class="stat-card clickable-stat" id="stat-card-vault" title="Open Rewards Vault">
             <div class="stat-icon-wrap icon-blue">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
             </div>
             <div class="stat-content">
-              <span class="stat-label">Votre coffre</span>
-              <span class="stat-value" id="stat-rewards">Prêt</span>
+              <span class="stat-label">Your Vault</span>
+              <span class="stat-value" id="stat-rewards">Ready</span>
             </div>
           </div>
         </div>
@@ -265,25 +265,25 @@
           <div class="toolbar-left">
             <div class="search-box">
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-              <input type="text" id="quest-search" aria-label="Rechercher dans les quêtes" placeholder="Rechercher une quête, un jeu…">
+              <input type="text" id="quest-search" aria-label="Search quests" placeholder="Search quests, games…">
             </div>
 
             <div class="sort-select-box">
-              <select id="quest-sort-select" class="sort-select" title="Trier les quêtes">
-                <option value="default">Tri par défaut</option>
-                <option value="urgent">Expiration la plus proche</option>
-                <option value="shortest">Durée croissante</option>
-                <option value="longest">Durée décroissante</option>
-                <option value="name">Nom de A à Z</option>
+              <select id="quest-sort-select" class="sort-select" title="Sort quests">
+                <option value="default">Default Order</option>
+                <option value="urgent">Expiring Soonest</option>
+                <option value="shortest">Shortest Duration</option>
+                <option value="longest">Longest Duration</option>
+                <option value="name">Name A to Z</option>
               </select>
             </div>
 
-            <div class="mode-select-box" title="Rythme de session : séquentiel ou accéléré">
-              <button class="mode-btn active" id="mode-btn-stealth" data-mode="stealth" title="Mode séquentiel avec une pause entre les jeux">
+            <div class="mode-select-box" title="Session Cadence: Sequential or Turbo">
+              <button class="mode-btn active" id="mode-btn-stealth" data-mode="stealth" title="Sequential mode with realistic intervals">
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-                <span>Séquentiel</span>
+                <span>Sequential</span>
               </button>
-              <button class="mode-btn" id="mode-btn-turbo" data-mode="turbo" title="Mode accéléré">
+              <button class="mode-btn" id="mode-btn-turbo" data-mode="turbo" title="Accelerated turbo mode">
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
                 <span>Turbo</span>
               </button>
@@ -292,24 +292,24 @@
 
           <div class="toolbar-right">
             <div class="selection-actions">
-              <button class="btn btn-secondary btn-sm" id="btn-select-all">Tout sélectionner</button>
-              <button class="btn btn-secondary btn-sm" id="btn-deselect-all">Désélectionner</button>
-              <button class="btn btn-icon btn-sm" id="btn-refresh-quests" title="Actualiser les quêtes">
+              <button class="btn btn-secondary btn-sm" id="btn-select-all">Select All</button>
+              <button class="btn btn-secondary btn-sm" id="btn-deselect-all">Deselect All</button>
+              <button class="btn btn-icon btn-sm" id="btn-refresh-quests" title="Refresh Quests">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
               </button>
             </div>
 
-            <button class="btn btn-claim" id="btn-claim-all-completed" disabled title="Récupérer toutes les récompenses disponibles">
+            <button class="btn btn-claim" id="btn-claim-all-completed" disabled title="Claim all ready rewards">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 12v10H4V12"/><path d="M2 7h20v5H2z"/><path d="M12 22V7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg>
-              <span id="claim-all-btn-label">Récupérer (0)</span>
+              <span id="claim-all-btn-label">Claim (0)</span>
             </button>
             <button class="btn btn-primary" id="btn-start-selected" disabled>
               <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-              <span id="start-btn-label">Lancer (0)</span>
+              <span id="start-btn-label">Start (0)</span>
             </button>
-            <button class="btn btn-hero" id="btn-complete-all" title="Lancer toutes les quêtes restantes">
+            <button class="btn btn-hero" id="btn-complete-all" title="Start all remaining quests">
               <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-              <span>Tout lancer</span>
+              <span>Start All</span>
             </button>
           </div>
         </div>
@@ -317,35 +317,34 @@
         <!-- Filter Pills Bar -->
         <div class="filter-row">
           <div class="filter-pills">
-            <button class="pill active" data-filter="remaining">À terminer <span class="pill-badge" id="pill-count-remaining">0</span></button>
-            <button class="pill" data-filter="all">Toutes <span class="pill-badge" id="pill-count-all">0</span></button>
-            <button class="pill" data-filter="VIDEO">Vidéos</button>
-            <button class="pill" data-filter="GAME">Jeux</button>
-            <button class="pill" data-filter="ACTIVITY">Activités</button>
-            <button class="pill" data-filter="claimable">À récupérer <span class="pill-badge" id="pill-count-claimable">0</span></button>
-            <button class="pill" data-filter="completed">Terminées <span class="pill-badge" id="pill-count-completed">0</span></button>
+            <button class="pill active" data-filter="remaining">Remaining <span class="pill-badge" id="pill-count-remaining">0</span></button>
+            <button class="pill" data-filter="all">All <span class="pill-badge" id="pill-count-all">0</span></button>
+            <button class="pill" data-filter="VIDEO">Videos</button>
+            <button class="pill" data-filter="GAME">Games</button>
+            <button class="pill" data-filter="ACTIVITY">Activities</button>
+            <button class="pill" data-filter="claimable">Claimable <span class="pill-badge" id="pill-count-claimable">0</span></button>
+            <button class="pill" data-filter="completed">Completed <span class="pill-badge" id="pill-count-completed">0</span></button>
           </div>
         </div>
 
         <!-- Quest Cards Container -->
         <div class="quests-grid" id="quests-container">
-          <!-- Dynamic cards injected by JS -->
           <div class="loading-state" id="quests-loading">
             <div class="spinner"></div>
-            <p>Chargement des quêtes…</p>
+            <p>Loading quests…</p>
           </div>
         </div>
       </section>
 
       <!-- TAB 2: LIVE ENGINE -->
       <section class="tab-pane" id="tab-live">
-        <div class="page-path"><span>Votre espace</span><svg viewBox="0 0 16 16" fill="none" stroke="currentColor"><path d="m6 4 4 4-4 4"/></svg><span>En direct</span></div>
+        <div class="page-path"><span>Workspace</span><svg viewBox="0 0 16 16" fill="none" stroke="currentColor"><path d="m6 4 4 4-4 4"/></svg><span>Live Monitor</span></div>
         <header class="page-heading">
           <div>
-            <h1>Votre session, en direct.</h1>
-            <p>Gardez un œil sur la progression et les événements de votre session.</p>
+            <h1>Live Session Telemetry.</h1>
+            <p>Monitor real-time progress, rhythm intervals, and session events.</p>
           </div>
-          <span class="heading-tag">Suivi de session</span>
+          <span class="heading-tag">Live Session</span>
         </header>
         <div class="live-layout">
           <!-- Left: Big Orb & Active Telemetry -->
@@ -359,7 +358,7 @@
                   <div class="orb-halo"></div>
                   <img src="../assets/icon.png" class="orb-logo-img" alt="Discord Orb">
                 </div>
-                <div class="live-status-tag" id="live-engine-status">En attente</div>
+                <div class="live-status-tag" id="live-engine-status">Idle</div>
               </div>
 
               <!-- Animated Equalizer Waves -->
@@ -375,8 +374,8 @@
               </div>
 
               <div class="live-current-details">
-                <h3 id="live-current-title">En attente d’une quête</h3>
-                <p id="live-current-sub">Choisissez une quête dans la bibliothèque pour commencer.</p>
+                <h3 id="live-current-title">Waiting for quest session</h3>
+                <p id="live-current-sub">Select one or more quests from the library to get started.</p>
                 
                 <div class="live-progress-container">
                   <div class="live-progress-track">
@@ -391,27 +390,27 @@
                 <div class="telemetry-metrics">
                   <div class="metric-item">
                     <span class="metric-val" id="metric-current-idx">0/0</span>
-                    <span class="metric-name">Quêtes traitées</span>
+                    <span class="metric-name">Quests Completed</span>
                   </div>
                   <div class="metric-item">
                     <span class="metric-val text-cyan" id="metric-latency">-- ms</span>
-                    <span class="metric-name">Latence</span>
+                    <span class="metric-name">Latency</span>
                   </div>
                   <div class="metric-item">
                     <span class="metric-val" id="metric-elapsed">00:00</span>
-                    <span class="metric-name">Temps écoulé</span>
+                    <span class="metric-name">Elapsed Time</span>
                   </div>
                   <div class="metric-item">
                     <span class="metric-val text-amber" id="metric-eta">--:--</span>
-                    <span class="metric-name">Fin estimée</span>
+                    <span class="metric-name">Estimated ETA</span>
                   </div>
                   <div class="metric-item">
                     <span class="metric-val" id="metric-heartbeats">0</span>
-                    <span class="metric-name">Échanges</span>
+                    <span class="metric-name">Heartbeats</span>
                   </div>
                   <div class="metric-item">
                     <span class="metric-val text-emerald" id="metric-success-rate">100%</span>
-                    <span class="metric-name">Réussite</span>
+                    <span class="metric-name">Success Rate</span>
                   </div>
                 </div>
 
@@ -420,21 +419,21 @@
                   <div class="rpc-sim-header">
                     <div class="rpc-sim-title">
                       <span class="rpc-sim-dot" id="radar-pulse-dot"></span>
-                      <span id="rpc-sim-game">Session en attente</span>
+                      <span id="rpc-sim-game">Session Idle</span>
                     </div>
-                    <span class="rpc-sim-badge" id="rpc-sim-type">Client Windows</span>
+                    <span class="rpc-sim-badge" id="rpc-sim-type">Windows Client</span>
                   </div>
                   <div class="rpc-sim-body">
                     <div class="rpc-sim-row">
-                      <span class="rpc-lbl">Identifiant du jeu</span>
+                      <span class="rpc-lbl">Application ID</span>
                       <span class="rpc-val text-cyan" id="rpc-sim-appid">--</span>
                     </div>
                     <div class="rpc-sim-row">
                       <span class="rpc-lbl">Cadence</span>
-                      <span class="rpc-val text-emerald" id="rpc-sim-cadence">Adaptative · variation ±15 %</span>
+                      <span class="rpc-val text-emerald" id="rpc-sim-cadence">Adaptive · ±15% Jitter</span>
                     </div>
                     <div class="rpc-sim-row">
-                      <span class="rpc-lbl">Prochain échange</span>
+                      <span class="rpc-lbl">Next Heartbeat</span>
                       <span class="rpc-val text-amber" id="rpc-sim-next-hb">--</span>
                     </div>
                   </div>
@@ -443,19 +442,19 @@
                 <div class="live-controls">
                   <button class="btn btn-danger" id="btn-stop-engine" disabled>
                     <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>
-                    <span>Arrêter</span>
+                    <span>Stop</span>
                   </button>
                   <button class="btn btn-secondary" id="btn-pause-engine" disabled>
                     <svg id="icon-pause-btn" width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
                     <span id="label-pause-btn">Pause</span>
                   </button>
-                  <button class="btn btn-warning" id="btn-skip-engine" disabled title="Passer à la quête suivante">
+                  <button class="btn btn-warning" id="btn-skip-engine" disabled title="Skip to next quest">
                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 4 15 12 5 20 5 4" fill="currentColor"/><line x1="19" y1="5" x2="19" y2="19"/></svg>
-                    <span>Suivante</span>
+                    <span>Skip</span>
                   </button>
                   <button class="btn btn-secondary" id="btn-jump-quests">
                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
-                    <span>Voir les quêtes</span>
+                    <span>View Quests</span>
                   </button>
                 </div>
               </div>
@@ -467,36 +466,36 @@
             <div class="terminal-header">
               <div class="terminal-title">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
-                <span>Journal de session</span>
+                <span>Session Logs</span>
               </div>
               <div class="terminal-filters">
-                <button class="term-pill active" data-term-filter="all">Tout</button>
+                <button class="term-pill active" data-term-filter="all">All</button>
                 <button class="term-pill" data-term-filter="info">Info</button>
-                <button class="term-pill" data-term-filter="success">Réussites</button>
-                <button class="term-pill" data-term-filter="warn">Alertes</button>
-                <button class="term-pill" data-term-filter="error">Erreurs</button>
+                <button class="term-pill" data-term-filter="success">Success</button>
+                <button class="term-pill" data-term-filter="warn">Warnings</button>
+                <button class="term-pill" data-term-filter="error">Errors</button>
               </div>
               <div class="terminal-actions">
-                <button class="btn-term" id="btn-copy-terminal" title="Copier le journal">
+                <button class="btn-term" id="btn-copy-terminal" title="Copy log text">
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-                  <span>Copier</span>
+                  <span>Copy</span>
                 </button>
-                <button class="btn-term" id="btn-export-logs" title="Enregistrer le journal en fichier texte">
+                <button class="btn-term" id="btn-export-logs" title="Export logs to text file">
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                  <span>Exporter</span>
+                  <span>Export</span>
                 </button>
                 <label class="auto-scroll-toggle">
                   <input type="checkbox" id="auto-scroll-check" checked>
-                  <span>Défilement auto</span>
+                  <span>Auto-scroll</span>
                 </label>
-                <button class="btn-term" id="btn-clear-terminal" title="Effacer le journal">Effacer</button>
+                <button class="btn-term" id="btn-clear-terminal" title="Clear terminal">Clear</button>
               </div>
             </div>
 
             <div class="terminal-body" id="terminal-logs">
               <div class="log-line log-system">
                 <span class="log-ts">[00:00:00]</span>
-                <span class="log-msg">Le journal est prêt. Les événements de votre session apparaîtront ici.</span>
+                <span class="log-msg">Session stream ready. Real-time telemetry events will appear here.</span>
               </div>
             </div>
           </div>
@@ -505,7 +504,7 @@
 
       <!-- TAB: REWARD VAULT (FULL PAGE) -->
       <section class="tab-pane" id="tab-vault">
-        <div class="page-path"><span>Votre espace</span><svg viewBox="0 0 16 16" fill="none" stroke="currentColor"><path d="m6 4 4 4-4 4"/></svg><span>Récompenses</span></div>
+        <div class="page-path"><span>Workspace</span><svg viewBox="0 0 16 16" fill="none" stroke="currentColor"><path d="m6 4 4 4-4 4"/></svg><span>Rewards</span></div>
         <div class="vault-page-container">
           <div class="vault-page-header">
             <div class="vault-page-title-wrap">
@@ -513,23 +512,23 @@
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 12v10H4V12"/><path d="M2 7h20v5H2z"/><path d="M12 22V7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg>
               </div>
               <div>
-                <h2>Votre collection.</h2>
-                <p>Vos codes, cadeaux et récompenses, à portée de main.</p>
+                <h2>Rewards Vault.</h2>
+                <p>Your claimed codes, gifts, and rewards in one central place.</p>
               </div>
             </div>
 
             <div class="vault-page-actions">
-              <button class="btn btn-secondary btn-sm" id="btn-vault-export-txt" title="Exporter en fichier texte">
+              <button class="btn btn-secondary btn-sm" id="btn-vault-export-txt" title="Export to text file">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                <span>Exporter</span>
+                <span>Export</span>
               </button>
-              <button class="btn btn-secondary btn-sm" id="btn-vault-copy-all-page" title="Copier tous les codes">
+              <button class="btn btn-secondary btn-sm" id="btn-vault-copy-all-page" title="Copy all codes">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-                <span>Tout copier</span>
+                <span>Copy All</span>
               </button>
-              <button class="btn btn-danger btn-sm" id="btn-vault-clear-all" title="Effacer tous les codes enregistrés">
+              <button class="btn btn-danger btn-sm" id="btn-vault-clear-all" title="Clear all saved codes">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
-                <span>Vider le coffre</span>
+                <span>Clear Vault</span>
               </button>
             </div>
           </div>
@@ -541,7 +540,7 @@
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
               </div>
               <div class="stat-content">
-                <span class="stat-label">Codes conservés</span>
+                <span class="stat-label">Saved Codes</span>
                 <span class="stat-value" id="vault-stat-total">0</span>
               </div>
             </div>
@@ -551,7 +550,7 @@
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
               </div>
               <div class="stat-content">
-                <span class="stat-label">Disponibles</span>
+                <span class="stat-label">Ready to Redeem</span>
                 <span class="stat-value text-emerald" id="vault-stat-ready">0</span>
               </div>
             </div>
@@ -561,8 +560,8 @@
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
               </div>
               <div class="stat-content">
-                <span class="stat-label">Inventaire Discord</span>
-                <button class="btn btn-secondary btn-sm" id="btn-vault-open-discord-page" style="margin-top: 4px;">Voir les cadeaux</button>
+                <span class="stat-label">Discord Inventory</span>
+                <button class="btn btn-secondary btn-sm" id="btn-vault-open-discord-page" style="margin-top: 4px;">View Gift Inventory</button>
               </div>
             </div>
           </div>
@@ -571,24 +570,24 @@
           <div class="vault-filter-bar">
             <div class="search-box">
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-              <input type="text" id="vault-search" aria-label="Rechercher dans les récompenses" placeholder="Rechercher un jeu, une récompense, un code…">
+              <input type="text" id="vault-search" aria-label="Search rewards" placeholder="Search games, rewards, codes…">
             </div>
           </div>
 
           <!-- Codes Grid Container -->
           <div class="vault-codes-grid" id="vault-page-items">
-            <!-- Dynamically populated or empty state -->
+            <!-- Dynamically populated -->
           </div>
         </div>
       </section>
 
       <!-- TAB 3: ACCOUNT & SESSION MANAGER -->
       <section class="tab-pane" id="tab-account">
-        <div class="page-path"><span>Votre espace</span><svg viewBox="0 0 16 16" fill="none" stroke="currentColor"><path d="m6 4 4 4-4 4"/></svg><span>Comptes</span></div>
+        <div class="page-path"><span>Workspace</span><svg viewBox="0 0 16 16" fill="none" stroke="currentColor"><path d="m6 4 4 4-4 4"/></svg><span>Accounts</span></div>
         <header class="page-heading">
           <div>
-            <h1>Vos comptes, simplement.</h1>
-            <p>Connectez votre compte Discord et retrouvez vos sessions enregistrées.</p>
+            <h1>Account Management.</h1>
+            <p>Connect your Discord account and manage stored credentials.</p>
           </div>
         </header>
         <div class="account-container">
@@ -602,36 +601,36 @@
             <div class="account-header">
               <div class="account-avatar-wrapper">
                 <img id="account-avatar" src="../assets/avatar-placeholder.svg" alt="Avatar">
-                <div class="account-avatar-badge" title="En ligne"></div>
+                <div class="account-avatar-badge" title="Online"></div>
               </div>
               <div class="account-text">
                 <div class="account-name-row">
-                  <h2 id="account-username">Utilisateur</h2>
+                  <h2 id="account-username">User</h2>
                   <div class="account-badges-row" id="account-badges-container">
                     <span class="acc-badge acc-badge-nitro" id="badge-nitro">Nitro</span>
                     <span class="acc-badge acc-badge-mfa" id="badge-mfa">2FA</span>
-                    <span class="acc-badge acc-badge-verified" id="badge-verified">Vérifié</span>
+                    <span class="acc-badge acc-badge-verified" id="badge-verified">Verified</span>
                     <span class="acc-badge acc-badge-bravery" id="badge-bravery" style="display:none;">HypeSquad Bravery</span>
                     <span class="acc-badge acc-badge-brilliance" id="badge-brilliance" style="display:none;">HypeSquad Brilliance</span>
                     <span class="acc-badge acc-badge-balance" id="badge-balance" style="display:none;">HypeSquad Balance</span>
-                    <span class="acc-badge acc-badge-dev" id="badge-dev" style="display:none;">Développeur actif</span>
-                    <span class="acc-badge acc-badge-early" id="badge-early" style="display:none;">Soutien de la première heure</span>
+                    <span class="acc-badge acc-badge-dev" id="badge-dev" style="display:none;">Active Developer</span>
+                    <span class="acc-badge acc-badge-early" id="badge-early" style="display:none;">Early Supporter</span>
                   </div>
                 </div>
                 <span class="account-tag" id="account-globalname">@user</span>
               </div>
               <div class="account-header-actions">
-                <button class="btn btn-secondary btn-sm" id="btn-copy-user-id" title="Copier l’identifiant Discord">
+                <button class="btn btn-secondary btn-sm" id="btn-copy-user-id" title="Copy Discord User ID">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-                  <span>Copier l’ID</span>
+                  <span>Copy ID</span>
                 </button>
-                <button class="btn btn-secondary btn-sm" id="btn-refresh-profile" title="Actualiser le profil">
+                <button class="btn btn-secondary btn-sm" id="btn-refresh-profile" title="Refresh Profile">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
-                  <span>Actualiser</span>
+                  <span>Refresh</span>
                 </button>
-                <button class="btn btn-danger btn-sm" id="btn-logout" title="Fermer cette session">
+                <button class="btn btn-danger btn-sm" id="btn-logout" title="Log out active session">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
-                  <span>Déconnexion</span>
+                  <span>Log Out</span>
                 </button>
               </div>
             </div>
@@ -639,20 +638,20 @@
             <!-- Key Metrics Grid -->
             <div class="account-details-grid">
               <div class="detail-box">
-                <span class="detail-title">Identifiant Discord</span>
+                <span class="detail-title">Discord User ID</span>
                 <span class="detail-val" id="account-id">00000000000</span>
               </div>
               <div class="detail-box">
-                <span class="detail-title">Création du compte</span>
+                <span class="detail-title">Account Created</span>
                 <span class="detail-val" id="account-created">--</span>
               </div>
               <div class="detail-box">
-                <span class="detail-title">Abonnement Nitro</span>
+                <span class="detail-title">Nitro Subscription</span>
                 <span class="detail-val" id="account-nitro-type">Standard</span>
               </div>
               <div class="detail-box">
-                <span class="detail-title">Quêtes du compte</span>
-                <span class="detail-val text-emerald" id="account-quests-summary">0 disponible / 0 terminée</span>
+                <span class="detail-title">Quests Available</span>
+                <span class="detail-val text-emerald" id="account-quests-summary">0 available / 0 completed</span>
               </div>
             </div>
 
@@ -661,38 +660,38 @@
               <div class="vault-header">
                 <div class="vault-title">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-                  <span>Jeton de session</span>
+                  <span>Session Token</span>
                 </div>
                 <div class="vault-status-badge">
                   <span class="pulse-dot-green"></span>
-                  <span>Session active</span>
+                  <span>Active Session</span>
                 </div>
               </div>
               <div class="vault-input-row">
-                <input type="password" id="active-token-field" aria-label="Jeton de session active" readonly value="••••••••••••••••••••••••••••••••••••••••••••">
-                <button class="btn btn-secondary btn-sm" id="btn-toggle-active-token" title="Afficher ou masquer">
+                <input type="password" id="active-token-field" aria-label="Active session token" readonly value="••••••••••••••••••••••••••••••••••••••••••••">
+                <button class="btn btn-secondary btn-sm" id="btn-toggle-active-token" title="Show or hide">
                   <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-                  <span id="btn-toggle-active-token-text">Afficher</span>
+                  <span id="btn-toggle-active-token-text">Show</span>
                 </button>
-                <button class="btn btn-primary btn-sm" id="btn-copy-active-token" title="Copier dans le presse-papiers">
+                <button class="btn btn-primary btn-sm" id="btn-copy-active-token" title="Copy to clipboard">
                   <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-                  <span>Copier le jeton</span>
+                  <span>Copy Token</span>
                 </button>
               </div>
-              <span class="vault-disclaimer">Votre session est enregistrée uniquement sur cet ordinateur. Gardez votre jeton confidentiel.</span>
+              <span class="vault-disclaimer">Your token is stored encrypted locally on this device only. Keep it confidential.</span>
             </div>
           </div>
 
-          <!-- 2. Comptes enregistrés HUB -->
+          <!-- 2. Saved Accounts HUB -->
           <div class="accounts-hub-card" id="accounts-hub-card">
             <div class="hub-header">
               <div class="hub-title-wrap">
-                <h3>Comptes enregistrés</h3>
-                <span class="hub-count" id="hub-accounts-count">0 compte</span>
+                <h3>Saved Accounts</h3>
+                <span class="hub-count" id="hub-accounts-count">0 accounts</span>
               </div>
               <button class="btn btn-secondary btn-sm" id="btn-show-add-account">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                <span>Ajouter un compte</span>
+                <span>Add Account</span>
               </button>
             </div>
             <div class="saved-accounts-grid" id="saved-accounts-grid">
@@ -706,16 +705,16 @@
               <div class="login-card-title">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
                 <div>
-                  <h3 id="login-card-heading">Bienvenue dans votre studio.</h3>
-                  <p id="login-card-desc">Choisissez comment connecter votre compte Discord.</p>
+                  <h3 id="login-card-heading">Welcome to Orb Studio.</h3>
+                  <p id="login-card-desc">Select how you would like to connect your Discord account.</p>
                 </div>
               </div>
             </div>
 
             <div class="login-tabs">
-              <button class="login-tab-btn active" data-login-tab="tab-login-qr">Code QR</button>
-              <button class="login-tab-btn" data-login-tab="tab-login-auto">Session locale</button>
-              <button class="login-tab-btn" data-login-tab="tab-login-manual">Jeton manuel</button>
+              <button class="login-tab-btn active" data-login-tab="tab-login-qr">Mobile QR</button>
+              <button class="login-tab-btn" data-login-tab="tab-login-auto">Local Session</button>
+              <button class="login-tab-btn" data-login-tab="tab-login-manual">Manual Token</button>
             </div>
 
             <!-- QR Code Tab -->
@@ -723,10 +722,10 @@
               <div class="qr-login-box">
                 <div class="qr-left">
                   <div class="qr-frame" id="qr-frame">
-                    <img id="qr-image" src="" alt="Code QR de connexion Discord" style="display: none;">
+                    <img id="qr-image" src="" alt="Discord Mobile QR login code" style="display: none;">
                     <div class="qr-placeholder" id="qr-placeholder">
                       <div class="spinner"></div>
-                      <p>Préparation du code QR…</p>
+                      <p>Generating QR code…</p>
                     </div>
                     <!-- Overlay when scanned on mobile -->
                     <div class="qr-scanned-overlay" id="qr-scanned-overlay" style="display: none;">
@@ -734,34 +733,34 @@
                         <img id="qr-scanned-avatar" src="../assets/avatar-placeholder.svg" alt="Avatar">
                         <div class="qr-scanned-pulse"></div>
                       </div>
-                      <span class="qr-scanned-name" id="qr-scanned-name">Utilisateur</span>
-                      <span class="qr-scanned-sub">Confirmez sur votre téléphone</span>
+                      <span class="qr-scanned-name" id="qr-scanned-name">User</span>
+                      <span class="qr-scanned-sub">Confirm on your phone</span>
                     </div>
                     <!-- Overlay when QR code has expired -->
                     <div class="qr-expired-overlay" id="qr-expired-overlay" style="display: none;">
                       <div class="qr-expired-icon">
                         <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
                       </div>
-                      <span>Ce code a expiré</span>
-                      <button class="btn btn-primary btn-sm" id="btn-qr-expired-refresh" type="button">Actualiser</button>
+                      <span>QR Code Expired</span>
+                      <button class="btn btn-primary btn-sm" id="btn-qr-expired-refresh" type="button">Refresh Code</button>
                     </div>
                   </div>
-                  <span class="qr-status-text" id="qr-status-text">Initialisation…</span>
+                  <span class="qr-status-text" id="qr-status-text">Initializing…</span>
                 </div>
 
                 <div class="qr-instructions">
-                  <h3>Le plus simple : votre téléphone.</h3>
+                  <h3>Quickest method: Your phone</h3>
                   <ol>
-                    <li>Ouvrez <strong>Discord</strong> sur votre téléphone.</li>
-                    <li>Dans les <strong>Paramètres</strong>, choisissez <strong>Scanner un code QR</strong>.</li>
-                    <li>Scannez le code affiché à gauche.</li>
-                    <li>Confirmez la <strong>connexion</strong> sur votre téléphone.</li>
+                    <li>Open <strong>Discord</strong> on your mobile device.</li>
+                    <li>Go to <strong>User Settings</strong>, then tap <strong>Scan QR Code</strong>.</li>
+                    <li>Point your camera at the QR code displayed on the left.</li>
+                    <li>Tap <strong>Log In</strong> to approve the connection.</li>
                   </ol>
                   <div class="tip-box">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
-                    <span>La demande de connexion se confirme dans votre application Discord.</span>
+                    <span>Login authorization is confirmed directly through your official Discord app.</span>
                   </div>
-                  <button class="btn btn-secondary" id="btn-refresh-qr">Générer un nouveau code</button>
+                  <button class="btn btn-secondary" id="btn-refresh-qr">Generate New Code</button>
                 </div>
               </div>
             </div>
@@ -770,36 +769,36 @@
             <div class="login-tab-content" id="tab-login-auto">
               <div class="auto-detect-box">
                 <div class="auto-detect-header">
-                  <h3>Retrouver une session locale</h3>
-                  <p>Retrouvez les sessions disponibles dans Discord, Discord PTB, Canary et vos navigateurs Chromium.</p>
+                  <h3>Detect Local Discord Sessions</h3>
+                  <p>Search for existing sessions in Discord, Discord PTB, Canary, and Chromium browsers.</p>
                   <button class="btn btn-primary" id="btn-scan-local-tokens">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-                    <span>Rechercher une session</span>
+                    <span>Scan for Sessions</span>
                   </button>
                 </div>
 
                 <div class="local-tokens-list" id="local-tokens-container">
-                  <p class="empty-hint">Les sessions détectées sur cet ordinateur apparaîtront ici.</p>
+                  <p class="empty-hint">Detected local sessions on this PC will appear here.</p>
                 </div>
               </div>
             </div>
 
-            <!-- Jeton manuel Tab -->
+            <!-- Manual Token Tab -->
             <div class="login-tab-content" id="tab-login-manual">
               <div class="manual-token-box">
-                <label for="manual-token-input">Votre jeton de session Discord</label>
+                <label for="manual-token-input">Discord User Token</label>
                 <div class="input-with-action">
-                  <input type="password" id="manual-token-input" placeholder="Collez votre jeton de session…">
-                  <button class="btn-input-icon" id="btn-toggle-token-eye" title="Afficher ou masquer">
+                  <input type="password" id="manual-token-input" placeholder="Paste session token here…">
+                  <button class="btn-input-icon" id="btn-toggle-token-eye" title="Show or hide">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
                   </button>
                 </div>
                 <div class="manual-actions">
-                  <button class="btn btn-primary" id="btn-submit-token">Se connecter</button>
+                  <button class="btn btn-primary" id="btn-submit-token">Log In</button>
                 </div>
                 <div class="token-helper">
-                  <h4>Où retrouver votre jeton ?</h4>
-                  <p>For convenience, use Mobile QR scan or Session locale. On Discord Web (discord.com/app): open Developer Tools (F12) → Network → inspect any API call → copy the Authorization request header.</p>
+                  <h4>How to find your token?</h4>
+                  <p>For convenience, use Mobile QR scan or Local Session. On Discord Web (discord.com/app): open Developer Tools (F12) → Network → inspect any API request → copy the Authorization header.</p>
                 </div>
               </div>
             </div>
@@ -809,46 +808,46 @@
 
       <!-- TAB 4: SETTINGS -->
       <section class="tab-pane" id="tab-settings">
-        <div class="page-path"><span>Votre espace</span><svg viewBox="0 0 16 16" fill="none" stroke="currentColor"><path d="m6 4 4 4-4 4"/></svg><span>Préférences</span></div>
+        <div class="page-path"><span>Workspace</span><svg viewBox="0 0 16 16" fill="none" stroke="currentColor"><path d="m6 4 4 4-4 4"/></svg><span>Settings</span></div>
         <header class="page-heading">
           <div>
-            <h1>Un studio à votre rythme.</h1>
-            <p>Ajustez les sessions, les notifications et les couleurs de votre espace.</p>
+            <h1>Customize Your Studio Cadence.</h1>
+            <p>Tune timing parameters, audio cues, desktop alerts, and theme palette.</p>
           </div>
         </header>
         <div class="settings-container">
           <!-- Automation Presets Group -->
           <div class="settings-group">
-            <h3>Le rythme de vos sessions</h3>
+            <h3>Session Cadence</h3>
             <div class="presets-selector">
               <div class="preset-card" data-preset="turbo">
                 <div class="preset-header">
-                  <span class="preset-name">Rapide</span>
+                  <span class="preset-name">Turbo</span>
                 </div>
-                <div class="preset-desc">Vidéo : 10 s. Échanges : 20 s. Pour avancer plus rapidement.</div>
+                <div class="preset-desc">Video: 10s. Heartbeat: 20s. For fast progression.</div>
               </div>
               <div class="preset-card active" data-preset="balanced">
                 <div class="preset-header">
-                  <span class="preset-name">Équilibré</span>
+                  <span class="preset-name">Balanced</span>
                 </div>
-                <div class="preset-desc">Vidéo : 7 s. Échanges : 28 s. Le rythme recommandé au quotidien.</div>
+                <div class="preset-desc">Video: 7s. Heartbeat: 28s. Recommended everyday cadence.</div>
               </div>
               <div class="preset-card" data-preset="safe">
                 <div class="preset-header">
-                  <span class="preset-name">Mesuré</span>
+                  <span class="preset-name">Stealth</span>
                 </div>
-                <div class="preset-desc">Vidéo : 5 s. Échanges : 32 s. Une cadence plus espacée.</div>
+                <div class="preset-desc">Video: 5s. Heartbeat: 32s. Relaxed and spaced cadence.</div>
               </div>
             </div>
           </div>
 
           <div class="settings-group">
-            <h3>Progression et automatisation</h3>
+            <h3>Automation & Timing</h3>
 
             <div class="setting-item">
               <div class="setting-info">
-                <span class="setting-title">Intervalle des échanges de jeu</span>
-                <span class="setting-desc">Temps entre deux mises à jour de l’activité de jeu.</span>
+                <span class="setting-title">Game Heartbeat Interval</span>
+                <span class="setting-desc">Time between game activity progress updates.</span>
               </div>
               <div class="setting-control">
                 <input type="number" id="setting-hb-interval" min="15" max="60" value="28">
@@ -858,8 +857,8 @@
 
             <div class="setting-item">
               <div class="setting-info">
-                <span class="setting-title">Progression des vidéos</span>
-                <span class="setting-desc">Secondes prises en compte à chaque mise à jour.</span>
+                <span class="setting-title">Video Progress Step</span>
+                <span class="setting-desc">Seconds advanced per video quest cycle.</span>
               </div>
               <div class="setting-control">
                 <input type="number" id="setting-video-step" min="3" max="15" value="7">
@@ -869,8 +868,8 @@
 
             <div class="setting-item">
               <div class="setting-info">
-                <span class="setting-title">Variation des intervalles</span>
-                <span class="setting-desc">Fait varier légèrement le temps entre les échanges.</span>
+                <span class="setting-title">Heartbeat Timing Jitter</span>
+                <span class="setting-desc">Applies slight randomized variation between updates.</span>
               </div>
               <div class="setting-control">
                 <label class="switch">
@@ -882,8 +881,8 @@
 
             <div class="setting-item">
               <div class="setting-info">
-                <span class="setting-title">Récupération des récompenses</span>
-                <span class="setting-desc">Récupérer la récompense dès qu’une quête est terminée.</span>
+                <span class="setting-title">Auto-Claim Rewards</span>
+                <span class="setting-desc">Automatically claim reward promo code when a quest completes.</span>
               </div>
               <div class="setting-control">
                 <label class="switch">
@@ -895,8 +894,8 @@
 
             <div class="setting-item">
               <div class="setting-info">
-                <span class="setting-title">Copie des codes</span>
-                <span class="setting-desc">Copier les nouveaux codes dans le presse-papiers.</span>
+                <span class="setting-title">Auto-Copy Promo Codes</span>
+                <span class="setting-desc">Copy newly claimed promo codes directly to clipboard.</span>
               </div>
               <div class="setting-control">
                 <label class="switch">
@@ -908,8 +907,8 @@
 
             <div class="setting-item">
               <div class="setting-info">
-                <span class="setting-title">Actualisation des quêtes</span>
-                <span class="setting-desc">Rechercher de nouvelles quêtes toutes les cinq minutes.</span>
+                <span class="setting-title">Auto-Refresh Quests</span>
+                <span class="setting-desc">Check for new Discord quests automatically every 5 minutes.</span>
               </div>
               <div class="setting-control">
                 <label class="switch">
@@ -922,11 +921,11 @@
 
           <!-- Sound & Desktop Notifications -->
           <div class="settings-group">
-            <h3>Sons et notifications</h3>
+            <h3>Audio & Notifications</h3>
             <div class="setting-item">
               <div class="setting-info">
-                <span class="setting-title">Sons du studio</span>
-                <span class="setting-desc">Un signal discret accompagne les événements de la session.</span>
+                <span class="setting-title">Studio Sound Effects</span>
+                <span class="setting-desc">Play discrete subtle audio cues on session events.</span>
               </div>
               <div class="setting-control">
                 <label class="switch">
@@ -938,8 +937,8 @@
 
             <div class="setting-item">
               <div class="setting-info">
-                <span class="setting-title">Notifications Windows</span>
-                <span class="setting-desc">Recevoir une notification lorsqu’une quête est terminée.</span>
+                <span class="setting-title">Windows Notifications</span>
+                <span class="setting-desc">Display desktop notification when a quest is finished.</span>
               </div>
               <div class="setting-control">
                 <label class="switch">
@@ -950,19 +949,19 @@
             </div>
           </div>
 
-          <!-- Theme & La couleur de votre studios -->
+          <!-- Theme & Accent Palette -->
           <div class="settings-group">
-            <h3>La couleur de votre studio</h3>
+            <h3>Studio Theme Palette</h3>
             <div class="setting-item">
               <div class="setting-info">
-                <span class="setting-title">Couleur d’accent</span>
-                <span class="setting-desc">Un accent pour les actions et les éléments sélectionnés.</span>
+                <span class="setting-title">Accent Color</span>
+                <span class="setting-desc">Color theme for interactive controls, badges, and focus rings.</span>
               </div>
               <div class="setting-control">
                 <div class="theme-pills">
-                  <button class="theme-dot active" data-theme="default" title="Pervenche" style="background: #b8adf2;"></button>
-                  <button class="theme-dot" data-theme="emerald" title="Sauge" style="background: #a8cbb4;"></button>
-                  <button class="theme-dot" data-theme="amber" title="Pêche" style="background: #e2b69b;"></button>
+                  <button class="theme-dot active" data-theme="default" title="Periwinkle" style="background: #b8adf2;"></button>
+                  <button class="theme-dot" data-theme="emerald" title="Sage" style="background: #a8cbb4;"></button>
+                  <button class="theme-dot" data-theme="amber" title="Peach" style="background: #e2b69b;"></button>
                   <button class="theme-dot" data-theme="crimson" title="Rose" style="background: #d8a8c4;"></button>
                 </div>
               </div>
@@ -970,11 +969,11 @@
           </div>
 
           <div class="settings-group">
-            <h3>Client Discord</h3>
+            <h3>Discord Client Emulation</h3>
             <div class="setting-item">
               <div class="setting-info">
-                <span class="setting-title">Numéro de build</span>
-                <span class="setting-desc">Build du client utilisé pour les échanges de session.</span>
+                <span class="setting-title">Client Build Number</span>
+                <span class="setting-desc">Build number sent in Discord client super-properties headers.</span>
               </div>
               <div class="setting-control">
                 <input type="number" id="setting-build-number" value="606747" style="width: 120px;">
@@ -982,8 +981,8 @@
             </div>
             <div class="setting-item">
               <div class="setting-info">
-                <span class="setting-title">Version du client</span>
-                <span class="setting-desc">Version de référence sur Windows x64.</span>
+                <span class="setting-title">Client Version</span>
+                <span class="setting-desc">Stable Discord client release reference on Windows x64.</span>
               </div>
               <div class="setting-control">
                 <input type="text" value="1.0.9256" disabled style="opacity: 0.7; width: 120px;">
@@ -992,8 +991,8 @@
           </div>
 
           <div class="save-settings-bar">
-            <button class="btn btn-primary" id="btn-save-settings">Enregistrer les préférences</button>
-            <span id="settings-saved-indicator" style="display: none; color: var(--emerald); font-size: 13px; font-weight: 600;">✓ Préférences enregistrées</span>
+            <button class="btn btn-primary" id="btn-save-settings">Save Preferences</button>
+            <span id="settings-saved-indicator" style="display: none; color: var(--emerald); font-size: 13px; font-weight: 600;">✓ Preferences Saved</span>
           </div>
         </div>
       </section>
@@ -1005,35 +1004,35 @@
   <div class="modal-backdrop" id="quest-modal" role="dialog" aria-modal="true" aria-labelledby="modal-quest-title" style="display: none;">
     <div class="modal-card">
       <div class="modal-hero" id="modal-hero">
-        <button class="modal-close-btn" id="btn-close-quest-modal" title="Fermer">
+        <button class="modal-close-btn" id="btn-close-quest-modal" title="Close">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>
         </button>
-        <div class="modal-hero-badge" id="modal-task-badge">Jeu sur ordinateur</div>
+        <div class="modal-hero-badge" id="modal-task-badge">Desktop Game</div>
       </div>
       <div class="modal-body">
-        <h2 class="modal-title" id="modal-quest-title">Détails de la quête</h2>
-        <div class="modal-subtitle" id="modal-quest-sub">Jeu et éditeur</div>
+        <h2 class="modal-title" id="modal-quest-title">Quest Overview</h2>
+        <div class="modal-subtitle" id="modal-quest-sub">Game and Publisher</div>
 
         <!-- Promo Code Alert Box if claimed -->
         <div class="promo-code-card" id="modal-promo-box" style="display: none;">
           <div class="promo-code-header">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
-            <span>Votre code de récompense</span>
+            <span>Your Promo Code</span>
           </div>
           <div class="promo-code-body">
-            <input type="text" id="modal-promo-code" aria-label="Code de récompense" readonly value="">
-            <button class="btn btn-primary btn-sm" id="btn-copy-promo-code">Copier</button>
+            <input type="text" id="modal-promo-code" aria-label="Reward promo code" readonly value="">
+            <button class="btn btn-primary btn-sm" id="btn-copy-promo-code">Copy</button>
           </div>
-          <span class="promo-hint">Utilisez ce code dans le jeu concerné ou dans votre inventaire de cadeaux Discord.</span>
+          <span class="promo-hint">Redeem this code in the game or in your Discord Gift Inventory.</span>
         </div>
 
         <div class="modal-specs-grid">
           <div class="spec-item">
-            <span class="spec-label">Durée de la quête</span>
+            <span class="spec-label">Target Duration</span>
             <span class="spec-value" id="modal-target-time">15 min</span>
           </div>
           <div class="spec-item">
-            <span class="spec-label">Progression</span>
+            <span class="spec-label">Progress</span>
             <span class="spec-value" id="modal-progress-pct">0%</span>
           </div>
           <div class="spec-item">
@@ -1041,25 +1040,25 @@
             <span class="spec-value" id="modal-expiration">--</span>
           </div>
           <div class="spec-item">
-            <span class="spec-label">Identifiant du jeu</span>
+            <span class="spec-label">Application ID</span>
             <span class="spec-value" id="modal-app-id">0000000000</span>
           </div>
         </div>
 
         <div class="modal-actions">
-          <button class="btn btn-secondary" id="btn-copy-quest-id">Copier l’ID de la quête</button>
-          <button class="btn btn-emerald" id="btn-modal-claim" style="display: none;">Récupérer la récompense</button>
-          <button class="btn btn-primary" id="btn-close-quest-modal-bottom">Fermer</button>
+          <button class="btn btn-secondary" id="btn-copy-quest-id">Copy Quest ID</button>
+          <button class="btn btn-emerald" id="btn-modal-claim" style="display: none;">Claim Reward</button>
+          <button class="btn btn-primary" id="btn-close-quest-modal-bottom">Close</button>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Votre coffre de récompenses Modal -->
-  <div class="modal-backdrop" id="vault-modal" role="dialog" aria-modal="true" aria-label="Coffre de récompenses" style="display: none;">
+  <!-- Rewards Vault Modal -->
+  <div class="modal-backdrop" id="vault-modal" role="dialog" aria-modal="true" aria-label="Rewards Vault" style="display: none;">
     <div class="modal-card modal-vault-card">
       <div class="modal-hero vault-hero">
-        <button class="modal-close-btn" id="btn-close-vault-modal" title="Fermer">
+        <button class="modal-close-btn" id="btn-close-vault-modal" title="Close">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>
         </button>
         <div class="vault-hero-content">
@@ -1067,8 +1066,8 @@
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 12v10H4V12"/><path d="M2 7h20v5H2z"/><path d="M12 22V7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg>
           </div>
           <div>
-            <h2 style="font-size: 20px; font-weight: 800;">Votre coffre de récompenses</h2>
-            <p style="font-size: 13px; color: var(--text-muted); margin-top: 4px;">Retrouvez les codes de vos quêtes terminées.</p>
+            <h2 style="font-size: 20px; font-weight: 800;">Your Rewards Vault</h2>
+            <p style="font-size: 13px; color: var(--text-muted); margin-top: 4px;">Saved codes and rewards from completed quests.</p>
           </div>
         </div>
       </div>
@@ -1076,27 +1075,27 @@
         <div class="vault-stats-banner">
           <div class="vault-stat-item">
             <span class="vault-stat-val" id="vault-total-codes">0</span>
-            <span class="vault-stat-label">Codes récupérés</span>
+            <span class="vault-stat-label">Claimed Codes</span>
           </div>
           <div class="vault-stat-item">
-            <span class="vault-stat-val text-emerald" id="vault-total-orbs">Prêt</span>
-            <span class="vault-stat-label">État</span>
+            <span class="vault-stat-val text-emerald" id="vault-total-orbs">Ready</span>
+            <span class="vault-stat-label">Status</span>
           </div>
           <button class="btn btn-primary btn-sm" id="btn-vault-copy-all">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-            <span>Tout copier</span>
+            <span>Copy All</span>
           </button>
         </div>
 
         <div class="vault-list" id="vault-items-container">
           <div class="empty-state" style="padding: 30px;">
-            <p style="color: var(--text-muted);">Les codes de vos prochaines récompenses apparaîtront ici.</p>
+            <p style="color: var(--text-muted);">Promo codes from your completed quests will appear here.</p>
           </div>
         </div>
 
         <div class="modal-actions" style="margin-top: 18px;">
-          <button class="btn btn-secondary" id="btn-vault-open-discord">Ouvrir les cadeaux Discord</button>
-          <button class="btn btn-primary" id="btn-close-vault-bottom">Fermer le coffre</button>
+          <button class="btn btn-secondary" id="btn-vault-open-discord">Open Discord Gift Inventory</button>
+          <button class="btn btn-primary" id="btn-close-vault-bottom">Close Vault</button>
         </div>
       </div>
     </div>
@@ -1105,9 +1104,9 @@
   <dialog id="confirm-clear-vault" class="confirmation-dialog" aria-labelledby="confirmation-title" aria-describedby="confirmation-description">
     <form method="dialog">
       <div class="confirmation-icon"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 6h18M9 6V3h6v3M5 6l1 15h12l1-15M10 10v7m4-7v7"/></svg></div>
-      <h2 id="confirmation-title">Vider votre coffre ?</h2>
-      <p id="confirmation-description">Les codes enregistrés dans le studio seront effacés. Cette action ne modifie pas vos récompenses sur Discord.</p>
-      <div class="confirmation-actions"><button class="btn btn-secondary" value="cancel" autofocus>Garder mes codes</button><button class="btn btn-danger" value="confirm">Vider le coffre</button></div>
+      <h2 id="confirmation-title">Clear Rewards Vault?</h2>
+      <p id="confirmation-description">Saved codes in the local vault will be deleted. This does not revoke your claimed items in Discord.</p>
+      <div class="confirmation-actions"><button class="btn btn-secondary" value="cancel" autofocus>Keep Codes</button><button class="btn btn-danger" value="confirm">Clear Vault</button></div>
     </form>
   </dialog>
 

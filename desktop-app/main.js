@@ -271,7 +271,7 @@ ipcMain.handle('token-validate', async (event, token) => {
     });
 
     if (!res.ok) {
-      return { ok: false, error: 'Token invalide ou session expirée' };
+      return { ok: false, error: 'Invalid token or expired session' };
     }
 
     const user = await res.json();

@@ -1,91 +1,47 @@
-# ⚡ Operator Vault — Portfolio & Distribution de Projets
+# Operator Vault — Portfolio & Project Showcase
 
-Plateforme web moderne, ultra-légère et responsive pour exposer et distribuer vos projets personnels, outils et artefacts de recherche.
+A modern, lightweight, responsive web showcase to present and distribute personal software projects, tools, and technical research artifacts.
 
 ---
 
-## 🚀 1. Tester en local immédiatement
+## 1. Running Locally
 
-Vous pouvez tester le site de deux manières :
+You can test the site in two ways:
 
-### Option A : Serveur local rapide (recommandé)
-Dans un terminal (PowerShell / Bash) dans ce dossier :
+### Option A: Local Python Server (Recommended)
+From PowerShell or Bash in this directory:
 ```bash
 python -m http.server 8080
 ```
-Puis ouvrez votre navigateur sur : **[http://localhost:8080](http://localhost:8080)**
+Open your browser at: **http://localhost:8080**
 
-### Option B : Double-clic direct
-Double-cliquez simplement sur `index.html`. Un fallback intégré charge automatiquement vos projets même sans serveur web.
+### Option B: Direct File Opening
+Double-click `index.html`. A built-in fallback automatically loads your projects even without an HTTP server.
 
 ---
 
-## 🌐 2. Déployer en ligne pour le monde entier (Gratuit)
+## 2. Deploying to the Web
 
-### Via GitHub Pages (2 minutes)
-1. Créez un nouveau dépôt sur GitHub (ex: `mes-projets` ou `<votre-pseudo>.github.io`).
-2. Poussez tous les fichiers de ce dossier :
+### Via GitHub Pages
+1. Create a repository on GitHub (e.g. `<user>.github.io` or `projects-hub`).
+2. Push the files:
    ```bash
    git init
    git add .
    git commit -m "Initial release Operator Vault"
    git branch -M main
-   git remote add origin https://github.com/<votre-pseudo>/<votre-repo>.git
+   git remote add origin https://github.com/<user>/<repo>.git
    git push -u origin main
    ```
-3. Allez dans les **Paramètres (Settings)** du dépôt sur GitHub -> **Pages**.
-4. Sous **Build and deployment**, sélectionnez la branche `main` et le dossier `/ (root)`.
-5. Cliquez sur **Save**. Votre site est en ligne à l'adresse `https://<votre-pseudo>.github.io/<votre-repo>/` !
+3. In repository **Settings** -> **Pages**: select the `main` branch and `/ (root)` directory.
+4. Click **Save**.
 
-### Via Vercel ou Netlify
-- Glissez-déposez simplement ce dossier sur [app.netlify.com/drop](https://app.netlify.com/drop) ou importez le dépôt dans [vercel.com](https://vercel.com).
-- Le déploiement est instantané (zéro configuration requise).
-
----
-
-## 🛠️ 3. Comment ajouter / modifier vos projets
-
-Vous avez deux méthodes très simples :
-
-### Méthode 1 : Directement depuis l'interface web (Visuelle)
-1. Cliquez sur le bouton **"Ajouter un Projet"** en haut à droite du site.
-2. Remplissez le formulaire (Titre, Catégorie, Tags, Dépôt GitHub, Commandes...).
-3. Validez : le projet s'affiche immédiatement sur votre page !
-4. Cliquez ensuite sur **"Exporter JSON"** pour télécharger le fichier `projects.json` à jour et remplacez celui du dossier.
-
-### Méthode 2 : En modifiant `projects.json`
-Ouvrez simplement `projects.json` avec n'importe quel éditeur et dupliquez un bloc existant :
-```json
-{
-  "id": "mon-nouveau-projet",
-  "title": "Nom de mon projet",
-  "category": "security",
-  "categoryLabel": "Sécurité & Kernel",
-  "status": "stable",
-  "statusLabel": "Stable v1.0",
-  "date": "2026-04",
-  "shortDesc": "Résumé pour la carte d'accueil...",
-  "fullDesc": "Description détaillée affichée dans la modale...",
-  "tags": ["C++", "Windows", "Reverse"],
-  "features": [
-    "Fonctionnalité 1",
-    "Fonctionnalité 2"
-  ],
-  "repoUrl": "https://github.com/votre-user/mon-repo",
-  "demoUrl": "https://...",
-  "downloadUrl": "#",
-  "instructions": "# Commandes de compilation\ncargo build --release"
-}
-```
+### Via Vercel or Netlify
+- Drag and drop this folder onto [app.netlify.com/drop](https://app.netlify.com/drop) or import the repository in [vercel.com](https://vercel.com).
+- Deployment is instantaneous with zero build configuration needed.
 
 ---
 
-## 📁 Structure des fichiers
+## 3. Customizing Projects
 
-```text
-├── index.html        # Structure HTML5 & templates de modales
-├── style.css         # Système de design Dark Obsidian / Glassmorphism
-├── app.js            # Moteur JavaScript : filtres, recherche, modales, ajout
-├── projects.json     # Base de données de vos projets
-└── README.md         # Guide de déploiement et d'administration
-```
+Edit `projects.json` directly to update descriptions, repositories, and download links.

@@ -11,19 +11,19 @@ echo ========================================================
 echo.
 
 if exist "desktop-app\node_modules" (
-    echo [OK] Lancement de Discord Orb Studio (dernière version)...
+    echo [OK] Launching Discord Orb Studio (latest version)...
     cd desktop-app
     start "" npm start
     exit /b 0
 )
 
 if exist "dist\Discord Orb Studio.exe" (
-    echo [OK] Lancement du binaire autonome portable...
+    echo [OK] Launching portable standalone binary...
     start "" "dist\Discord Orb Studio.exe"
     exit /b 0
 )
 
-echo [!] Installation des dependances...
+echo [!] Installing dependencies...
 cd desktop-app
 call npm install
 start "" npm start

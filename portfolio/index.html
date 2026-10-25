@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Maik • Mes Projets & Réalisations</title>
-  <meta name="description" content="Portfolio et carnet de projets personnels : sécurité des systèmes, composants kernel, graphismes DirectX et outils web. Code source et documentations disponibles.">
+  <title>Projects Showcase & Lab Notes</title>
+  <meta name="description" content="Personal engineering showcase: systems security, kernel components, DirectX graphics hooks, and modern web tooling. Source code and documentation available.">
   
   <!-- Google Fonts: Plus Jakarta Sans & JetBrains Mono -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -21,22 +21,22 @@
       <a href="#" class="brand">
         <div class="brand-avatar">
           👨‍💻
-          <span class="status-indicator" title="Projets disponibles"></span>
+          <span class="status-indicator" title="Projects available"></span>
         </div>
         <div class="brand-info">
-          <span class="brand-name">Maik • Projets Perso</span>
-          <span class="brand-tagline">Développement système, reverse & web</span>
+          <span class="brand-name">Personal Projects</span>
+          <span class="brand-tagline">Systems development, reverse engineering & web</span>
         </div>
       </a>
 
       <div class="nav-actions">
-        <button id="btn-export-json" class="btn btn-secondary btn-sm" title="Sauvegarder la base de données de vos projets">
+        <button id="btn-export-json" class="btn btn-secondary btn-sm" title="Export projects database">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
             <polyline points="7 10 12 15 17 10"></polyline>
             <line x1="12" y1="15" x2="12" y2="3"></line>
           </svg>
-          Exporter projects.json
+          Export projects.json
         </button>
 
         <button id="btn-open-add" class="btn btn-primary btn-sm">
@@ -44,7 +44,7 @@
             <line x1="12" y1="5" x2="12" y2="19"></line>
             <line x1="5" y1="12" x2="19" y2="12"></line>
           </svg>
-          Nouveau projet
+          New Project
         </button>
       </div>
     </div>
@@ -57,23 +57,23 @@
         <div class="hero-content">
           <div class="hero-pill">
             <span class="hero-pill-dot"></span>
-            <span>Carnet d'ingénierie & projets personnels</span>
+            <span>Engineering Lab & Personal Projects</span>
           </div>
           <h1 class="hero-title">
-            Mes créations, outils et expérimentations <span class="highlight">en accès libre.</span>
+            Open tools, software & experimental <span class="highlight">artifacts.</span>
           </h1>
           <p class="hero-desc">
-            Salut ! Ici, je rassemble les projets que j'ai conçus et codés : drivers Windows, moteurs d'interception d'appels système, hooks graphiques et outils web. Tout est testé, documenté et prêt à être exploré.
+            A curated collection of engineered software: Windows drivers, system call dispatchers, graphics presentation hooks, and utility tooling. All tested and documented.
           </p>
           <div class="hero-actions">
             <a href="#projets" class="btn btn-primary">
-              Explorer les réalisations
+              Explore Projects
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                 <path d="M7 13l5 5 5-5M12 4v14"/>
               </svg>
             </a>
             <button id="hero-btn-add" class="btn btn-secondary" onclick="window.hubApp?.openAddModal()">
-              Ajouter une réalisation
+              Add Project
             </button>
           </div>
         </div>
@@ -88,25 +88,25 @@
               </svg>
             </div>
             <div>
-              <div class="bio-title">L'Atelier de travail</div>
-              <div class="bio-subtitle">C++, Kernel, ASM, Web moderne</div>
+              <div class="bio-title">Technical Focus</div>
+              <div class="bio-subtitle">C++, Kernel, ASM, Modern Web</div>
             </div>
           </div>
           <p class="bio-text">
-            Chaque projet répond à un problème technique précis : explorer la mémoire protégée, intercepter des flux graphiques ou automatiser des tâches d'analyse. Cliquez sur n'importe quelle fiche pour voir le code et les instructions.
+            Each project addresses specific technical challenges: physical and virtual memory inspection, graphics swapchain interception, or automated instrumentation. Click any project card to view source code and build instructions.
           </p>
           <div class="bio-stats">
             <div class="bio-stat-item">
               <span class="bio-stat-val" id="metric-total">5</span>
-              <span class="bio-stat-label">Projets</span>
+              <span class="bio-stat-label">Projects</span>
             </div>
             <div class="bio-stat-item">
               <span class="bio-stat-val" id="metric-categories">4</span>
-              <span class="bio-stat-label">Catégories</span>
+              <span class="bio-stat-label">Categories</span>
             </div>
             <div class="bio-stat-item">
               <span class="bio-stat-val" id="metric-latest">2026</span>
-              <span class="bio-stat-label">Activité</span>
+              <span class="bio-stat-label">Activity</span>
             </div>
           </div>
         </aside>
@@ -126,16 +126,16 @@
               type="text" 
               id="search-input" 
               class="search-input" 
-              placeholder="Rechercher par mot-clé, langage (C++, Kernel, Python, ASM)..." 
+              placeholder="Search by keyword, tech (C++, Kernel, Python, ASM)..." 
               autocomplete="off"
             >
-            <button id="search-clear" class="search-clear" title="Effacer">&times;</button>
+            <button id="search-clear" class="search-clear" title="Clear">&times;</button>
           </div>
 
           <select id="sort-select" class="sort-select">
-            <option value="date-desc">Plus récents d'abord</option>
-            <option value="date-asc">Plus anciens d'abord</option>
-            <option value="title-asc">Ordre alphabétique (A-Z)</option>
+            <option value="date-desc">Newest First</option>
+            <option value="date-asc">Oldest First</option>
+            <option value="title-asc">Alphabetical (A-Z)</option>
           </select>
         </div>
 
@@ -149,7 +149,7 @@
     <!-- Projects Grid Section -->
     <section>
       <div class="section-header">
-        <h2 class="section-title">Catalogue des projets</h2>
+        <h2 class="section-title">Projects Catalog</h2>
         <span class="section-count" id="section-count"></span>
       </div>
       <div class="projects-grid" id="projects-grid">
@@ -164,31 +164,31 @@
       <div class="modal-header">
         <div>
           <div class="badge-group" style="margin-bottom: 8px;">
-            <span class="badge badge-category" id="modal-category">Catégorie</span>
+            <span class="badge badge-category" id="modal-category">Category</span>
             <span class="badge badge-status-stable" id="modal-status">Status</span>
           </div>
-          <h2 id="modal-title" style="font-size: 1.35rem; font-weight: 700;">Titre du Projet</h2>
+          <h2 id="modal-title" style="font-size: 1.35rem; font-weight: 700;">Project Title</h2>
         </div>
-        <button class="modal-close" title="Fermer la fenêtre">&times;</button>
+        <button class="modal-close" title="Close window">&times;</button>
       </div>
 
       <div class="modal-body">
         <div class="modal-section">
-          <div class="modal-section-title">Présentation du projet</div>
+          <div class="modal-section-title">Overview</div>
           <p id="modal-desc" style="color: var(--text-muted); line-height: 1.65;"></p>
         </div>
 
         <div class="modal-section" id="modal-features-section">
-          <div class="modal-section-title">Fonctionnalités & Spécificités</div>
+          <div class="modal-section-title">Features & Technical Details</div>
           <ul class="feature-list" id="modal-features"></ul>
         </div>
 
         <div class="modal-section" id="modal-code-section">
-          <div class="modal-section-title">Commandes d'installation & Exécution</div>
+          <div class="modal-section-title">Build & Usage Commands</div>
           <div class="code-box">
             <div class="code-box-header">
-              <span>TERMINAL / EXEMPLE</span>
-              <button class="copy-btn" id="modal-code-copy">Copier le code</button>
+              <span>TERMINAL / USAGE</span>
+              <button class="copy-btn" id="modal-code-copy">Copy</button>
             </div>
             <pre class="code-box-content" id="modal-code"></pre>
           </div>
@@ -202,7 +202,7 @@
             <polyline points="7 10 12 15 17 10"></polyline>
             <line x1="12" y1="15" x2="12" y2="3"></line>
           </svg>
-          Télécharger l'archive
+          Download Package
         </a>
         <a id="modal-btn-demo" href="#" target="_blank" class="btn btn-secondary btn-sm" style="display: none;">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -210,13 +210,13 @@
             <polyline points="15 3 21 3 21 9"></polyline>
             <line x1="10" y1="14" x2="21" y2="3"></line>
           </svg>
-          Voir la démo
+          Live Demo
         </a>
         <a id="modal-btn-repo" href="#" target="_blank" class="btn btn-primary btn-sm" style="display: none;">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
             <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
           </svg>
-          Consulter le code source
+          View Source Code
         </a>
       </div>
     </div>
@@ -227,70 +227,70 @@
     <div class="modal-container">
       <div class="modal-header">
         <div>
-          <h2 style="font-size: 1.25rem; font-weight: 700;">Ajouter un nouveau projet</h2>
-          <p style="font-size: 0.84rem; color: var(--text-soft);">Remplissez les détails pour ajouter un projet à votre carnet public.</p>
+          <h2 style="font-size: 1.25rem; font-weight: 700;">Add New Project</h2>
+          <p style="font-size: 0.84rem; color: var(--text-soft);">Fill in details to add a project to your local catalog.</p>
         </div>
-        <button class="modal-close" title="Fermer la fenêtre">&times;</button>
+        <button class="modal-close" title="Close window">&times;</button>
       </div>
 
       <form id="add-project-form">
         <div class="modal-body">
           <div class="form-row">
             <div class="form-group">
-              <label class="form-label" for="new-title">Titre du projet *</label>
-              <input type="text" id="new-title" class="form-input" placeholder="ex: Mon Injecteur DLL x64" required>
+              <label class="form-label" for="new-title">Project Title *</label>
+              <input type="text" id="new-title" class="form-input" placeholder="e.g. Memory Analysis Engine" required>
             </div>
             <div class="form-group">
-              <label class="form-label" for="new-category">Catégorie *</label>
+              <label class="form-label" for="new-category">Category *</label>
               <select id="new-category" class="form-select" required>
-                <option value="security">Sécurité & Kernel</option>
-                <option value="game-dev">Graphismes & Hooks</option>
-                <option value="tools">Outils & Analyse</option>
-                <option value="web">Web & Utilitaires</option>
+                <option value="security">Security & Systems</option>
+                <option value="game-dev">Graphics & Engine</option>
+                <option value="tools">Tools & Analysis</option>
+                <option value="web">Web & Utilities</option>
               </select>
             </div>
           </div>
 
           <div class="form-group">
-            <label class="form-label" for="new-short-desc">Courte description (visible sur la fiche) *</label>
-            <input type="text" id="new-short-desc" class="form-input" placeholder="Ex: Utilitaire léger pour analyser la mémoire en mode noyau..." required>
+            <label class="form-label" for="new-short-desc">Short Description *</label>
+            <input type="text" id="new-short-desc" class="form-input" placeholder="e.g. Lightweight memory inspection tool..." required>
           </div>
 
           <div class="form-group">
-            <label class="form-label" for="new-full-desc">Description détaillée</label>
-            <textarea id="new-full-desc" class="form-textarea" placeholder="Expliquez la démarche technique, l'architecture choisie et les cas d'usage..."></textarea>
+            <label class="form-label" for="new-full-desc">Detailed Description</label>
+            <textarea id="new-full-desc" class="form-textarea" placeholder="Explain technical design, architecture, and use cases..."></textarea>
           </div>
 
           <div class="form-group">
-            <label class="form-label" for="new-tags">Technologies utilisées (séparées par une virgule)</label>
+            <label class="form-label" for="new-tags">Tech Stack (comma separated)</label>
             <input type="text" id="new-tags" class="form-input" placeholder="C++, Win32, ASM x64, Syscalls">
           </div>
 
           <div class="form-group">
-            <label class="form-label" for="new-features">Points forts (1 par ligne)</label>
-            <textarea id="new-features" class="form-textarea" placeholder="Fonctionnalité clé 1&#10;Fonctionnalité clé 2&#10;Zéro dépendance externe"></textarea>
+            <label class="form-label" for="new-features">Key Highlights (one per line)</label>
+            <textarea id="new-features" class="form-textarea" placeholder="Key feature 1&#10;Key feature 2&#10;Zero external dependencies"></textarea>
           </div>
 
           <div class="form-row">
             <div class="form-group">
-              <label class="form-label" for="new-repo">Lien vers le dépôt GitHub</label>
+              <label class="form-label" for="new-repo">GitHub Repository Link</label>
               <input type="url" id="new-repo" class="form-input" placeholder="https://github.com/...">
             </div>
             <div class="form-group">
-              <label class="form-label" for="new-demo">Lien de démo ou téléchargement</label>
+              <label class="form-label" for="new-demo">Demo or Release Link</label>
               <input type="url" id="new-demo" class="form-input" placeholder="https://...">
             </div>
           </div>
 
           <div class="form-group">
-            <label class="form-label" for="new-instructions">Commandes d'installation ou extrait de code</label>
-            <textarea id="new-instructions" class="form-textarea" placeholder="# Pour compiler&#10;msbuild /p:Configuration=Release"></textarea>
+            <label class="form-label" for="new-instructions">Build Commands / Code Snippet</label>
+            <textarea id="new-instructions" class="form-textarea" placeholder="# Build&#10;msbuild /p:Configuration=Release"></textarea>
           </div>
         </div>
 
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary modal-close">Annuler</button>
-          <button type="submit" class="btn btn-primary">Enregistrer le projet</button>
+          <button type="button" class="btn btn-secondary modal-close">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Project</button>
         </div>
       </form>
     </div>
@@ -303,11 +303,11 @@
   <footer class="footer">
     <div class="container footer-content">
       <div class="footer-text">
-        Projets personnels de Maik • Développés avec rigueur et passion.
+        Projects Showcase • Built with focus and precision.
       </div>
       <div class="footer-links">
-        <a href="projects.json" target="_blank" class="footer-link">Voir projects.json brut</a>
-        <a href="#" class="footer-link" onclick="window.scrollTo({top: 0, behavior: 'smooth'}); return false;">Haut de page &uarr;</a>
+        <a href="projects.json" target="_blank" class="footer-link">Raw projects.json</a>
+        <a href="#" class="footer-link" onclick="window.scrollTo({top: 0, behavior: 'smooth'}); return false;">Top &uarr;</a>
       </div>
     </div>
   </footer>

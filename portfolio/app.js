@@ -250,11 +250,11 @@ class ProjectHubApp {
     if (!this.tabsContainer) return;
 
     const categoryMap = {
-      'all': { label: 'Tous les projets', count: this.projects.length },
-      'security': { label: 'Sécurité & Kernel', count: 0 },
-      'game-dev': { label: 'Graphismes & Hooks', count: 0 },
-      'tools': { label: 'Outils & Analyse', count: 0 },
-      'web': { label: 'Web & Utilitaires', count: 0 }
+      'all': { label: 'All Projects', count: this.projects.length },
+      'security': { label: 'Security & Systems', count: 0 },
+      'game-dev': { label: 'Graphics & Engine', count: 0 },
+      'tools': { label: 'Tools & Analysis', count: 0 },
+      'web': { label: 'Web & Utilities', count: 0 }
     };
 
     this.projects.forEach(p => {
@@ -332,7 +332,7 @@ class ProjectHubApp {
     const items = this.getFilteredProjects();
 
     if (this.sectionCount) {
-      this.sectionCount.textContent = `${items.length} ${items.length > 1 ? 'projets disponibles' : 'projet disponible'}`;
+      this.sectionCount.textContent = `${items.length} ${items.length > 1 ? 'projects available' : 'project available'}`;
     }
 
     if (items.length === 0) {
@@ -342,8 +342,8 @@ class ProjectHubApp {
             <circle cx="11" cy="11" r="8"></circle>
             <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
           </svg>
-          <h3>Aucun projet ne correspond à cette recherche</h3>
-          <p>Essayez avec d'autres mots-clés ou sélectionnez une autre catégorie ci-dessus.</p>
+          <h3>No projects match this search</h3>
+          <p>Try different keywords or select a different category above.</p>
         </div>
       `;
       return;
@@ -381,7 +381,7 @@ class ProjectHubApp {
         </div>
         <div class="card-actions">
           <button class="btn btn-secondary btn-sm btn-view-details" data-id="${p.id}">
-            Découvrir le projet &rarr;
+            View Details &rarr;
           </button>
           ${p.repoUrl ? `
             <a href="${p.repoUrl}" target="_blank" rel="noopener" class="btn btn-ghost btn-sm" title="Voir le dépôt GitHub">
@@ -455,7 +455,7 @@ class ProjectHubApp {
     if (copyBtn) {
       copyBtn.onclick = () => {
         navigator.clipboard.writeText(p.instructions || '');
-        this.showToast('Extrait de code copié !', 'success');
+        this.showToast('Code snippet copied!', 'success');
       };
     }
 

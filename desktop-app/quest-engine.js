@@ -102,20 +102,20 @@ class QuestEngine extends EventEmitter {
         try { data = await res.json(); } catch (_) {}
 
         if (res.status === 401) {
-          this.log(`Session Discord invalide ou expirée (HTTP 401).`, 'error');
+          this.log(`Invalid or expired Discord session (HTTP 401).`, 'error');
           return { ok: false, status: 401, body: data, latencyMs };
         }
 
         if (res.status === 429) {
           const waitTime = ((data?.retry_after ?? 4) * 1000) + 500;
-          this.log(`Rate limited (429). Pause de ${(waitTime/1000).toFixed(1)}s...`, 'warn');
+          this.log(`Rate limited (429). Pausing for ${(waitTime/1000).toFixed(1)}s...`, 'warn');
           await sleep(waitTime);
           continue;
         }
 
         return { ok: res.ok, status: res.status, body: data, latencyMs };
       } catch (err) {
-        this.log(`Erreur réseau (${method} ${endpoint}) : ${err.message}. Retry ${retry + 1}/3...`, 'warn');
+        this.log(`Network error (${method} ${endpoint}): ${err.message}. Retrying ${retry + 1}/3...`, 'warn');
         await sleep(2000 * (retry + 1));
       }
     }
@@ -158,10 +158,10 @@ class QuestEngine extends EventEmitter {
   }
 
   async fetchQuests() {
-    if (!this.token) throw new Error("Token non défini.");
+    if (!this.token) throw new Error("Token not set.");
     const res = await this.apiFetch('/quests/@me');
     if (!res.ok) {
-      throw new Error(res.body?.message || `Erreur API Discord (${res.status})`);
+      throw new Error(res.body?.message || `Discord API error (${res.status})`);
     }
 
     let rawList = [];
@@ -176,7 +176,7 @@ class QuestEngine extends EventEmitter {
     const config = q.config || {};
     const messages = config.messages || {};
     const gameTitle = messages.gameTitle || messages.game_title || config.application?.name || "Jeu";
-    const questName = messages.questName || messages.quest_name || gameTitle || "Quête Discord";
+    const questName = messages.questName || messages.quest_name || gameTitle || "Discord Quest";
 
     const userStatus = q.user_status || q.userStatus || {};
     const enrolledAt = userStatus.enrolled_at || userStatus.enrolledAt;
@@ -303,7 +303,7 @@ class QuestEngine extends EventEmitter {
   skip() {
     if (!this.running || !this.currentQuest) return false;
     this.skipRequested = true;
-    this.log(`Passage de la quête active "${this.currentQuest.questName}"...`, 'warn');
+    this.log(`Skipping active quest "${this.currentQuest.questName}"...`, 'warn');
     this.emit('quest-skipped', { quest: this.currentQuest });
     return true;
   }
@@ -318,7 +318,7 @@ class QuestEngine extends EventEmitter {
     this.aborted = true;
     this.running = false;
     this.paused = false;
-    this.log("Arrêt demandé par l'utilisateur.", 'warn');
+    this.log("Stop requested by user.", 'warn');
     this.emit('stopped');
   }
 
@@ -336,7 +336,7 @@ class QuestEngine extends EventEmitter {
     const completedList = [];
     const failedList = [];
 
-    this.log(`Lancement du moteur pour ${total} quête(s)...`, 'info');
+    this.log(`Starting engine for ${total} quest(s)...`, 'info');
     this.emit('started', { total });
 
     for (let i = 0; i < total; i++) {
@@ -347,26 +347,26 @@ class QuestEngine extends EventEmitter {
       this.currentQuest = quest;
       const questSessionId = crypto.randomUUID();
 
-      this.log(`[${i + 1}/${total}] Quête : "${quest.questName}" [${quest.taskLabel}]`, 'info');
+      this.log(`[${i + 1}/${total}] Quest: "${quest.questName}" [${quest.taskLabel}]`, 'info');
       this.emit('quest-start', { quest, index: i, total });
 
       // Step 1: Auto-Enrollment
       if (!quest.isEnrolled) {
-        this.log(`Inscription automatique à la quête : "${quest.questName}"...`, 'info');
+        this.log(`Auto-enrolling in quest: "${quest.questName}"...`, 'info');
         const enrollRes = await this.apiFetch(`/quests/${quest.id}/enroll`, 'POST', null, questSessionId);
         if (!enrollRes.ok && enrollRes.status !== 400) {
           const msg = enrollRes.body?.message || `HTTP ${enrollRes.status}`;
-          this.log(`Échec d'inscription : ${msg}`, 'error');
-          failedList.push({ quest, reason: `Inscription refusée (${msg})` });
+          this.log(`Enrollment failed: ${msg}`, 'error');
+          failedList.push({ quest, reason: `Enrollment rejected (${msg})` });
           continue;
         }
-        this.log(`Inscription confirmée. Synchronisation (2s)...`, 'success');
+        this.log(`Enrollment confirmed. Syncing (2s)...`, 'success');
         quest.isEnrolled = true;
         await sleep(2000);
       }
 
       let success = false;
-      let failReason = "Temps maximum dépassé";
+      let failReason = "Maximum duration exceeded";
       let wasSkipped = false;
 
       // Step 2: Route by Task Type
@@ -380,15 +380,15 @@ class QuestEngine extends EventEmitter {
       }
 
       success = execRes?.success || false;
-      failReason = execRes?.reason || "Inconnu";
+      failReason = execRes?.reason || "Unknown";
       wasSkipped = execRes?.skipped || false;
 
       if (wasSkipped) {
-        this.log(`Quête sautée par l'utilisateur : "${quest.questName}"`, 'warn');
-        failedList.push({ quest, reason: "Sautée manuellement", skipped: true });
+        this.log(`Quest skipped by user: "${quest.questName}"`, 'warn');
+        failedList.push({ quest, reason: "Skipped manually", skipped: true });
         this.emit('quest-skipped', { quest, index: i, total });
       } else if (success) {
-        this.log(`Quête terminée : "${quest.questName}"`, 'success');
+        this.log(`Quest completed: "${quest.questName}"`, 'success');
         completedList.push(quest);
 
         // Step 3: Auto-Claim Reward if configured
@@ -399,7 +399,7 @@ class QuestEngine extends EventEmitter {
 
         this.emit('quest-complete', { quest, index: i, total });
       } else if (!this.aborted) {
-        this.log(`Échec pour "${quest.questName}" : ${failReason}`, 'error');
+        this.log(`Failed for "${quest.questName}": ${failReason}`, 'error');
         failedList.push({ quest, reason: failReason });
         this.emit('quest-fail', { quest, reason: failReason });
       }
@@ -408,7 +408,7 @@ class QuestEngine extends EventEmitter {
         const pauseMs = this.settings.executionMode === 'stealth'
           ? Math.floor(12000 + Math.random() * 8000)
           : 2500;
-        this.log(`Pause inter-quêtes (${(pauseMs/1000).toFixed(1)}s)...`, 'info');
+        this.log(`Inter-quest cadence pause (${(pauseMs/1000).toFixed(1)}s)...`, 'info');
         await sleep(pauseMs);
       }
     }
@@ -416,7 +416,7 @@ class QuestEngine extends EventEmitter {
     this.running = false;
     this.currentQuest = null;
 
-    this.log(`Session terminée : ${completedList.length} complétée(s), ${failedList.length} échec(s)`, completedList.length > 0 ? 'success' : 'info');
+    this.log(`Session finished: ${completedList.length} completed, ${failedList.length} failed`, completedList.length > 0 ? 'success' : 'info');
 
     this.emit('finished', {
       completedList,
@@ -498,24 +498,24 @@ class QuestEngine extends EventEmitter {
 
     while (current < target && consecutiveErrors < 5 && !this.aborted && !this.skipRequested) {
       await this.checkPause();
-      if (this.aborted) return { success: false, reason: "Interrompu par l'utilisateur" };
-      if (this.skipRequested) return { success: false, reason: "Sautée manuellement", skipped: true };
+      if (this.aborted) return { success: false, reason: "Interrupted by user" };
+      if (this.skipRequested) return { success: false, reason: "Skipped manually", skipped: true };
 
       const waitTarget = this.settings.jitterEnabled ? jitter(interval, 0.15) : interval;
       const start = Date.now();
 
       while (Date.now() - start < waitTarget) {
         await this.checkPause();
-        if (this.aborted) return { success: false, reason: "Interrompu par l'utilisateur" };
-        if (this.skipRequested) return { success: false, reason: "Sautée manuellement", skipped: true };
+        if (this.aborted) return { success: false, reason: "Interrupted by user" };
+        if (this.skipRequested) return { success: false, reason: "Skipped manually", skipped: true };
         await sleep(400);
       }
 
       await this.checkPause();
-      if (this.aborted) return { success: false, reason: "Interrompu par l'utilisateur" };
-      if (this.skipRequested) return { success: false, reason: "Sautée manuellement", skipped: true };
+      if (this.aborted) return { success: false, reason: "Interrupted by user" };
+      if (this.skipRequested) return { success: false, reason: "Skipped manually", skipped: true };
 
-      this.log(`Envoi signal heartbeat (AppID: ${appId || 'N/A'})...`, 'info');
+      this.log(`Sending heartbeat packet (AppID: ${appId || 'N/A'})...`, 'info');
       const hb = await this.apiFetch(`/quests/${quest.id}/heartbeat`, 'POST', {
         application_id: appId,
         terminal: false
@@ -532,7 +532,7 @@ class QuestEngine extends EventEmitter {
           if (val <= lastReportedSec) {
             stallCount++;
             if (stallCount >= 6) {
-              this.log(`Progression inchangée (${val}s) après 6 paquets. Resynchronisation de session...`, 'warn');
+              this.log(`Progress unchanged (${val}s) after 6 packets. Resyncing session...`, 'warn');
               await this.apiFetch(`/quests/${quest.id}/enroll`, 'POST', null, sessionId);
               stallCount = 0;
             }
@@ -550,7 +550,7 @@ class QuestEngine extends EventEmitter {
         quest.percentage = pct;
         quest.remainingSeconds = Math.max(0, target - current);
 
-        this.log(`Heartbeat OK : ${current}/${target}s (${pct}%) · ${hb.latencyMs}ms`, 'success');
+        this.log(`Heartbeat ACK: ${current}/${target}s (${pct}%) · ${hb.latencyMs}ms`, 'success');
         this.emit('progress', {
           quest,
           current,
@@ -571,9 +571,9 @@ class QuestEngine extends EventEmitter {
       } else {
         consecutiveErrors++;
         const msg = hb.body?.message || `HTTP ${hb.status}`;
-        this.log(`Signal refusé (${consecutiveErrors}/5) : ${msg}`, 'warn');
+        this.log(`Signal rejected (${consecutiveErrors}/5): ${msg}`, 'warn');
         if (consecutiveErrors >= 5) {
-          return { success: false, reason: `5 erreurs consécutives (${msg})` };
+          return { success: false, reason: `5 consecutive errors (${msg})` };
         }
       }
     }
@@ -586,7 +586,7 @@ class QuestEngine extends EventEmitter {
       return { success: true };
     }
 
-    return { success: false, reason: "Interrompu ou non complété" };
+    return { success: false, reason: "Interrupted or incomplete" };
   }
 
   async executeActivityQuest(quest, sessionId, questIndex, totalQuests) {
@@ -604,27 +604,27 @@ class QuestEngine extends EventEmitter {
 
     const isStream = quest.taskType === "STREAM";
     this.log(isStream 
-      ? `Mode Stream : canal call:${channelId}:1, diffusion simulée...` 
-      : `Mode Activité Vocale : canal call:${channelId}:1, heartbeats toutes les ~20s...`, 'info');
+      ? `Stream mode: channel call:${channelId}:1, simulated stream broadcast...` 
+      : `Voice Activity mode: channel call:${channelId}:1, heartbeats every ~20s...`, 'info');
 
     while (current < target && consecutiveErrors < 5 && !this.aborted && !this.skipRequested) {
       await this.checkPause();
-      if (this.aborted) return { success: false, reason: "Interrompu par l'utilisateur" };
-      if (this.skipRequested) return { success: false, reason: "Sautée manuellement", skipped: true };
+      if (this.aborted) return { success: false, reason: "Interrupted by user" };
+      if (this.skipRequested) return { success: false, reason: "Skipped manually", skipped: true };
 
       const waitTarget = this.settings.jitterEnabled ? jitter(interval, 0.2) : interval;
       const start = Date.now();
 
       while (Date.now() - start < waitTarget) {
         await this.checkPause();
-        if (this.aborted) return { success: false, reason: "Interrompu par l'utilisateur" };
-        if (this.skipRequested) return { success: false, reason: "Sautée manuellement", skipped: true };
+        if (this.aborted) return { success: false, reason: "Interrupted by user" };
+        if (this.skipRequested) return { success: false, reason: "Skipped manually", skipped: true };
         await sleep(400);
       }
 
       await this.checkPause();
-      if (this.aborted) return { success: false, reason: "Interrompu par l'utilisateur" };
-      if (this.skipRequested) return { success: false, reason: "Sautée manuellement", skipped: true };
+      if (this.aborted) return { success: false, reason: "Interrupted by user" };
+      if (this.skipRequested) return { success: false, reason: "Skipped manually", skipped: true };
 
       const hb = await this.apiFetch(`/quests/${quest.id}/heartbeat`, 'POST', {
         application_id: appId,
@@ -643,7 +643,7 @@ class QuestEngine extends EventEmitter {
           if (val <= lastReportedSec) {
             stallCount++;
             if (stallCount >= 6) {
-              this.log(`Activité : progression inchangée (${val}s). Vérification...`, 'warn');
+              this.log(`Activity: progress unchanged (${val}s). Checking sync...`, 'warn');
               stallCount = 0;
             }
           } else {
@@ -660,7 +660,7 @@ class QuestEngine extends EventEmitter {
         quest.percentage = pct;
         quest.remainingSeconds = Math.max(0, target - current);
 
-        this.log(`Activité OK : ${current}/${target}s (${pct}%) · ${hb.latencyMs}ms`, 'success');
+        this.log(`Activity ACK: ${current}/${target}s (${pct}%) · ${hb.latencyMs}ms`, 'success');
         this.emit('progress', {
           quest,
           current,
@@ -680,9 +680,9 @@ class QuestEngine extends EventEmitter {
         }
       } else {
         consecutiveErrors++;
-        this.log(`Erreur activité (${consecutiveErrors}/5) : HTTP ${hb.status}`, 'warn');
+        this.log(`Activity error (${consecutiveErrors}/5): HTTP ${hb.status}`, 'warn');
         if (consecutiveErrors >= 5) {
-          return { success: false, reason: "Erreurs répétées sur l'activité" };
+          return { success: false, reason: "Repeated activity errors" };
         }
       }
     }
@@ -696,19 +696,19 @@ class QuestEngine extends EventEmitter {
       return { success: true };
     }
 
-    return { success: false, reason: "Incomplet" };
+    return { success: false, reason: "Incomplete" };
   }
 
   async claimReward(quest) {
     try {
-      this.log(`Réclamation récompense pour "${quest.questName}"...`, 'info');
+      this.log(`Claiming reward for "${quest.questName}"...`, 'info');
       
       // Step 1: Check if there's already a reward code available
       try {
         const rcRes = await this.apiFetch(`/quests/${quest.id}/reward-code`, 'GET');
         if (rcRes.ok && rcRes.body?.code) {
           const code = rcRes.body.code;
-          this.log(`Code promo récupéré : ${code}`, 'success');
+          this.log(`Promo code retrieved: ${code}`, 'success');
           quest.isClaimed = true;
           quest.claimCode = code;
           this.emit('reward-claimed', {
@@ -732,11 +732,11 @@ class QuestEngine extends EventEmitter {
 
       // Handle Captcha verification required by Discord
       if (res.body?.captcha_key || res.body?.captcha_service) {
-        this.log(`Captcha Discord requis pour "${quest.questName}". Ouvrez Discord pour valider le cadeau.`, 'warn');
+        this.log(`Discord Captcha required for "${quest.questName}". Please open Discord to claim gift.`, 'warn');
         return { 
           ok: false, 
           captchaRequired: true, 
-          message: "Captcha Discord requis — Cliquez sur 'Discord' pour réclamer directement dans l'application",
+          message: "Discord Captcha required — Please claim inside Discord app",
           questId: quest.id,
           data: res.body 
         };
@@ -749,9 +749,9 @@ class QuestEngine extends EventEmitter {
 
       if (res.ok) {
         if (code) {
-          this.log(`Récompense obtenue ! Code : ${code}`, 'success');
+          this.log(`Reward claimed! Code: ${code}`, 'success');
         } else {
-          this.log(`Récompense réclamée avec succès (créditée sur votre compte Discord) !`, 'success');
+          this.log(`Reward claimed successfully (credited directly to your Discord account)!`, 'success');
         }
         quest.isClaimed = true;
         quest.claimCode = code;
@@ -766,11 +766,11 @@ class QuestEngine extends EventEmitter {
         return { ok: true, code, rewardName: quest.rewardName, gameTitle: quest.gameTitle, data: res.body };
       } else {
         const msg = res.body?.message || `HTTP ${res.status}`;
-        this.log(`Note réclamation : ${msg}`, 'warn');
+        this.log(`Claim note: ${msg}`, 'warn');
         return { ok: false, message: msg, data: res.body };
       }
     } catch (e) {
-      this.log(`Erreur réclamation : ${e.message}`, 'error');
+      this.log(`Claim error: ${e.message}`, 'error');
       return { ok: false, message: e.message };
     }
   }

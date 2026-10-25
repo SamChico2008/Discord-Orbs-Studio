@@ -1,6 +1,7 @@
 const fs = require('fs');
-const s = JSON.parse(fs.readFileSync('C:/Users/SamChicoPC/.gemini/antigravity-ide/scratch/discord-quest-bot/sessions.json', 'utf8'));
-const token = Object.values(s)[0].token;
+const sessionPath = process.env.DISCORD_SESSION_PATH || './sessions.json';
+const s = fs.existsSync(sessionPath) ? JSON.parse(fs.readFileSync(sessionPath, 'utf8')) : {};
+const token = Object.values(s)[0]?.token || process.env.DISCORD_TOKEN || '';
 
 async function testHB() {
   // Let's test with quest 1542685543295361096 (Version Update: Typhoeus, already enrolled)
