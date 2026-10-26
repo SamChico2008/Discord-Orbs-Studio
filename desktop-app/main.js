@@ -150,7 +150,7 @@ async function checkStartupUpdates() {
   let result;
   try {
     const checkPromise = checkForUpdates({ packaged: app.isPackaged });
-    const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error('Delai depasse')), 3500));
+    const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error('Delai depasse')), 15000));
     result = await Promise.race([checkPromise, timeoutPromise]);
   } catch (error) {
     result = { updates: [], errors: [error.message], unsupported: false };
@@ -159,10 +159,35 @@ async function checkStartupUpdates() {
   if (remaining) await new Promise((resolve) => setTimeout(resolve, remaining));
   if (startupSplashClosed) return false;
 
+  if (result.pendingUpdate) {
+    await setSplashState({ mode: 'unavailable' });
+    await new Promise((resolve) => setTimeout(resolve, 900));
+    return false;
+  }
+
   if (result.unsupported) {
     await setSplashState({ mode: 'unavailable' });
     await new Promise((resolve) => setTimeout(resolve, 600));
     return false;
+  }
+
+  if (result.autoInstall) {
+    await setSplashState({ mode: 'installing' });
+    try {
+      await applyUpdates(result.updates, {
+        tempDir: app.getPath('temp'),
+        installDir: path.dirname(process.execPath)
+      });
+      await setSplashState({ mode: 'restarting' });
+      await new Promise((resolve) => setTimeout(resolve, 500));
+      app.quit();
+      return true;
+    } catch (error) {
+      await setSplashState({ mode: 'failed', message: error.message });
+      await new Promise((resolve) => { startupUpdateChoiceResolver = resolve; });
+      startupUpdateChoiceResolver = null;
+      return false;
+    }
   }
 
   if (!result.updates.length) {
@@ -445,6 +470,16 @@ ipcMain.handle('accounts-save', (event, account) => {
   }
   saveStoredConfig(cfg);
   return cfg.accounts;
+});
+
+ipcMain.handle('accounts-set-display-name', (event, accountId, displayName) => {
+  if (typeof accountId !== 'string' || typeof displayName !== 'string') return { ok: false };
+  const cfg = loadStoredConfig();
+  const account = (cfg.accounts || []).find((item) => item.id === accountId);
+  if (!account) return { ok: false };
+  account.custom_name = displayName.replace(/[\u0000-\u001f\u007f]/g, '').trim().slice(0, 32);
+  saveStoredConfig(cfg);
+  return { ok: true, accounts: cfg.accounts, customName: account.custom_name };
 });
 
 ipcMain.handle('accounts-remove', (event, accountId) => {

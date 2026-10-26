@@ -28,10 +28,10 @@
 
     <!-- Center Quick Tools -->
     <div class="window-center-tools">
-      <button class="win-tool-btn" id="btn-quick-vault" title="Open rewards vault">
+      <button class="win-tool-btn coming-soon-control" id="btn-quick-vault" title="Rewards Vault — Coming Soon" disabled aria-disabled="true">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 12v10H4V12"/><path d="M2 7h20v5H2z"/><path d="M12 22V7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg>
-        <span>Vault</span>
-        <span class="tool-badge" id="title-vault-badge">0</span>
+        <span>Rewards</span>
+        <span class="coming-soon-badge">Soon</span>
       </button>
 
       <button class="win-tool-btn" id="btn-quick-mute" title="Toggle audio cues">
@@ -81,10 +81,10 @@
           <span class="live-pulse-dot" id="live-indicator-dot"></span>
         </button>
 
-        <button class="nav-btn" data-tab="tab-vault">
+        <button class="nav-btn coming-soon-control" data-tab="tab-vault" title="Coming Soon" disabled aria-disabled="true">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 12v10H4V12"/><path d="M2 7h20v5H2z"/><path d="M12 22V7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg>
           <span>Rewards</span>
-          <span class="nav-counter" id="nav-vault-count">0</span>
+          <span class="coming-soon-badge">Soon</span>
         </button>
 
         <div class="nav-divider" aria-hidden="true"></div>
@@ -130,7 +130,9 @@
       <!-- Floating Discord Profile Popout Card -->
       <div class="discord-profile-popout" id="discord-profile-popout" style="display: none;">
         <div class="popout-banner" id="popout-banner">
-          <button class="popout-close-btn" id="btn-close-popout" title="Close">&times;</button>
+          <button class="popout-close-btn" id="btn-close-popout" title="Close" aria-label="Close profile">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+          </button>
         </div>
         <div class="popout-avatar-row">
           <div class="popout-avatar-wrap">
@@ -143,8 +145,13 @@
         </div>
         <div class="popout-body">
           <div class="popout-names">
-            <div class="popout-global-name" id="popout-name">Not Connected</div>
-            <div class="popout-handle" id="popout-handle">@username</div>
+            <div class="popout-name-line">
+              <div class="popout-global-name" id="popout-name">Not Connected</div>
+              <button class="popout-edit-name" id="btn-edit-display-name" type="button" title="Edit app display name" aria-label="Edit app display name">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m16 4 4 4M4 20l4-.8L19 8a2.1 2.1 0 0 0-3-3L5 16z"/></svg>
+              </button>
+            </div>
+            <div class="popout-handle account-handle-text" id="popout-handle">@username</div>
           </div>
           <div class="popout-divider"></div>
           
@@ -191,6 +198,19 @@
           </div>
         </div>
       </div>
+
+      <dialog class="display-name-dialog" id="display-name-dialog" aria-labelledby="display-name-title">
+        <form id="display-name-form">
+          <h2 id="display-name-title">Customize app name</h2>
+          <p>Choose how this account appears in Orb Studio. This won’t change your Discord profile.</p>
+          <label for="display-name-input">Display name</label>
+          <input id="display-name-input" name="displayName" type="text" maxlength="32" autocomplete="off" placeholder="Leave empty to use your Discord name">
+          <div class="display-name-actions">
+            <button class="btn btn-secondary" id="btn-cancel-display-name" type="button">Cancel</button>
+            <button class="btn btn-primary" type="submit">Save name</button>
+          </div>
+        </form>
+      </dialog>
 
       <div class="sidebar-footer">
         <input type="checkbox" id="toggle-build-info" class="build-toggle-input">
@@ -250,13 +270,13 @@
             </div>
           </div>
 
-          <div class="stat-card clickable-stat" id="stat-card-vault" title="Open Rewards Vault">
+          <div class="stat-card coming-soon-control" id="stat-card-vault" title="Rewards Vault — Coming Soon" aria-disabled="true">
             <div class="stat-icon-wrap icon-blue">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
             </div>
             <div class="stat-content">
-              <span class="stat-label">Your Vault</span>
-              <span class="stat-value" id="stat-rewards">Ready</span>
+              <span class="stat-label">Rewards Vault</span>
+              <span class="stat-value">Coming Soon</span>
             </div>
           </div>
         </div>
@@ -506,7 +526,7 @@
       <!-- TAB: REWARD VAULT (FULL PAGE) -->
       <section class="tab-pane" id="tab-vault">
         <div class="page-path"><span>Workspace</span><svg viewBox="0 0 16 16" fill="none" stroke="currentColor"><path d="m6 4 4 4-4 4"/></svg><span>Rewards</span></div>
-        <div class="vault-page-container">
+        <div class="vault-page-container vault-content-disabled">
           <div class="vault-page-header">
             <div class="vault-page-title-wrap">
               <div class="vault-page-icon">
@@ -580,6 +600,11 @@
             <!-- Dynamically populated -->
           </div>
         </div>
+        <div class="coming-soon-card">
+          <span class="coming-soon-badge">Coming Soon</span>
+          <h2>Rewards Vault</h2>
+          <p>The Rewards Vault is being prepared and will be available in a future update.</p>
+        </div>
       </section>
 
       <!-- TAB 3: ACCOUNT & SESSION MANAGER -->
@@ -618,7 +643,7 @@
                     <span class="acc-badge acc-badge-early" id="badge-early" style="display:none;">Early Supporter</span>
                   </div>
                 </div>
-                <span class="account-tag" id="account-globalname">@user</span>
+                <span class="account-tag account-handle-text" id="account-globalname">@user</span>
               </div>
               <div class="account-header-actions">
                 <button class="btn btn-secondary btn-sm" id="btn-copy-user-id" title="Copy Discord User ID">
@@ -679,7 +704,7 @@
                   <span>Copy Token</span>
                 </button>
               </div>
-              <span class="vault-disclaimer">Your token is stored encrypted locally on this device only. Keep it confidential.</span>
+              <span class="vault-disclaimer">Your session token is stored in Orb Studio’s local configuration on this device. Keep your Windows account private.</span>
             </div>
           </div>
 
@@ -838,6 +863,22 @@
                   <span class="preset-name">Stealth</span>
                 </div>
                 <div class="preset-desc">Video: 5s. Heartbeat: 32s. Relaxed and spaced cadence.</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="settings-group">
+            <h3>Profile Display</h3>
+            <div class="setting-item">
+              <div class="setting-info">
+                <span class="setting-title">Hide @handles</span>
+                <span class="setting-desc">Hide account handles in your profile and saved-account lists. Display names stay visible.</span>
+              </div>
+              <div class="setting-control">
+                <label class="switch">
+                  <input type="checkbox" id="setting-hide-handles">
+                  <span class="slider"></span>
+                </label>
               </div>
             </div>
           </div>

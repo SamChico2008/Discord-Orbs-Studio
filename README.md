@@ -7,12 +7,23 @@
 
   <p>
     <a href="https://github.com/SamChico2008/Discord-Orbs-Studio/releases/latest"><img src="https://img.shields.io/badge/Platform-Windows_x64-0078D6?style=flat-square&logo=windows&logoColor=white" alt="Platform Windows" /></a>
-    <a href="https://github.com/SamChico2008/Discord-Orbs-Studio/releases/tag/v3.3.6"><img src="https://img.shields.io/badge/Release-v3.3.6-5865F2?style=flat-square&logo=github&logoColor=white" alt="Release v3.3.6" /></a>
+    <a href="https://github.com/SamChico2008/Discord-Orbs-Studio/releases/tag/v3.3.7"><img src="https://img.shields.io/badge/Release-v3.3.7-5865F2?style=flat-square&logo=github&logoColor=white" alt="Release v3.3.7" /></a>
     <a href="https://www.electronjs.org/"><img src="https://img.shields.io/badge/Electron-v45.0.0-47848F?style=flat-square&logo=electron&logoColor=white" alt="Electron" /></a>
     <a href="https://nodejs.org/"><img src="https://img.shields.io/badge/Node.js-%3E%3D24.0.0-339933?style=flat-square&logo=node.js&logoColor=white" alt="Node.js" /></a>
     <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-brightgreen?style=flat-square" alt="License MIT" /></a>
     <a href="https://github.com/SamChico2008"><img src="https://img.shields.io/badge/Developer-Helios-blueviolet?style=flat-square" alt="Developer Helios" /></a>
   </p>
+</div>
+
+---
+
+## Interface Preview
+
+<div align="center">
+  <img src="docs/screenshots/quests-dashboard.png" width="49%" alt="Discord Orb Studio quests dashboard" />
+  <img src="docs/screenshots/live-monitor.png" width="49%" alt="Discord Orb Studio live session monitor" />
+  <img src="docs/screenshots/account-management.png" width="49%" alt="Discord Orb Studio account management" />
+  <img src="docs/screenshots/settings.png" width="49%" alt="Discord Orb Studio settings and profile display options" />
 </div>
 
 ---
@@ -88,8 +99,8 @@ The generated executable will be placed in:
 
 ## Privacy & Security
 
-- User credentials and session tokens are encrypted and retained locally on your machine.
-- No personal data or telemetry is transmitted to third-party servers.
+- Session tokens are stored in Orb Studio’s local configuration file on this device; protect access to your Windows account.
+- Orb Studio connects to Discord services to validate sessions and provide quest and reward features. The app does not include a third-party analytics service.
 - Heartbeat emulation matches official Discord protocol structures to ensure account safety and stability.
 
 ---

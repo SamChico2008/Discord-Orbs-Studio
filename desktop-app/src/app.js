@@ -11,6 +11,7 @@ let currentSearch = '';
 let currentSort = 'default';
 let currentUser = null;
 let currentToken = null;
+let hideAccountHandles = false;
 let savedAccounts = [];
 let savedClaimedCodes = [];
 let isEngineRunning = false;
@@ -28,6 +29,11 @@ function escapeHtml(str) {
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#39;');
+}
+
+function getAppDisplayName(user) {
+  const customName = typeof user?.custom_name === 'string' ? user.custom_name.trim() : '';
+  return customName || user?.global_name || user?.username || 'Not Connected';
 }
 
 // ── Audio Synthesizer (Zero-dependency Web Audio API) ──
@@ -117,6 +123,11 @@ const popoutAvatar = document.getElementById('popout-avatar');
 const popoutStatusIndicator = document.getElementById('popout-status-indicator');
 const popoutBadgesShelf = document.getElementById('popout-badges-shelf');
 const popoutName = document.getElementById('popout-name');
+const btnEditDisplayName = document.getElementById('btn-edit-display-name');
+const displayNameDialog = document.getElementById('display-name-dialog');
+const displayNameForm = document.getElementById('display-name-form');
+const displayNameInput = document.getElementById('display-name-input');
+const btnCancelDisplayName = document.getElementById('btn-cancel-display-name');
 const popoutHandle = document.getElementById('popout-handle');
 const popoutCreatedDate = document.getElementById('popout-created-date');
 const popoutNitroText = document.getElementById('popout-nitro-text');
@@ -147,7 +158,6 @@ const radarPulseDot = document.getElementById('radar-pulse-dot');
 const titleEnginePill = document.getElementById('title-engine-pill');
 const titlePillDot = document.getElementById('title-pill-dot');
 const titlePillText = document.getElementById('title-pill-text');
-const btnQuickVault = document.getElementById('btn-quick-vault');
 const titleVaultBadge = document.getElementById('title-vault-badge');
 const btnQuickMute = document.getElementById('btn-quick-mute');
 const iconSoundOn = document.getElementById('icon-sound-on');
@@ -173,7 +183,6 @@ const statCompleted = document.getElementById('stat-completed-quests');
 const statTime = document.getElementById('stat-estimated-time');
 const statCardAvailable = document.getElementById('stat-card-available');
 const statCardCompleted = document.getElementById('stat-card-completed');
-const statCardVault = document.getElementById('stat-card-vault');
 
 const pillCountRemaining = document.getElementById('pill-count-remaining');
 const pillCountAll = document.getElementById('pill-count-all');
@@ -285,6 +294,7 @@ const settingAutoCopy = document.getElementById('setting-auto-copy');
 const settingAutoRefresh = document.getElementById('setting-auto-refresh');
 const settingAudioSfx = document.getElementById('setting-audio-sfx');
 const settingDesktopNotify = document.getElementById('setting-desktop-notify');
+const settingHideHandles = document.getElementById('setting-hide-handles');
 const settingBuildNumber = document.getElementById('setting-build-number');
 const themeDots = document.querySelectorAll('.theme-dot');
 const btnSaveSettings = document.getElementById('btn-save-settings');
@@ -325,6 +335,42 @@ document.getElementById('btn-minimize').addEventListener('click', () => window.e
 document.getElementById('btn-maximize').addEventListener('click', () => window.electronAPI.maximizeWindow());
 document.getElementById('btn-close').addEventListener('click', () => window.electronAPI.closeWindow());
 
+if (btnEditDisplayName) {
+  btnEditDisplayName.addEventListener('click', () => {
+    if (!currentUser || !displayNameDialog || !displayNameInput) return;
+    displayNameInput.value = currentUser.custom_name || '';
+    displayNameDialog.showModal();
+    displayNameInput.focus();
+  });
+}
+
+if (btnCancelDisplayName) {
+  btnCancelDisplayName.addEventListener('click', () => displayNameDialog?.close());
+}
+
+if (displayNameForm) {
+  displayNameForm.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    if (!currentUser) return;
+    const result = await window.electronAPI.setAccountDisplayName(currentUser.id, displayNameInput.value);
+    if (!result?.ok) {
+      showToast('Could not save this app display name', 'error');
+      return;
+    }
+    currentUser.custom_name = result.customName;
+    savedAccounts = result.accounts;
+    const displayName = getAppDisplayName(currentUser);
+    navUsername.textContent = displayName;
+    navUsername.title = hideAccountHandles ? displayName : `${displayName} (@${currentUser.username})`;
+    if (popoutName) popoutName.textContent = displayName;
+    accountUsername.textContent = displayName;
+    renderAccountsDropdown();
+    renderSavedAccountsHub();
+    displayNameDialog.close();
+    showToast('App display name saved', 'success');
+  });
+}
+
 // ── Toast Notification Helper ──
 function showToast(message, type = 'info') {
   const container = document.getElementById('toast-container');
@@ -351,13 +397,14 @@ function showToast(message, type = 'info') {
 
 // ── Tab Switching ──
 function switchTab(tabId, suppressQR = false) {
+  if (tabId === 'tab-vault') {
+    showToast('Rewards Vault is coming soon.', 'info');
+    return;
+  }
+
   navBtns.forEach(btn => btn.classList.toggle('active', btn.dataset.tab === tabId));
   tabPanes.forEach(pane => pane.classList.toggle('active', pane.id === tabId));
   playAudioChime('click');
-
-  if (tabId === 'tab-vault') {
-    renderVaultPage();
-  }
 
   if (tabId === 'tab-account' && !suppressQR) {
     const qrTabBtn = document.querySelector('.login-tab-btn[data-login-tab="tab-login-qr"]');
@@ -401,8 +448,8 @@ function renderAccountsDropdown() {
     item.innerHTML = `
       <img class="dropdown-acc-avatar" src="${acc.avatar}" alt="Avatar">
       <div class="dropdown-acc-info">
-        <div class="dropdown-acc-name">${escapeHtml(acc.global_name || acc.username)}</div>
-        <div class="dropdown-acc-tag">@${escapeHtml(acc.username)}</div>
+        <div class="dropdown-acc-name">${escapeHtml(getAppDisplayName(acc))}</div>
+        <div class="dropdown-acc-tag account-handle-text">@${escapeHtml(acc.username)}</div>
       </div>
       <button class="dropdown-acc-remove" title="Remove account">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
@@ -420,7 +467,7 @@ function renderAccountsDropdown() {
       if (valRes.ok) {
         setAuthenticatedUser(valRes.user, acc.token);
         loadQuests();
-        showToast(`Active account: ${acc.global_name || acc.username}`, 'success');
+        showToast(`Active account: ${getAppDisplayName(acc)}`, 'success');
         playAudioChime('start');
       } else {
         showToast(`Session expired for @${acc.username}`, 'error');
@@ -465,8 +512,8 @@ function renderSavedAccountsHub() {
     card.innerHTML = `
       <img class="saved-acc-avatar" src="${acc.avatar || '../assets/avatar-placeholder.svg'}" alt="Avatar">
       <div class="saved-acc-info">
-        <div class="saved-acc-name">${escapeHtml(acc.global_name || acc.username)}</div>
-        <div class="saved-acc-tag">@${escapeHtml(acc.username)}</div>
+        <div class="saved-acc-name">${escapeHtml(getAppDisplayName(acc))}</div>
+        <div class="saved-acc-tag account-handle-text">@${escapeHtml(acc.username)}</div>
         ${isCurrent ? '<div class="saved-acc-status"><span class="pulse-dot-green"></span> Active Session</div>' : ''}
       </div>
       <div class="saved-acc-actions">
@@ -486,7 +533,7 @@ function renderSavedAccountsHub() {
         if (valRes.ok) {
           setAuthenticatedUser(valRes.user, acc.token);
           loadQuests();
-          showToast(`Active account: ${acc.global_name || acc.username}`, 'success');
+          showToast(`Active account: ${getAppDisplayName(acc)}`, 'success');
           playAudioChime('start');
         } else {
           showToast(`Session for @${acc.username} has expired`, 'error');
@@ -667,16 +714,18 @@ async function initAuth() {
 }
 
 async function setAuthenticatedUser(user, token) {
-  currentUser = user;
+  currentUser = { ...user, custom_name: savedAccounts.find((account) => account.id === user.id)?.custom_name || user.custom_name || '' };
   currentToken = token;
+  const displayName = getAppDisplayName(currentUser);
 
   const userAvatarUrl = user.avatar || '../assets/avatar-placeholder.svg';
 
   // Update Nav Pill
   navAvatar.src = userAvatarUrl;
-  navUsername.textContent = user.global_name || user.username;
-  navUsername.title = `${user.global_name || user.username} (@${user.username})`;
+  navUsername.textContent = displayName;
+  navUsername.title = hideAccountHandles ? displayName : `${displayName} (@${user.username})`;
   navSubtext.textContent = `@${user.username}`;
+  navSubtext.classList.add('account-handle-text');
   navStatusIndicator.classList.add('online');
 
   if (navNitroBadge) {
@@ -688,7 +737,7 @@ async function setAuthenticatedUser(user, token) {
 
   // Update Popout Card
   if (popoutAvatar) popoutAvatar.src = userAvatarUrl;
-  if (popoutName) popoutName.textContent = user.global_name || user.username;
+  if (popoutName) popoutName.textContent = displayName;
   if (popoutHandle) popoutHandle.textContent = `@${user.username}`;
   if (popoutCreatedDate) popoutCreatedDate.textContent = getDiscordCreationDate(user.id);
   if (popoutUserId) popoutUserId.textContent = user.id;
@@ -731,7 +780,7 @@ async function setAuthenticatedUser(user, token) {
 
   // Update Account Card Hero
   accountAvatar.src = userAvatarUrl;
-  accountUsername.textContent = user.global_name || user.username;
+  accountUsername.textContent = displayName;
   accountGlobalname.textContent = `@${user.username}`;
   accountId.textContent = user.id;
 
@@ -784,6 +833,7 @@ async function setAuthenticatedUser(user, token) {
     id: user.id,
     username: user.username,
     global_name: user.global_name || user.username,
+    custom_name: currentUser.custom_name,
     avatar: user.avatar,
     token: token
   };
@@ -802,6 +852,7 @@ function setUnauthenticatedUser() {
   navUsername.textContent = 'Not Connected';
   navUsername.removeAttribute('title');
   navSubtext.textContent = 'Click to connect';
+  navSubtext.classList.remove('account-handle-text');
   navStatusIndicator.classList.remove('online');
 
   if (navNitroBadge) navNitroBadge.style.display = 'none';
@@ -1215,12 +1266,6 @@ if (statCardCompleted) {
   });
 }
 
-if (statCardVault) {
-  statCardVault.addEventListener('click', () => {
-    openVaultModal();
-  });
-}
-
 btnSelectAll.addEventListener('click', () => {
   getFilteredQuests().forEach(q => {
     if (!q.isCompleted && !q.isExpired) selectedQuestIds.add(q.id);
@@ -1282,22 +1327,20 @@ function renderQuests() {
       return;
     }
     const completedCount = allQuests.filter(q => q.isCompleted).length;
-    const vaultCount = savedClaimedCodes ? savedClaimedCodes.length : 0;
-
     if (allQuests.length > 0 && currentFilter === 'remaining') {
       questsContainer.innerHTML = `
         <div class="all-completed-celebration">
           <div class="celebration-icon">✓</div>
           <h3 class="celebration-title">All Quests Completed!</h3>
-          <p class="celebration-desc">You have completed all available quests. View your history or check out your reward codes in the vault.</p>
+          <p class="celebration-desc">You have completed all available quests. View your completed quest history here.</p>
           <div class="celebration-actions">
             <button class="btn btn-primary" id="btn-celebrate-view-completed">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
               <span>View Completed Quests (${completedCount})</span>
             </button>
-            <button class="btn btn-secondary" id="btn-celebrate-view-vault">
+            <button class="btn btn-secondary coming-soon-control" id="btn-celebrate-view-vault" disabled aria-disabled="true">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-              <span>Open Rewards Vault (${vaultCount})</span>
+              <span>Rewards Vault · Coming Soon</span>
             </button>
             <button class="btn btn-secondary" id="btn-celebrate-refresh">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
@@ -1309,9 +1352,6 @@ function renderQuests() {
 
       document.getElementById('btn-celebrate-view-completed')?.addEventListener('click', () => {
         setActiveFilter('completed');
-      });
-      document.getElementById('btn-celebrate-view-vault')?.addEventListener('click', () => {
-        switchTab('tab-vault');
       });
       document.getElementById('btn-celebrate-refresh')?.addEventListener('click', () => {
         loadQuests();
@@ -1647,7 +1687,6 @@ if (btnClaimAllCompleted) {
     updateStats();
     showToast(`Successfully claimed ${successCount} of ${unclaimed.length} reward(s)`, 'success');
     playAudioChime('success');
-    if (savedClaimedCodes.length > 0) openVaultModal();
   });
 }
 
@@ -1913,8 +1952,6 @@ function renderVaultItems() {
   });
 }
 
-if (btnQuickVault) btnQuickVault.addEventListener('click', openVaultModal);
-if (statCardVault) statCardVault.addEventListener('click', openVaultModal);
 if (btnCloseVaultModal) btnCloseVaultModal.addEventListener('click', closeVaultModal);
 if (btnCloseVaultBottom) btnCloseVaultBottom.addEventListener('click', closeVaultModal);
 if (vaultModal) {
@@ -2442,6 +2479,15 @@ function updateMuteButtonVisual() {
   if (iconSoundOff) iconSoundOff.style.display = isMuted ? 'block' : 'none';
 }
 
+function applyAccountHandleVisibility(hideHandles) {
+  hideAccountHandles = Boolean(hideHandles);
+  document.body.classList.toggle('hide-account-handles', hideAccountHandles);
+  if (currentUser) {
+    const displayName = getAppDisplayName(currentUser);
+    navUsername.title = hideAccountHandles ? displayName : `${displayName} (@${currentUser.username})`;
+  }
+}
+
 if (settingAudioSfx) {
   settingAudioSfx.addEventListener('change', updateMuteButtonVisual);
 }
@@ -2477,6 +2523,8 @@ async function loadSettings() {
   }
   if (s.audioSfx !== undefined) settingAudioSfx.checked = s.audioSfx;
   if (s.desktopNotify !== undefined) settingDesktopNotify.checked = s.desktopNotify;
+  if (s.hideAccountHandles !== undefined && settingHideHandles) settingHideHandles.checked = s.hideAccountHandles;
+  applyAccountHandleVisibility(s.hideAccountHandles);
   if (s.buildNumber) settingBuildNumber.value = s.buildNumber;
 
   if (s.speedPreset) {
@@ -2512,6 +2560,7 @@ btnSaveSettings.addEventListener('click', async () => {
     autoRefresh: settingAutoRefresh ? settingAutoRefresh.checked : false,
     audioSfx: settingAudioSfx.checked,
     desktopNotify: settingDesktopNotify.checked,
+    hideAccountHandles: settingHideHandles ? settingHideHandles.checked : false,
     buildNumber: parseInt(settingBuildNumber.value, 10) || 606747,
     speedPreset: activePreset,
     theme: activeTheme,
@@ -2519,6 +2568,7 @@ btnSaveSettings.addEventListener('click', async () => {
   };
 
   setupAutoRefresh(settings.autoRefresh);
+  applyAccountHandleVisibility(settings.hideAccountHandles);
   await window.electronAPI.updateSettings(settings);
   settingsSavedIndicator.style.display = 'inline-block';
   setTimeout(() => {

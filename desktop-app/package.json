@@ -1,7 +1,7 @@
 {
   "name": "discord-orb-studio",
   "productName": "Discord Orb Studio",
-  "version": "3.3.6",
+  "version": "3.3.7",
   "description": "Discord Quest Companion",
   "main": "main.js",
   "scripts": {
@@ -11,7 +11,9 @@
     "build": "electron-builder --win nsis",
     "build:installer": "electron-builder --win nsis",
     "build:portable": "electron-builder --win portable",
-    "build:all": "electron-builder --win nsis portable"
+    "build:all": "electron-builder --win nsis portable",
+    "runtime-manifest": "node scripts/write-runtime-manifest.js",
+    "test:updates": "node --test tests/update-manager.test.js"
   },
   "keywords": [
     "discord",

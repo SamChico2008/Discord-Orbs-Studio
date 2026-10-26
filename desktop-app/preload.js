@@ -42,6 +42,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
   // Multi-Account Management
   getAccounts: () => ipcRenderer.invoke('accounts-list'),
   saveAccount: (account) => ipcRenderer.invoke('accounts-save', account),
+  setAccountDisplayName: (accountId, displayName) => ipcRenderer.invoke('accounts-set-display-name', accountId, displayName),
   removeAccount: (accountId) => ipcRenderer.invoke('accounts-remove', accountId),
 
   // Vault (Claimed Codes) Management
