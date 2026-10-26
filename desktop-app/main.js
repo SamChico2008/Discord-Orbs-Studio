@@ -1,7 +1,7 @@
 /**
  * Discord Orb Studio - Electron Main Process
  */
-const { app, BrowserWindow, ipcMain, shell, dialog, Notification } = require('electron');
+const { app, BrowserWindow, ipcMain, shell, dialog, Notification, screen } = require('electron');
 app.commandLine.appendSwitch('no-sandbox');
 const path = require('path');
 const fs = require('fs');
@@ -48,11 +48,12 @@ function saveStoredConfig(cfg) {
 }
 
 function createWindow() {
+  const { width, height } = screen.getPrimaryDisplay().workAreaSize;
   mainWindow = new BrowserWindow({
-    width: 1140,
-    height: 780,
-    minWidth: 980,
-    minHeight: 650,
+    width: Math.min(1140, width),
+    height: Math.min(780, height),
+    minWidth: Math.min(720, width),
+    minHeight: Math.min(500, height),
     frame: false,
     titleBarStyle: 'hidden',
     backgroundColor: '#171719',

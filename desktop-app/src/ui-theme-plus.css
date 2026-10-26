@@ -27,6 +27,37 @@ body[data-theme="crimson"] {
   --bg-dark: #181519; --bg-panel: #1e1a1f; --bg-card: #251f26;
 }
 body { transition: background-color 300ms ease; }
+html, body { min-width: 0; }
+#sidebar { overflow-y: auto; }
+.quests-grid, .vault-codes-grid, .saved-accounts-grid { grid-template-columns: repeat(auto-fit, minmax(min(100%, 270px), 1fr)); }
+.modal-card.beta-modal-card { overflow-y: auto !important; }
+.login-tabs { flex-wrap: wrap; column-gap: 18px; }
+.search-box, .vault-input-row input { min-width: 0; }
+.filter-pills { flex-wrap: wrap; }
+button:focus-visible, [role="button"]:focus-visible { outline: 2px solid var(--border-focus); outline-offset: 3px; }
+
+@media (max-width: 760px) {
+  #sidebar { width: 155px; }
+  #main-content { padding: 18px 14px 24px; }
+  .stats-grid, .vault-stats-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px 0; }
+  .qr-login-box, .presets-selector { grid-template-columns: 1fr; }
+  .live-telemetry .telemetry-card { display: block; }
+  .live-telemetry .orb-visualizer-wrap { min-height: 220px; border-right: 0; }
+  .heading-orbit, .title-engine-pill, .brand-badge { display: none; }
+  .drag-region { min-width: 0; padding-left: 10px; }
+  .brand-title { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .window-actions { flex-shrink: 0; }
+  .hub-header, .vault-input-row { flex-wrap: wrap; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
 body, #title-bar, #sidebar { background-color: var(--bg-dark) !important; }
 #main-content { background: radial-gradient(1100px 380px at 85% -10%, color-mix(in srgb, var(--tint) 7%, transparent), transparent 70%), var(--bg-panel) !important; }
 
