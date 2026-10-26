@@ -27,6 +27,8 @@ body[data-theme="crimson"] {
   --bg-dark: #181519; --bg-panel: #1e1a1f; --bg-card: #251f26;
 }
 body { transition: background-color 300ms ease; }
+.studio-credit { margin: -12px 12px 18px; color: var(--text-muted); font-size: 11px; }
+.studio-credit strong { color: var(--blurple); font-weight: 600; }
 html, body { min-width: 0; }
 #sidebar { overflow-y: auto; }
 .quests-grid, .vault-codes-grid, .saved-accounts-grid { grid-template-columns: repeat(auto-fit, minmax(min(100%, 270px), 1fr)); }

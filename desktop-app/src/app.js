@@ -1172,9 +1172,11 @@ function updateStartButton() {
 }
 
 // ── Search, Sorting & Filters ──
+let questSearchTimer = null;
 questSearchInput.addEventListener('input', (e) => {
   currentSearch = e.target.value.toLowerCase().trim();
-  renderQuests();
+  clearTimeout(questSearchTimer);
+  questSearchTimer = setTimeout(renderQuests, 120);
 });
 
 if (questSortSelect) {
@@ -1268,6 +1270,8 @@ function getFilteredQuests() {
 }
 
 function renderQuests() {
+  clearTimeout(questSearchTimer);
+  questSearchTimer = null;
   const filtered = getFilteredQuests();
   questsContainer.innerHTML = '';
 
@@ -1324,6 +1328,7 @@ function renderQuests() {
     return;
   }
 
+  const cardsFragment = document.createDocumentFragment();
   filtered.forEach(q => {
     const isSelected = selectedQuestIds.has(q.id);
     const card = document.createElement('div');
@@ -1494,8 +1499,9 @@ function renderQuests() {
       });
     }
 
-    questsContainer.appendChild(card);
+    cardsFragment.appendChild(card);
   });
+  questsContainer.appendChild(cardsFragment);
 }
 
 // ── Quest Details & Promo Code Modal ──
