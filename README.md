@@ -24,6 +24,8 @@
 >
 > Discord Orb Studio is an independent project for studying desktop application development, automation, and interactions with online services. It is not affiliated with, endorsed by, or sponsored by Discord Inc.
 >
+> **You stay in control.** You choose which quests to run, adjust session pacing, and can pause or stop processing from the interface. Visible progress and activity logs help you follow what the app is doing and decide when to continue. The source code is available in this repository for review.
+>
 > Use this software only with accounts and systems you are authorized to access. You are responsible for complying with Discord's Terms of Service, quest eligibility requirements, and applicable rules. This project does not guarantee rewards, account safety, or protection against account restrictions.
 >
 > **Use entirely at your own risk.** Account automation may lead to warnings, account suspension or permanent termination, loss of access to services or rewards, data loss, or other unexpected consequences. These outcomes may occur even if the software appears to work normally.
