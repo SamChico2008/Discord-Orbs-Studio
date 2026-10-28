@@ -17,19 +17,6 @@
 
 ---
 
-## Educational Purpose Disclaimer
-
-> [!IMPORTANT]
-> **For educational and research purposes only.**
->
-> Discord Orb Studio is an independent project for studying desktop application development, automation, and interactions with online services. It is not affiliated with, endorsed by, or sponsored by Discord Inc.
->
-> **You stay in control.** You choose which quests to run, adjust session pacing, and can pause or stop processing from the interface. Visible progress and activity logs help you follow what the app is doing and decide when to continue. The source code is available in this repository for review.
->
-> **Use entirely at your own risk.** Account automation may lead to warnings, account suspension or permanent termination, loss of access to services or rewards, data loss, or other unexpected consequences. These outcomes may occur even if the software appears to work normally.
->
-> The software is provided **"as is," without warranty**, under the [MIT License](LICENSE).
-
 ## Download
 
 Get the Windows installer from **[GitHub Releases](https://github.com/SamChico2008/Discord-Orbs-Studio/releases/latest)**. The packaged application includes Electron and its embedded Node.js runtime; a separate Node.js installation is only needed for development.
@@ -138,3 +125,17 @@ Increase the desktop package version, prepare the release summary, and build the
 This project is open-source software licensed under the **[MIT License](LICENSE)**.
 
 Developed and maintained by **Helios** (2026).
+
+---
+
+## Educational Purpose Disclaimer
+
+**For educational and research purposes only.**
+
+Discord Orb Studio is an independent project for studying desktop application development, automation, and interactions with online services. It is not affiliated with, endorsed by, or sponsored by Discord Inc.
+
+**You stay in control.** You choose which quests to run, adjust session pacing, and can pause or stop processing from the interface. Visible progress and activity logs help you follow what the app is doing and decide when to continue. The source code is available in this repository for review.
+
+**Use entirely at your own risk.** Account automation may lead to warnings, account suspension or permanent termination, loss of access to services or rewards, data loss, or other unexpected consequences. These outcomes may occur even if the software appears to work normally.
+
+The software is provided **"as is," without warranty**, under the [MIT License](https://github.com/SamChico2008/Discord-Orbs-Studio/blob/main/LICENSE).
