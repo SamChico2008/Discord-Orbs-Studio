@@ -26,6 +26,10 @@
 >
 > Use this software only with accounts and systems you are authorized to access. You are responsible for complying with Discord's Terms of Service, quest eligibility requirements, and applicable rules. This project does not guarantee rewards, account safety, or protection against account restrictions.
 >
+> **Use entirely at your own risk.** Account automation may lead to warnings, account suspension or permanent termination, loss of access to services or rewards, data loss, or other unexpected consequences. These outcomes may occur even if the software appears to work normally.
+>
+> You are solely responsible for deciding whether to run the software, understanding these risks, and accepting the consequences of your use. The authors and contributors make no promise of account protection, reward eligibility, or uninterrupted operation. Describing this project as educational does not imply approval from Discord or exempt users from its rules.
+>
 > The software is provided **"as is," without warranty**, under the [MIT License](LICENSE).
 
 ## Download
