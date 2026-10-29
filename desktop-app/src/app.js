@@ -2654,7 +2654,10 @@ document.addEventListener('click', (e) => {
 function bootApp() {
   initAuth();
   loadSettings();
-  setTimeout(checkBetaNotice, 200);
+  setTimeout(async () => {
+    const showedReleaseNotes = await window.showReleaseNotes?.();
+    if (!showedReleaseNotes) checkBetaNotice();
+  }, 200);
 }
 
 if (document.readyState === 'loading') {

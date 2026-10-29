@@ -37,6 +37,7 @@ window.setStartupState = (state = {}) => {
   document.querySelectorAll('.launch-state').forEach((panel) => panel.classList.add('is-hidden'));
   const id = stateIds[state.mode] || stateIds.checking;
   document.getElementById(id).classList.remove('is-hidden');
+  document.querySelectorAll('[data-choice]').forEach((button) => { button.disabled = false; });
   if (state.mode === 'updateAvailable') renderUpdates(state.updates);
   if (state.mode === 'failed') document.getElementById('error-detail').textContent = state.message || '';
 };

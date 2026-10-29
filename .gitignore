@@ -1,6 +1,7 @@
 # Dependances
 node_modules/
 desktop-app/node_modules/
+desktop-app/runtime-manifest.json
 discord-quest-bot/node_modules/
 
 # Builds & binaires volumineux

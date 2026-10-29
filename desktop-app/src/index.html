@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="ui-redesign.css">
   <link rel="stylesheet" href="ui-theme-plus.css">
+  <link rel="stylesheet" href="release-notes.css">
 </head>
 <body>
   <!-- Custom Window Title Bar -->
@@ -18,7 +19,7 @@
           <img src="../assets/icon.png" class="brand-orb-img" alt="Logo">
         </div>
         <span class="brand-title">Discord <span>Orb Studio</span></span>
-        <span class="brand-badge">v3.3</span>
+        <span class="brand-badge" id="app-version" aria-label="Application version"></span>
       </div>
       <div class="title-engine-pill" id="title-engine-pill">
         <span class="title-pill-dot" id="title-pill-dot"></span>
@@ -1189,9 +1190,23 @@
     </div>
   </div>
 
+  <dialog class="release-notes-dialog" id="release-notes-modal" aria-labelledby="release-notes-title" aria-describedby="release-notes-subtitle">
+    <header class="release-notes-header">
+      <button class="release-notes-close" id="release-notes-close" type="button" aria-label="Close update summary">×</button>
+      <div class="release-notes-eyebrow"><span class="release-notes-check" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none"><path d="m3 8 3 3 7-7" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></span> UPDATE COMPLETE</div>
+      <h2 id="release-notes-title">What's new</h2>
+      <p class="release-notes-subtitle" id="release-notes-subtitle"></p>
+      <span class="release-notes-version" id="release-notes-version"></span>
+    </header>
+    <div class="release-notes-body" id="release-notes-body" tabindex="0" role="region" aria-label="Changes in this update"></div>
+    <footer class="release-notes-footer"><span>Shown once for this version.</span><button class="btn btn-primary" id="release-notes-continue" type="button" autofocus>Continue to Studio</button></footer>
+  </dialog>
+
   <!-- Notification Toast -->
   <div id="toast-container" role="status" aria-live="polite"></div>
 
+  <script src="app-version.js"></script>
+  <script src="release-notes.js"></script>
   <script src="app.js"></script>
   <script src="interface.js"></script>
 </body>

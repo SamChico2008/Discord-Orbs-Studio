@@ -25,7 +25,14 @@ function makeRelease({ appVersion = '3.3.7', electron = '46.0.0', node = '25.0.0
     size: installerBytes.length,
     browser_download_url: `https://github.com/SamChico2008/Discord-Orbs-Studio/releases/download/v${appVersion}/Discord.Orb.Studio.Setup.${appVersion}.exe`
   };
-  const release = { tag_name: `v${appVersion}`, draft: false, prerelease: false, assets: [manifestAsset, installerAsset] };
+  const manifestMarker = Buffer.from(manifestBytes).toString('base64');
+  const release = {
+    tag_name: `v${appVersion}`,
+    draft: false,
+    prerelease: false,
+    body: `Release notes\n\n<!-- orb-runtime-manifest:${manifestMarker} -->`,
+    assets: [installerAsset]
+  };
   const fetchJson = async (url) => {
     if (url.includes('nodejs.org')) return [{ version: 'v25.0.0', lts: 'Jod' }, { version: 'v26.0.0', lts: false }];
     if (url.includes('registry.npmjs.org')) return { version: '46.0.0' };
@@ -50,6 +57,18 @@ test('checks embedded Node.js and Electron and selects a compatible stable insta
   ]);
   assert.equal(result.updates[0].release.tag, 'v3.3.7');
   assert.equal(result.updates[0].release.installerDigest, fixture.installerAsset.digest);
+});
+
+test('reads runtime metadata from release notes without a separate manifest download', async () => {
+  const fixture = makeRelease();
+  const result = await checkForPackagedRuntimeUpdates({
+    appVersion: '3.3.6', runtime: currentRuntime, platform: 'win32',
+    fetchJson: fixture.fetchJson,
+    fetchAsset: async () => { throw new Error('A separate metadata asset should not be downloaded'); }
+  });
+
+  assert.equal(result.autoInstall, true);
+  assert.equal(fixture.release.assets.some((asset) => asset.name === 'runtime-manifest.json'), false);
 });
 
 test('does not download a setup when both embedded runtimes are current', async () => {
@@ -106,8 +125,10 @@ test('installs a compatible Electron update even when the separate Node LTS line
   assert.equal(result.updates[0].latest, '46.0.0');
 });
 
-test('rejects a runtime manifest with a mismatched checksum', async () => {
+test('rejects a runtime manifest asset with a mismatched checksum', async () => {
   const fixture = makeRelease();
+  fixture.release.body = 'Release notes without a runtime marker';
+  fixture.release.assets.unshift(fixture.manifestAsset);
   fixture.fetchAsset = async () => Buffer.from('tampered manifest');
 
   await assert.rejects(checkForPackagedRuntimeUpdates({
@@ -126,7 +147,11 @@ test('checks the installer before starting one silent install and restart handof
     spawnedArgs = { executable, args, options };
     const child = new EventEmitter();
     child.unref = () => {};
-    process.nextTick(() => child.emit('spawn'));
+    process.nextTick(() => {
+      const installerFile = fs.readdirSync(tempDir).find((name) => name.endsWith('-setup.exe'));
+      fs.writeFileSync(path.join(tempDir, `${installerFile}.ready`), 'ready');
+      child.emit('spawn');
+    });
     return child;
   };
 
@@ -144,12 +169,16 @@ test('checks the installer before starting one silent install and restart handof
 
     assert.equal(spawnCount, 1);
     assert.equal(spawnedArgs.executable, 'powershell.exe');
-    const script = Buffer.from(spawnedArgs.args.at(-1), 'base64').toString('utf16le');
+    const bootstrap = Buffer.from(spawnedArgs.args.at(-1), 'base64').toString('utf16le');
+    assert.match(bootstrap, /Start-Process -FilePath 'powershell.exe' -WindowStyle Hidden/);
+    const encoded = bootstrap.match(/'-EncodedCommand', '([A-Za-z0-9+/=]+)'/)[1];
+    const script = Buffer.from(encoded, 'base64').toString('utf16le');
     assert.match(script, /Start-Process -FilePath \$installer -ArgumentList \$arguments -WindowStyle Hidden -Wait -PassThru/);
-    assert.match(script, /\$arguments = @\('\/S', \('\"\/D=' \+ \$installDir \+ '\"'\)\)/);
+    assert.match(script, /\$arguments = '\/S \/D=' \+ \$installDir/);
+    assert.match(script, /Wait-Process -Id \d+ -ErrorAction SilentlyContinue/);
     assert.match(script, /Test-Path -LiteralPath \$appPath/);
     assert.match(script, /Discord Orb Studio\.exe/);
-    assert.equal(spawnedArgs.options.detached, true);
+    assert.equal(spawnedArgs.options.detached, false);
     const installerFile = fs.readdirSync(tempDir).find((name) => name.endsWith('-setup.exe'));
     assert.ok(installerFile);
     assert.deepEqual(fs.readFileSync(path.join(tempDir, installerFile)), installer);

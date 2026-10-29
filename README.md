@@ -43,9 +43,9 @@ Get the Windows installer from **[GitHub Releases](https://github.com/SamChico20
 - **Accounts & Session Controls**: Switch between saved accounts, use QR code or session token login, and choose session cadence and speed presets.
 - **Streamlined Native Installer**: Windows 10 & 11 setup wizard with custom branding, English localization, and destination directory selection.
 
-### Prepared for the Next Release
+### Application Updates
 
-The next desktop release includes these additions. They become available to users after that release and its installer are published:
+The installed desktop application includes the following update features:
 
 - **Update prompts for every installation**: The app checks the public GitHub release feed at startup and every 15 minutes while running. Users choose **Update Now** or **Later** before installation.
 - **Installed version in the title bar**: The interface displays the full version of the running application and refreshes it after an upgrade.
@@ -105,11 +105,11 @@ From the repository root:
 npm run build
 ```
 
-The installer is written to the root `dist/` directory. The next release uses the versioned filename `Discord.Orb.Studio.Setup.<version>.exe`.
+The installer is written to the root `dist/` directory with the versioned filename `Discord.Orb.Studio.Setup.<version>.exe`.
 
 ### Publish Future Updates
 
-Increase the desktop package version, prepare the release summary, and build the installer. Publish a stable GitHub Release whose version tag matches the installer, and attach that installer to it. The upcoming updater uses published Releases rather than individual commits. The repository and release assets must be publicly accessible to installed applications.
+Increase the desktop package version, prepare the release summary, and build the installer. Publish a stable GitHub Release whose version tag matches the installer, and attach that installer to it. The updater uses published Releases rather than individual commits. The repository and release assets must be publicly accessible to installed applications.
 
 ---
 

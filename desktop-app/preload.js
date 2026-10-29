@@ -4,6 +4,9 @@
 const { contextBridge, ipcRenderer } = require('electron');
 
 contextBridge.exposeInMainWorld('electronAPI', {
+  getAppVersion: () => ipcRenderer.invoke('app-version'),
+  getReleaseNotes: () => ipcRenderer.invoke('release-notes-get'),
+  acknowledgeReleaseNotes: (version) => ipcRenderer.invoke('release-notes-seen', version),
   // Startup update experience
   startupUpdateChoice: (choice) => ipcRenderer.invoke('startup-update-choice', choice),
   onStartupUpdateState: (cb) => ipcRenderer.on('startup-update-state', (e, state) => cb(state)),

@@ -1,11 +1,11 @@
 {
   "name": "discord-orb-studio",
   "productName": "Discord Orb Studio",
-  "version": "3.3.7",
+  "version": "3.3.10",
   "description": "Discord Quest Companion",
   "main": "main.js",
   "scripts": {
-    "start": "electron . --no-sandbox",
+    "start": "electron .",
     "pack": "electron-builder --dir",
     "dist": "electron-builder --win nsis",
     "build": "electron-builder --win nsis",
@@ -13,7 +13,9 @@
     "build:portable": "electron-builder --win portable",
     "build:all": "electron-builder --win nsis portable",
     "runtime-manifest": "node scripts/write-runtime-manifest.js",
-    "test:updates": "node --test tests/update-manager.test.js"
+    "runtime-release-marker": "node scripts/write-runtime-release-marker.js",
+    "prebuild": "node scripts/prepare-release.js",
+    "test:updates": "node --test tests/*.test.js"
   },
   "keywords": [
     "discord",
@@ -77,7 +79,7 @@
       "uninstallerSidebar": "assets/installerSidebar.bmp",
       "installerHeader": "assets/installerHeader.bmp",
       "deleteAppDataOnUninstall": false,
-      "artifactName": "${productName} Setup.${ext}",
+      "artifactName": "Discord.Orb.Studio.Setup.${version}.${ext}",
       "include": "assets/installer.nsh"
     },
     "portable": {
@@ -86,11 +88,14 @@
     "files": [
       "main.js",
       "update-manager.js",
+      "release-notes.js",
+      "CHANGELOG.md",
       "preload.js",
       "preload-launch.js",
       "quest-engine.js",
       "qr-auth.js",
       "token-detector.js",
+      "runtime-manifest.json",
       "src/**/*",
       "assets/**/*"
     ]

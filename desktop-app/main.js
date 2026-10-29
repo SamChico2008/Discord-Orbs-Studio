@@ -2,7 +2,6 @@
  * Discord Orb Studio - Electron Main Process
  */
 const { app, BrowserWindow, ipcMain, shell, dialog, Notification, screen } = require('electron');
-app.commandLine.appendSwitch('no-sandbox');
 const path = require('path');
 const fs = require('fs');
 const crypto = require('crypto');
@@ -20,17 +19,29 @@ function isSafeExternalUrl(targetUrl) {
 const QuestEngine = require('./quest-engine');
 const QRAuthClient = require('./qr-auth');
 const { findLocalTokens } = require('./token-detector');
-const { checkForUpdates, applyUpdates } = require('./update-manager');
+const { checkForUpdates, applyUpdates, fetchReleaseNotes } = require('./update-manager');
+const { createReleaseNotesStore } = require('./release-notes');
 
 let mainWindow = null;
 let startupSplash = null;
 let startupUpdateChoiceResolver = null;
 let startupSplashClosed = false;
 let isStartingUp = true;
+let updateCheckTimer = null;
+let updateCheckInProgress = false;
+let deferredUpdateVersion = null;
+let lastUpdateCheck = 0;
+const updateCheckInterval = 15 * 60 * 1000;
 const questEngine = new QuestEngine();
 let qrClient = null;
 
 const CONFIG_PATH = path.join(app.getPath('userData'), 'orb_studio_config.json');
+const releaseNotesStore = createReleaseNotesStore({
+  filePath: path.join(app.getPath('userData'), 'release-notes-state.json'),
+  bundledPath: path.join(__dirname, 'CHANGELOG.md'),
+  currentVersion: app.getVersion(),
+  fetchNotes: fetchReleaseNotes
+});
 
 function loadStoredConfig() {
   try {
@@ -62,6 +73,7 @@ function createWindow() {
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       nodeIntegration: false,
+      sandbox: true,
       contextIsolation: true
     }
   });
@@ -105,6 +117,7 @@ function showStartupSplash() {
     webPreferences: {
       preload: path.join(__dirname, 'preload-launch.js'),
       nodeIntegration: false,
+      sandbox: true,
       contextIsolation: true
     }
   });
@@ -134,6 +147,70 @@ function closeStartupSplash() {
   startupSplash = null;
 }
 
+async function waitForStartupChoice(state) {
+  if (startupSplashClosed) return 'later';
+  const choice = new Promise((resolve) => { startupUpdateChoiceResolver = resolve; });
+  await setSplashState(state);
+  try {
+    return await choice;
+  } finally {
+    startupUpdateChoiceResolver = null;
+  }
+}
+
+async function installApplicationUpdate(updates) {
+  await setSplashState({ mode: 'installing' });
+  try {
+    releaseNotesStore.stageUpdate(updates[0]);
+    await applyUpdates(updates, {
+      tempDir: app.getPath('temp'),
+      installDir: path.dirname(process.execPath)
+    });
+    await setSplashState({ mode: 'restarting' });
+    app.quit();
+    return true;
+  } catch (error) {
+    try { releaseNotesStore.cancelUpdate(updates[0].latest); } catch (notesError) { console.error('Could not reset release notes:', notesError); }
+    await waitForStartupChoice({ mode: 'failed', message: error.message });
+    return false;
+  }
+}
+
+async function checkBackgroundUpdates() {
+  if (!app.isPackaged || updateCheckInProgress || !mainWindow || mainWindow.isDestroyed()
+    || Date.now() - lastUpdateCheck < updateCheckInterval) return;
+  updateCheckInProgress = true;
+  lastUpdateCheck = Date.now();
+  try {
+    const result = await checkForUpdates({ packaged: true, appVersion: app.getVersion() });
+    const update = result.updates[0];
+    if (!update || update.latest === deferredUpdateVersion || mainWindow.isDestroyed()) return;
+    deferredUpdateVersion = update.latest;
+    const { response } = await dialog.showMessageBox(mainWindow, {
+      type: 'info', title: 'Discord Orb Studio update',
+      message: `Discord Orb Studio ${update.latest} is available.`,
+      detail: `You are running version ${app.getVersion()}. Update now? The studio will close and restart after installation.`,
+      buttons: ['Update Now', 'Later'], defaultId: 0, cancelId: 1, noLink: true
+    });
+    if (response !== 0 || mainWindow.isDestroyed()) return;
+    const splash = showStartupSplash();
+    await new Promise((resolve) => splash.webContents.once('did-finish-load', resolve));
+    if (!await installApplicationUpdate(result.updates)) closeStartupSplash();
+  } catch (error) {
+    console.error('Background update check failed:', error);
+  } finally {
+    updateCheckInProgress = false;
+  }
+}
+
+function startUpdateChecks() {
+  if (!app.isPackaged) return;
+  lastUpdateCheck = Date.now();
+  updateCheckTimer = setInterval(checkBackgroundUpdates, updateCheckInterval);
+  updateCheckTimer.unref();
+  mainWindow.on('focus', checkBackgroundUpdates);
+}
+
 async function checkStartupUpdates() {
   const splash = showStartupSplash();
   try {
@@ -148,18 +225,21 @@ async function checkStartupUpdates() {
 
   const startedAt = Date.now();
   let result;
+  let checkTimeout;
   try {
-    const checkPromise = checkForUpdates({ packaged: app.isPackaged });
-    const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error('Delai depasse')), 15000));
+    const checkPromise = checkForUpdates({ packaged: app.isPackaged, appVersion: app.getVersion() });
+    const timeoutPromise = new Promise((_, reject) => { checkTimeout = setTimeout(() => reject(new Error('Update check timed out')), 15000); });
     result = await Promise.race([checkPromise, timeoutPromise]);
   } catch (error) {
     result = { updates: [], errors: [error.message], unsupported: false };
+  } finally {
+    clearTimeout(checkTimeout);
   }
   const remaining = Math.max(0, 700 - (Date.now() - startedAt));
   if (remaining) await new Promise((resolve) => setTimeout(resolve, remaining));
   if (startupSplashClosed) return false;
 
-  if (result.pendingUpdate) {
+  if (result.pendingUpdate || result.unavailable) {
     await setSplashState({ mode: 'unavailable' });
     await new Promise((resolve) => setTimeout(resolve, 900));
     return false;
@@ -171,55 +251,26 @@ async function checkStartupUpdates() {
     return false;
   }
 
-  if (result.autoInstall) {
-    await setSplashState({ mode: 'installing' });
-    try {
-      await applyUpdates(result.updates, {
-        tempDir: app.getPath('temp'),
-        installDir: path.dirname(process.execPath)
-      });
-      await setSplashState({ mode: 'restarting' });
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      app.quit();
-      return true;
-    } catch (error) {
-      await setSplashState({ mode: 'failed', message: error.message });
-      await new Promise((resolve) => { startupUpdateChoiceResolver = resolve; });
-      startupUpdateChoiceResolver = null;
-      return false;
-    }
-  }
-
   if (!result.updates.length) {
     await setSplashState({ mode: result.errors?.length ? 'offline' : 'upToDate' });
     await new Promise((resolve) => setTimeout(resolve, 600));
     return false;
   }
 
-  await setSplashState({ mode: 'updateAvailable', updates: result.updates.map(({ name, current, latest }) => ({ name, current, latest })) });
-  const choice = await new Promise((resolve) => { startupUpdateChoiceResolver = resolve; });
-  startupUpdateChoiceResolver = null;
+  const choice = await waitForStartupChoice({ mode: 'updateAvailable', updates: result.updates.map(({ name, current, latest }) => ({ name, current, latest })) });
   if (choice !== 'install') {
+    deferredUpdateVersion = result.updates[0].latest;
     return false;
   }
-
-  await setSplashState({ mode: 'installing' });
-  try {
-    await applyUpdates(result.updates);
-    await setSplashState({ mode: 'restarting' });
-    await new Promise((resolve) => setTimeout(resolve, 500));
-    app.relaunch();
-    app.exit(0);
-    return true;
-  } catch (error) {
-    await setSplashState({ mode: 'failed', message: error.message });
-    await new Promise((resolve) => { startupUpdateChoiceResolver = resolve; });
-    startupUpdateChoiceResolver = null;
-    return false;
-  }
+  return installApplicationUpdate(result.updates);
 }
 
 app.whenReady().then(async () => {
+  try {
+    releaseNotesStore.initialize({ updated: process.argv.includes('--updated') });
+  } catch (error) {
+    console.error('Could not initialize release notes:', error);
+  }
   try {
     const relaunching = await checkStartupUpdates();
     if (relaunching) return;
@@ -229,6 +280,7 @@ app.whenReady().then(async () => {
 
   createWindow();
   isStartingUp = false;
+  startUpdateChecks();
 
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) createWindow();
@@ -240,12 +292,19 @@ app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') app.quit();
 });
 
+app.on('before-quit', () => clearInterval(updateCheckTimer));
+
 // ── IPC Handlers: Window Controls ──
 ipcMain.handle('startup-update-choice', (event, choice) => {
+  if (!startupSplash || startupSplash.isDestroyed() || event.sender !== startupSplash.webContents) return false;
   if (!['install', 'later', 'continue'].includes(choice)) return false;
   if (startupUpdateChoiceResolver) startupUpdateChoiceResolver(choice);
   return true;
 });
+
+ipcMain.handle('app-version', () => app.getVersion());
+ipcMain.handle('release-notes-get', () => releaseNotesStore.getPendingSummary());
+ipcMain.handle('release-notes-seen', (event, version) => releaseNotesStore.acknowledge(version));
 
 ipcMain.handle('window-minimize', () => {
   if (mainWindow) mainWindow.minimize();

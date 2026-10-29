@@ -6,7 +6,7 @@ const path = require('node:path');
 
 const electronExecutable = require('electron');
 const packageInfo = require('../package.json');
-const outputPath = path.resolve(__dirname, process.argv[2] || '../../dist/runtime-manifest.json');
+const outputPath = path.resolve(__dirname, process.argv[2] || '../runtime-manifest.json');
 const runtime = JSON.parse(execFileSync(electronExecutable, [
   '-e',
   'process.stdout.write(JSON.stringify({ node: process.versions.node, electron: process.versions.electron }))'
