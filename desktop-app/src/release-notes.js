@@ -15,7 +15,8 @@
     let list = null;
     let paragraph = null;
     for (const line of body.split(/\r?\n/)) {
-      const text = line.trim().replace(/\*\*(.*?)\*\*/g, '$1').replace(/`([^`]+)`/g, '$1');
+      const text = line.trim().replace(/!?\[([^\]\r\n]*)\]\([^\)\r\n]+\)/g, '$1')
+        .replace(/\*\*(.*?)\*\*/g, '$1').replace(/`([^`]+)`/g, '$1');
       if (!text) { list = null; paragraph = null; continue; }
       const heading = text.match(/^#{1,6}\s+(.+)$/);
       const bullet = text.match(/^(?:[-*+]\s+|\d+[.)]\s+)(.+)$/);

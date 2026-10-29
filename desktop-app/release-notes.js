@@ -5,10 +5,15 @@ const path = require('node:path');
 
 function normalizeReleaseNotes(notes, version) {
   const clean = (value, limit) => String(value || '').replace(/<!--[\s\S]*?(?:-->|$)/g, '').slice(0, limit).trim();
+  const lines = clean(notes?.body, 64000).split(/\r?\n/);
+  const details = lines.findIndex((line) => /^#{1,6}\s+(?:installation|download verification|download checksums|checksums|educational purpose(?: disclaimer)?|vérification du téléchargement|utilisation)\s*#*\s*$/i.test(line.trim()));
+  const summary = (details < 0 ? lines : lines.slice(0, details))
+    .filter((line) => !/^#\s+Discord Orb Studio(?:\s+v?\d+\.\d+\.\d+.*)?\s*$/i.test(line.trim()))
+    .join('\n').trim();
   return {
     version,
     title: clean(notes?.title, 300) || `Discord Orb Studio ${version}`,
-    body: clean(notes?.body, 64000)
+    body: summary
   };
 }
 

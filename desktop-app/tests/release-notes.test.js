@@ -124,6 +124,42 @@ test('notes normalization strips private metadata comments and bounds remote con
   assert.ok(normalizeReleaseNotes({ body: 'x'.repeat(100000) }, '3.3.9').body.length <= 64000);
 });
 
+test('popup summaries keep the changes and leave installation, hashes and disclaimers on GitHub', () => {
+  const body = '# Discord Orb Studio 3.3.11\n\n### Manual update checks\n- Check for updates from Settings.\n\n## Installation\nDownload [setup](https://github.com/setup.exe).\n\n## Download verification\nSHA-256: 0123456789\n\n## Educational purpose\nResearch use only.';
+  const notes = normalizeReleaseNotes({ body }, '3.3.11');
+  assert.equal(notes.body, '### Manual update checks\n- Check for updates from Settings.');
+  assert.doesNotMatch(notes.body, /Installation|SHA-256|Educational purpose|https:/);
+});
+
+test('summary filtering preserves actual installer improvements and handles older French technical sections', () => {
+  const useful = '### Installation improvements\n- Fixed the restart after installation.';
+  assert.equal(normalizeReleaseNotes({ body: useful }, '3.3.11').body, useful);
+  for (const heading of ['Installation', 'Download verification', 'Educational purpose', 'Vérification du téléchargement', 'Utilisation']) {
+    assert.equal(normalizeReleaseNotes({ body: `- A useful change.\n\n## ${heading}\nLong technical details.` }, '3.3.11').body, '- A useful change.');
+  }
+});
+
+test('a summary cached by an older installer is simplified before display, including offline', async (context) => {
+  const { filePath, bundledPath } = fixture(context);
+  fs.writeFileSync(filePath, JSON.stringify({ lastRunVersion: '3.3.8', pending: {
+    version: '3.3.9', previousVersion: '3.3.8', notes: { title: 'A clearer release', body: '- A useful change.\n\n## Installation\nDownload setup.\n\n## Download verification\nSHA-256: abc' }
+  } }));
+  const store = createReleaseNotesStore({ filePath, bundledPath, currentVersion: '3.3.9', fetchNotes: async () => { throw new Error('Offline'); } });
+  store.initialize({ updated: true });
+  assert.equal((await store.getPendingSummary()).body, '- A useful change.');
+  assert.equal(JSON.parse(fs.readFileSync(filePath)).pending.notes.body, '- A useful change.');
+});
+
+test('a cached release containing only download details falls back to the installed changelog', async (context) => {
+  const { filePath, bundledPath } = fixture(context);
+  fs.writeFileSync(filePath, JSON.stringify({ lastRunVersion: '3.3.8', pending: {
+    version: '3.3.9', notes: { body: '## Installation\nDownload setup.' }
+  } }));
+  const store = createReleaseNotesStore({ filePath, bundledPath, currentVersion: '3.3.9' });
+  store.initialize({ updated: true });
+  assert.equal((await store.getPendingSummary()).body, '### Nouveautés\n- Résumé après installation.');
+});
+
 test('the bundled changelog has a summary for the version actually being packaged', () => {
   const version = require('../package.json').version;
   assert.ok(readBundledReleaseNotes(path.join(__dirname, '../CHANGELOG.md'), version)?.body);

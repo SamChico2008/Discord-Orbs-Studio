@@ -55,6 +55,16 @@ test('the main menu dialog renders installed-version headings and lists without 
   assert.deepEqual(subject.acknowledged, []);
 });
 
+test('summary links display readable labels without URLs or Markdown punctuation', async () => {
+  const subject = renderer({ version: '3.3.12', title: 'Clearer summaries',
+    body: '### Improvements\n- Open the [update settings](https://github.com/example/settings).\nRead the **[release notes](https://github.com/example/release)**.\n<img src=x onerror=alert(1)>' });
+  assert.equal(await subject.window.showReleaseNotes(), true);
+  const children = subject.elements.get('release-notes-body').children;
+  assert.equal(children[1].children[0].textContent, 'Open the update settings.');
+  assert.equal(children[2].textContent, 'Read the release notes. <img src=x onerror=alert(1)>');
+  assert.doesNotMatch(children.map((child) => child.textContent).join(' '), /https:|\]\(/);
+});
+
 test('Continue acknowledges only the displayed version, closes the popup and restores focus', async () => {
   const subject = renderer({ version: '3.3.9', title: 'Notes', body: '- A change' });
   await subject.window.showReleaseNotes();

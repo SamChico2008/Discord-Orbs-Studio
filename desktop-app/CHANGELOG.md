@@ -1,5 +1,12 @@
 # Discord Orb Studio
 
+## 3.3.12
+
+### Clearer update summaries
+- Read what's new in a short, simple list after each update.
+- Links show readable names instead of long web addresses.
+- Download instructions and technical details stay on GitHub.
+
 ## 3.3.11
 
 ### Manual update checks
