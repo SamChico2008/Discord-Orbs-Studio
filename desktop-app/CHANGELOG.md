@@ -1,5 +1,12 @@
 # Discord Orb Studio
 
+## 3.3.13
+
+### Updates inside the studio
+- Update prompts now appear inside the application, with the studio's colors and layout.
+- Choose Update now or Later, whether an update is found at startup, in the background, or from Settings.
+- Follow download, restart and retry messages in the same window.
+
 ## 3.3.12
 
 ### Clearer update summaries

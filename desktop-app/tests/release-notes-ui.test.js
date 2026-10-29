@@ -102,5 +102,6 @@ test('the real main menu loads the summary stylesheet and script and gives the s
   const source = fs.readFileSync(path.join(__dirname, '../src/app.js'), 'utf8');
   const boot = source.slice(source.indexOf('function bootApp()'));
   assert.match(boot, /await window.showReleaseNotes\?\.\(\)/);
-  assert.match(boot, /if \(!showedReleaseNotes\) checkBetaNotice\(\)/);
+  assert.match(boot, /window.enableApplicationUpdatePrompts\?\.\(\)/);
+  assert.match(boot, /if \(!showedReleaseNotes && !showedUpdatePrompt\) checkBetaNotice\(\)/);
 });

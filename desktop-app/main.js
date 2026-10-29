@@ -24,8 +24,9 @@ const { createReleaseNotesStore } = require('./release-notes');
 
 let mainWindow = null;
 let startupSplash = null;
-let startupUpdateChoiceResolver = null;
 let startupSplashClosed = false;
+let pendingApplicationUpdates = null;
+let applicationUpdateState = { phase: 'idle' };
 let isStartingUp = true;
 let updateCheckTimer = null;
 let updateCheckInProgress = false;
@@ -129,7 +130,6 @@ function showStartupSplash() {
   });
   startupSplash.once('closed', () => {
     startupSplashClosed = true;
-    if (startupUpdateChoiceResolver) startupUpdateChoiceResolver('later');
   });
   startupSplash.once('ready-to-show', () => startupSplash?.show());
   return startupSplash;
@@ -147,31 +147,33 @@ function closeStartupSplash() {
   startupSplash = null;
 }
 
-async function waitForStartupChoice(state) {
-  if (startupSplashClosed) return 'later';
-  const choice = new Promise((resolve) => { startupUpdateChoiceResolver = resolve; });
-  await setSplashState(state);
-  try {
-    return await choice;
-  } finally {
-    startupUpdateChoiceResolver = null;
-  }
+function setApplicationUpdateState(phase) {
+  applicationUpdateState = { phase, current: app.getVersion(), latest: pendingApplicationUpdates?.[0]?.latest || null };
+  if (mainWindow && !mainWindow.isDestroyed()) mainWindow.webContents.send('application-update-state', applicationUpdateState);
+}
+
+function offerApplicationUpdate(updates) {
+  pendingApplicationUpdates = updates;
+  deferredUpdateVersion = updates[0].latest;
+  setApplicationUpdateState('available');
+  return { status: 'available', latest: updates[0].latest };
 }
 
 async function installApplicationUpdate(updates) {
-  await setSplashState({ mode: 'installing' });
+  setApplicationUpdateState('installing');
   try {
     releaseNotesStore.stageUpdate(updates[0]);
     await applyUpdates(updates, {
       tempDir: app.getPath('temp'),
       installDir: path.dirname(process.execPath)
     });
-    await setSplashState({ mode: 'restarting' });
+    setApplicationUpdateState('restarting');
     app.quit();
     return true;
   } catch (error) {
     try { releaseNotesStore.cancelUpdate(updates[0].latest); } catch (notesError) { console.error('Could not reset release notes:', notesError); }
-    await waitForStartupChoice({ mode: 'failed', message: error.message });
+    console.error('Application update installation failed:', error);
+    setApplicationUpdateState('failed');
     return false;
   }
 }
@@ -180,6 +182,8 @@ async function checkBackgroundUpdates({ manual = false } = {}) {
   if (!app.isPackaged) return { status: 'unsupported' };
   if (updateCheckInProgress) return { status: 'busy' };
   if (!mainWindow || mainWindow.isDestroyed()) return { status: 'cancelled' };
+  if (['installing', 'restarting'].includes(applicationUpdateState.phase)) return { status: 'busy' };
+  if (['available', 'failed'].includes(applicationUpdateState.phase)) return { status: 'available', latest: applicationUpdateState.latest };
   if (!manual && Date.now() - lastUpdateCheck < updateCheckInterval) return { status: 'deferred' };
   updateCheckInProgress = true;
   lastUpdateCheck = Date.now();
@@ -192,21 +196,7 @@ async function checkBackgroundUpdates({ manual = false } = {}) {
     if (!update) return { status: 'upToDate', version: app.getVersion() };
     if (mainWindow.isDestroyed()) return { status: 'cancelled' };
     if (!manual && update.latest === deferredUpdateVersion) return { status: 'deferred', latest: update.latest };
-    deferredUpdateVersion = update.latest;
-    const { response } = await dialog.showMessageBox(mainWindow, {
-      type: 'info', title: 'Discord Orb Studio update',
-      message: `Discord Orb Studio ${update.latest} is available.`,
-      detail: `You are running version ${app.getVersion()}. Update now? The studio will close and restart after installation.`,
-      buttons: ['Update Now', 'Later'], defaultId: 0, cancelId: 1, noLink: true
-    });
-    if (response !== 0 || mainWindow.isDestroyed()) return { status: 'deferred', latest: update.latest };
-    const splash = showStartupSplash();
-    await new Promise((resolve) => splash.webContents.once('did-finish-load', resolve));
-    if (!await installApplicationUpdate(result.updates)) {
-      closeStartupSplash();
-      return { status: 'failed' };
-    }
-    return { status: 'restarting', latest: update.latest };
+    return offerApplicationUpdate(result.updates);
   } catch (error) {
     console.error('Background update check failed:', error);
     return { status: 'error' };
@@ -269,12 +259,8 @@ async function checkStartupUpdates() {
     return false;
   }
 
-  const choice = await waitForStartupChoice({ mode: 'updateAvailable', updates: result.updates.map(({ name, current, latest }) => ({ name, current, latest })) });
-  if (choice !== 'install') {
-    deferredUpdateVersion = result.updates[0].latest;
-    return false;
-  }
-  return installApplicationUpdate(result.updates);
+  offerApplicationUpdate(result.updates);
+  return false;
 }
 
 app.whenReady().then(async () => {
@@ -307,11 +293,21 @@ app.on('window-all-closed', () => {
 app.on('before-quit', () => clearInterval(updateCheckTimer));
 
 // ── IPC Handlers: Window Controls ──
-ipcMain.handle('startup-update-choice', (event, choice) => {
-  if (!startupSplash || startupSplash.isDestroyed() || event.sender !== startupSplash.webContents) return false;
-  if (!['install', 'later', 'continue'].includes(choice)) return false;
-  if (startupUpdateChoiceResolver) startupUpdateChoiceResolver(choice);
-  return true;
+ipcMain.handle('application-update-state', (event) => {
+  if (!mainWindow || mainWindow.isDestroyed() || event.sender !== mainWindow.webContents) return { phase: 'idle' };
+  return applicationUpdateState;
+});
+ipcMain.handle('application-update-choice', async (event, choice) => {
+  if (!mainWindow || mainWindow.isDestroyed() || event.sender !== mainWindow.webContents
+    || !['install', 'later'].includes(choice) || !pendingApplicationUpdates
+    || !['available', 'failed'].includes(applicationUpdateState.phase)) return { accepted: false };
+  if (choice === 'later') {
+    pendingApplicationUpdates = null;
+    setApplicationUpdateState('idle');
+  } else {
+    await installApplicationUpdate(pendingApplicationUpdates);
+  }
+  return { accepted: true, state: applicationUpdateState };
 });
 
 ipcMain.handle('app-version', () => app.getVersion());

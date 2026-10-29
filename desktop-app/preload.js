@@ -6,11 +6,11 @@ const { contextBridge, ipcRenderer } = require('electron');
 contextBridge.exposeInMainWorld('electronAPI', {
   getAppVersion: () => ipcRenderer.invoke('app-version'),
   checkForUpdates: () => ipcRenderer.invoke('updates-check'),
+  getApplicationUpdateState: () => ipcRenderer.invoke('application-update-state'),
+  applicationUpdateChoice: (choice) => ipcRenderer.invoke('application-update-choice', choice),
+  onApplicationUpdateState: (cb) => ipcRenderer.on('application-update-state', (event, state) => cb(state)),
   getReleaseNotes: () => ipcRenderer.invoke('release-notes-get'),
   acknowledgeReleaseNotes: (version) => ipcRenderer.invoke('release-notes-seen', version),
-  // Startup update experience
-  startupUpdateChoice: (choice) => ipcRenderer.invoke('startup-update-choice', choice),
-  onStartupUpdateState: (cb) => ipcRenderer.on('startup-update-state', (e, state) => cb(state)),
 
   // Window Controls
   minimizeWindow: () => ipcRenderer.invoke('window-minimize'),

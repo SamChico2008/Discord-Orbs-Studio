@@ -35,6 +35,7 @@ test('the settings button waits for the result, prevents double clicks and displ
 
 test('settings give distinct feedback for Later, unavailable service, pending release and busy installation', async () => {
   for (const [response, expected] of [
+    [{ status: 'available', latest: '3.3.13' }, /3\.3\.13.*available.*Update now/],
     [{ status: 'deferred', latest: '3.3.12' }, /3\.3\.12.*available/],
     [{ status: 'error' }, /unavailable/],
     [{ status: 'pending' }, /being prepared/],

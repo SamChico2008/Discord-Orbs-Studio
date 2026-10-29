@@ -1,0 +1,12 @@
+.app-update-dialog { width: min(520px, calc(100vw - 48px)); }
+.app-update-eyebrow { color: var(--blurple); font-size: 10px; font-weight: 650; letter-spacing: 1.4px; margin-bottom: 18px; }
+.app-update-body { padding-top: 22px; padding-bottom: 22px; }
+.app-update-versions { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 18px 20px; border: 1px solid var(--border-subtle); border-radius: 10px; background: var(--bg-dark); }
+.app-update-versions > div { display: flex; flex-direction: column; gap: 6px; }
+.app-update-versions > div:last-child { text-align: right; }
+.app-update-versions span { font-size: 11px; color: var(--text-muted); }
+.app-update-versions strong { font-size: 19px; color: var(--text-main); font-weight: 600; }
+.app-update-versions > div:last-child strong { color: var(--blurple); }
+.app-update-body #app-update-status { margin: 18px 0 0; }
+.app-update-actions { justify-content: flex-end; }
+.app-update-dialog button:disabled { opacity: .6; cursor: wait; }

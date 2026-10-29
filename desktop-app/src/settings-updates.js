@@ -13,6 +13,9 @@
     try {
       const result = await window.electronAPI.checkForUpdates();
       switch (result.status) {
+        case 'available':
+          status.textContent = `Version ${result.latest} is available. Choose Update now or Later in the update window.`;
+          break;
         case 'upToDate':
           status.textContent = `You're up to date! Version ${result.version} is the latest release.`;
           break;

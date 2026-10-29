@@ -10,10 +10,11 @@ const test = require('node:test');
 const update = { kind: 'application', name: 'Discord Orb Studio', current: '3.3.8', latest: '3.3.9', release: { tag: 'v3.3.9' } };
 const flush = () => new Promise(setImmediate);
 
-function harness({ result = { updates: [update], autoInstall: false }, failInstall = false, dialogResponse = 1,
-  checkResult = async () => result } = {}) {
+function harness({ result = { updates: [update], autoInstall: false }, failInstall = false,
+  checkResult = async () => result, holdInstall } = {}) {
   const windows = [];
   const states = [];
+  const appStates = [];
   const installs = [];
   const checks = [];
   const dialogs = [];
@@ -29,6 +30,7 @@ function harness({ result = { updates: [update], autoInstall: false }, failInsta
       windows.push(this);
       this.webContents = new EventEmitter();
       this.webContents.setWindowOpenHandler = () => {};
+      this.webContents.send = (channel, state) => appStates.push({ channel, ...state });
       this.webContents.executeJavaScript = async (script) => {
         states.push(JSON.parse(script.slice('window.setStartupState('.length, -1)));
       };
@@ -56,13 +58,13 @@ function harness({ result = { updates: [update], autoInstall: false }, failInsta
         app, BrowserWindow: Window,
         ipcMain: { handle: (channel, handler) => handlers.set(channel, handler) },
         screen: { getPrimaryDisplay: () => ({ workAreaSize: { width: 1200, height: 800 } }) },
-        dialog: { showMessageBox: async (parent, options) => { dialogs.push(options); return { response: dialogResponse }; } }
+        dialog: { showMessageBox: async () => { dialogs.push(true); throw new Error('Native update prompt called'); } }
       };
       if (name === './quest-engine') return EventEmitter;
       if (name === './qr-auth') return class {};
       if (name === './token-detector') return {};
       if (name === './release-notes') return { createReleaseNotesStore: () => ({
-        initialize() {}, stageUpdate: (update) => notesStaged.push(update), cancelUpdate: (version) => notesCancelled.push(version),
+        initialize() {}, stageUpdate: (value) => notesStaged.push(value), cancelUpdate: (version) => notesCancelled.push(version),
         getPendingSummary: async () => null, acknowledge: () => true
       }) };
       if (name === './update-manager') return {
@@ -70,6 +72,7 @@ function harness({ result = { updates: [update], autoInstall: false }, failInsta
         applyUpdates: async (updates, options) => {
           installs.push({ updates, options });
           if (failInstall) throw new Error('Checksum failed');
+          if (holdInstall) await holdInstall();
         }
       };
       return require(name);
@@ -77,70 +80,53 @@ function harness({ result = { updates: [update], autoInstall: false }, failInsta
   });
   vm.runInContext(fs.readFileSync(path.join(__dirname, '../main.js'), 'utf8'), context);
   return {
-    app, windows, states, installs, checks, dialogs, handlers, intervals, notesStaged, notesCancelled,
-    run: (source) => vm.runInContext(source, context),
+    app, windows, states, appStates, installs, checks, dialogs, handlers, intervals, notesStaged, notesCancelled,
+    run: (code) => vm.runInContext(code, context),
     advance: () => { now += 15 * 60 * 1000; },
-    choose: (choice, sender = windows.at(-1).webContents) => handlers.get('startup-update-choice')({ sender }, choice)
+    setInstallFailure: (value) => { failInstall = value; },
+    choose: (choice, sender = windows.at(-1).webContents) => handlers.get('application-update-choice')({ sender }, choice),
+    manual: (sender = windows.at(-1).webContents) => handlers.get('updates-check')({ sender }),
+    state: (sender = windows.at(-1).webContents) => handlers.get('application-update-state')({ sender })
   };
 }
 
-async function waitForState(subject, mode) {
-  for (let attempt = 0; attempt < 100; attempt += 1) {
-    if (subject.states.some((state) => state.mode === mode)) return;
-    await new Promise((resolve) => setTimeout(resolve, 2));
-  }
-  assert.fail(`Splash never reached ${mode}`);
-}
-
-test('startup waits for user acceptance even if legacy metadata requests automatic installation', async () => {
+test('startup queues an in-app offer and never installs before acceptance, even with legacy autoInstall metadata', async () => {
   const subject = harness({ result: { updates: [update], autoInstall: true } });
-  const startup = subject.run('checkStartupUpdates()');
-  await waitForState(subject, 'updateAvailable');
+  assert.equal(await subject.run('checkStartupUpdates()'), false);
+  subject.run('createWindow()');
+  await flush();
+  assert.equal(subject.state().phase, 'available');
   assert.equal(subject.installs.length, 0);
-  assert.equal(subject.choose('install', {}), false);
-  assert.equal(subject.installs.length, 0);
-  assert.equal(subject.choose('install'), true);
-  assert.equal(await startup, true);
+  assert.equal(subject.dialogs.length, 0);
+  assert.equal((await subject.choose('install', {})).accepted, false);
+  assert.equal((await subject.choose('install')).state.phase, 'restarting');
   assert.equal(subject.installs.length, 1);
   assert.equal(subject.notesStaged[0].latest, '3.3.9');
   assert.equal(subject.installs[0].options.tempDir, 'C:\\Orb Temp');
   assert.equal(subject.installs[0].options.installDir, path.dirname(process.execPath));
   assert.equal(subject.app.didQuit, true);
-  assert.equal(subject.checks[0].appVersion, '3.3.8');
 });
 
-test('Later opens the installed app and suppresses the same release for the current session', async () => {
+test('Later dismisses the in-app offer and suppresses the same release for the session', async () => {
   const subject = harness();
-  const startup = subject.run('checkStartupUpdates()');
-  await waitForState(subject, 'updateAvailable');
-  subject.choose('later');
-  assert.equal(await startup, false);
+  await subject.run('checkStartupUpdates()');
   subject.run('createWindow(); startUpdateChecks()');
+  await subject.choose('later');
+  assert.equal(subject.state().phase, 'idle');
   subject.advance();
   await subject.run('checkBackgroundUpdates()');
-  assert.equal(subject.dialogs.length, 0);
+  assert.equal(subject.state().phase, 'idle');
   assert.equal(subject.installs.length, 0);
+  assert.equal(subject.dialogs.length, 0);
 });
 
-test('closing the startup splash while a prompt is open continues without installing', async () => {
+test('closing the initial launch window while checking continues without queuing or installing', async () => {
   const subject = harness();
   const startup = subject.run('checkStartupUpdates()');
-  await waitForState(subject, 'updateAvailable');
   subject.windows[0].close();
   assert.equal(await startup, false);
+  assert.equal(subject.run('applicationUpdateState.phase'), 'idle');
   assert.equal(subject.installs.length, 0);
-});
-
-test('an installation failure leaves Open Studio available and keeps the app running', async () => {
-  const subject = harness({ failInstall: true });
-  const startup = subject.run('checkStartupUpdates()');
-  await waitForState(subject, 'updateAvailable');
-  subject.choose('install');
-  await waitForState(subject, 'failed');
-  subject.choose('continue');
-  assert.equal(await startup, false);
-  assert.equal(subject.app.didQuit, undefined);
-  assert.deepEqual(subject.notesCancelled, ['3.3.9']);
 });
 
 test('private release feed and connection errors continue to the installed app', async () => {
@@ -156,7 +142,7 @@ test('private release feed and connection errors continue to the installed app',
   }
 });
 
-test('background checks run every 15 minutes, ask before installing, and avoid duplicate prompts', async () => {
+test('background checks run every 15 minutes and send one in-app prompt without a native dialog', async () => {
   const subject = harness();
   subject.run('createWindow(); startUpdateChecks()');
   assert.equal(subject.intervals[0].delay, 15 * 60 * 1000);
@@ -164,37 +150,97 @@ test('background checks run every 15 minutes, ask before installing, and avoid d
   assert.equal(subject.checks.length, 0);
   subject.advance();
   await subject.intervals[0].callback();
-  assert.equal(subject.dialogs.length, 1);
-  assert.equal(subject.installs.length, 0);
+  assert.equal(subject.appStates.length, 1);
+  assert.equal(subject.appStates[0].phase, 'available');
   subject.advance();
   await subject.intervals[0].callback();
-  assert.equal(subject.dialogs.length, 1);
-});
-
-test('accepting a background update hands the installer the current installation directory', async () => {
-  const subject = harness({ dialogResponse: 0 });
-  subject.run('createWindow(); startUpdateChecks()');
-  subject.advance();
-  await subject.run('checkBackgroundUpdates()');
-  assert.equal(subject.installs.length, 1);
-  assert.equal(subject.installs[0].options.installDir, path.dirname(process.execPath));
-  assert.equal(subject.app.didQuit, true);
-});
-
-test('version IPC returns Electron installed metadata', () => {
-  const subject = harness();
-  assert.equal(subject.handlers.get('app-version')(), '3.3.8');
+  assert.equal(subject.appStates.length, 1);
+  assert.equal(subject.dialogs.length, 0);
+  assert.equal(subject.installs.length, 0);
 });
 
 test('manual checks bypass the timer and offer a release again after Later', async () => {
   const subject = harness();
   subject.run('createWindow(); startUpdateChecks()');
-  const check = () => subject.handlers.get('updates-check')({ sender: subject.windows[0].webContents });
-  assert.equal((await check()).status, 'deferred');
-  assert.equal((await check()).latest, '3.3.9');
+  assert.equal((await subject.manual()).status, 'available');
+  await subject.choose('later');
+  assert.equal((await subject.manual()).latest, '3.3.9');
   assert.equal(subject.checks.length, 2);
-  assert.equal(subject.dialogs.length, 2);
   assert.equal(subject.installs.length, 0);
+  assert.equal(subject.dialogs.length, 0);
+});
+
+test('the renderer receives only display versions and state, never installer arguments', async () => {
+  const subject = harness();
+  subject.run('createWindow()');
+  await subject.manual();
+  assert.deepEqual(Object.keys(subject.state()).sort(), ['current', 'latest', 'phase']);
+  assert.equal(subject.state().current, '3.3.8');
+  assert.equal(subject.state().latest, '3.3.9');
+});
+
+test('the update IPC rejects other windows, invalid choices and requests with no pending offer', async () => {
+  const subject = harness();
+  subject.run('createWindow()');
+  assert.equal((await subject.choose('install')).accepted, false);
+  await subject.manual();
+  assert.equal((await subject.choose('install', {})).accepted, false);
+  assert.equal((await subject.choose('unexpected')).accepted, false);
+  assert.equal(subject.state({}).phase, 'idle');
+  assert.equal(subject.installs.length, 0);
+});
+
+test('manual acceptance publishes installation states and reuses the verified handoff without another window', async () => {
+  const subject = harness();
+  subject.run('createWindow()');
+  await flush();
+  await subject.manual();
+  const response = await subject.choose('install');
+  assert.equal(response.state.phase, 'restarting');
+  assert.deepEqual(subject.appStates.map((state) => state.phase), ['available', 'installing', 'restarting']);
+  assert.equal(subject.windows.length, 1);
+  assert.equal(subject.installs[0].options.installDir, path.dirname(process.execPath));
+  assert.equal(subject.notesStaged[0].latest, '3.3.9');
+  assert.equal(subject.app.didQuit, true);
+});
+
+test('an install failure stays in the app, permits a retry and clears incorrect staged notes', async () => {
+  const subject = harness({ failInstall: true });
+  subject.run('createWindow()');
+  await subject.manual();
+  assert.equal((await subject.choose('install')).state.phase, 'failed');
+  assert.equal(subject.app.didQuit, undefined);
+  assert.equal(subject.windows[0].isDestroyed(), false);
+  assert.deepEqual(subject.notesCancelled, ['3.3.9']);
+  subject.setInstallFailure(false);
+  assert.equal((await subject.choose('install')).state.phase, 'restarting');
+  assert.equal(subject.installs.length, 2);
+  assert.equal(subject.app.didQuit, true);
+});
+
+test('Later also dismisses a failed installation without closing the application', async () => {
+  const subject = harness({ failInstall: true });
+  subject.run('createWindow()');
+  await subject.manual();
+  await subject.choose('install');
+  await subject.choose('later');
+  assert.equal(subject.state().phase, 'idle');
+  assert.equal(subject.app.didQuit, undefined);
+});
+
+test('duplicate acceptance and checks during installation never start another installer', async () => {
+  let completeInstall;
+  const subject = harness({ holdInstall: () => new Promise((resolve) => { completeInstall = resolve; }) });
+  subject.run('createWindow()');
+  await subject.manual();
+  const pending = subject.choose('install');
+  assert.equal(subject.state().phase, 'installing');
+  assert.equal((await subject.choose('install')).accepted, false);
+  assert.equal((await subject.choose('later')).accepted, false);
+  assert.equal((await subject.manual()).status, 'busy');
+  assert.equal(subject.installs.length, 1);
+  completeInstall();
+  await pending;
 });
 
 test('manual checks distinguish current, incomplete, unavailable and unsupported releases', async () => {
@@ -207,10 +253,9 @@ test('manual checks distinguish current, incomplete, unavailable and unsupported
   ]) {
     const subject = harness({ result });
     subject.run('createWindow()');
-    const response = await subject.handlers.get('updates-check')({ sender: subject.windows[0].webContents });
+    const response = await subject.manual();
     assert.equal(response.status, expected);
     if (expected === 'upToDate') assert.equal(response.version, '3.3.8');
-    assert.equal(subject.dialogs.length, 0);
     assert.equal(subject.installs.length, 0);
   }
 });
@@ -218,11 +263,10 @@ test('manual checks distinguish current, incomplete, unavailable and unsupported
 test('manual update IPC rejects other windows and development launches', async () => {
   const subject = harness();
   subject.run('createWindow(); showStartupSplash()');
-  const check = subject.handlers.get('updates-check');
-  assert.equal((await check({ sender: subject.windows[1].webContents })).status, 'cancelled');
+  assert.equal((await subject.manual(subject.windows[1].webContents)).status, 'cancelled');
   assert.equal(subject.checks.length, 0);
   subject.app.isPackaged = false;
-  assert.equal((await check({ sender: subject.windows[0].webContents })).status, 'unsupported');
+  assert.equal((await subject.manual(subject.windows[0].webContents)).status, 'unsupported');
   assert.equal(subject.checks.length, 0);
 });
 
@@ -234,52 +278,27 @@ test('manual and background checks share a lock and recover from network failure
     return new Promise((resolve) => { resolveCheck = resolve; });
   } });
   subject.run('createWindow(); startUpdateChecks()');
-  const check = () => subject.handlers.get('updates-check')({ sender: subject.windows[0].webContents });
-  const pending = check();
-  assert.equal((await check()).status, 'busy');
+  const pending = subject.manual();
+  assert.equal((await subject.manual()).status, 'busy');
   subject.advance();
   assert.equal((await subject.run('checkBackgroundUpdates()')).status, 'busy');
   assert.equal(subject.checks.length, 1);
   resolveCheck({ updates: [] });
   assert.equal((await pending).status, 'upToDate');
   fail = true;
-  assert.equal((await check()).status, 'error');
-  assert.equal((await check()).status, 'error');
-  assert.equal(subject.checks.length, 3);
+  assert.equal((await subject.manual()).status, 'error');
+  assert.equal((await subject.manual()).status, 'error');
 });
 
-test('manual acceptance uses the existing verified installer and stages the update summary', async () => {
-  const subject = harness({ dialogResponse: 0 });
-  subject.run('createWindow()');
-  await flush();
-  const response = await subject.handlers.get('updates-check')({ sender: subject.windows[0].webContents });
-  assert.equal(response.status, 'restarting');
-  assert.equal(subject.installs.length, 1);
-  assert.equal(subject.notesStaged[0].latest, '3.3.9');
-  assert.equal(subject.app.didQuit, true);
-});
-
-test('a failed manual installation leaves the main window available for another attempt', async () => {
-  const subject = harness({ dialogResponse: 0, failInstall: true });
-  subject.run('createWindow()');
-  await flush();
-  const pending = subject.handlers.get('updates-check')({ sender: subject.windows[0].webContents });
-  await waitForState(subject, 'failed');
-  subject.choose('continue');
-  assert.equal((await pending).status, 'failed');
-  assert.equal(subject.app.didQuit, undefined);
-  assert.equal(subject.windows[0].isDestroyed(), false);
-  assert.deepEqual(subject.notesCancelled, ['3.3.9']);
-});
-
-test('both renderer windows use the Electron sandbox with isolated preloads', () => {
+test('version IPC returns installed metadata and both windows retain isolated sandboxed preloads', () => {
   const subject = harness();
+  assert.equal(subject.handlers.get('app-version')(), '3.3.8');
   subject.run('createWindow(); showStartupSplash()');
   for (const window of subject.windows) {
     assert.equal(window.options.webPreferences.sandbox, true);
     assert.equal(window.options.webPreferences.contextIsolation, true);
     assert.equal(window.options.webPreferences.nodeIntegration, false);
   }
-  assert.doesNotMatch(fs.readFileSync(path.join(__dirname, '../main.js'), 'utf8'), /appendSwitch\(['"]no-sandbox/);
+  assert.doesNotMatch(fs.readFileSync(path.join(__dirname, '../main.js'), 'utf8'), /showMessageBox/);
   assert.doesNotMatch(require('../package.json').scripts.start, /--no-sandbox/);
 });

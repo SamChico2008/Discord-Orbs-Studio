@@ -9,6 +9,7 @@
   <link rel="stylesheet" href="ui-redesign.css">
   <link rel="stylesheet" href="ui-theme-plus.css">
   <link rel="stylesheet" href="release-notes.css">
+  <link rel="stylesheet" href="application-updates.css">
 </head>
 <body>
   <!-- Custom Window Title Bar -->
@@ -1202,6 +1203,23 @@
     </div>
   </div>
 
+  <dialog class="release-notes-dialog app-update-dialog" id="app-update-modal" aria-labelledby="app-update-title" aria-describedby="app-update-description">
+    <header class="release-notes-header">
+      <button class="release-notes-close" id="app-update-close" type="button" aria-label="Remind me later">×</button>
+      <div class="app-update-eyebrow">STUDIO UPDATE</div>
+      <h2 id="app-update-title">A new version is ready</h2>
+      <p class="release-notes-subtitle" id="app-update-description">Update when you're ready. Your studio will restart after installation.</p>
+    </header>
+    <div class="release-notes-body app-update-body">
+      <div class="app-update-versions"><div><span>Installed</span><strong id="app-update-current"></strong></div><span aria-hidden="true">→</span><div><span>Available</span><strong id="app-update-latest"></strong></div></div>
+      <p id="app-update-status" role="status" aria-live="polite"></p>
+    </div>
+    <footer class="release-notes-footer app-update-actions">
+      <button class="btn btn-ghost" id="app-update-later" type="button" autofocus>Later</button>
+      <button class="btn btn-primary" id="app-update-install" type="button">Update now</button>
+    </footer>
+  </dialog>
+
   <dialog class="release-notes-dialog" id="release-notes-modal" aria-labelledby="release-notes-title" aria-describedby="release-notes-subtitle">
     <header class="release-notes-header">
       <button class="release-notes-close" id="release-notes-close" type="button" aria-label="Close update summary">×</button>
@@ -1220,6 +1238,7 @@
   <script src="app-version.js"></script>
   <script src="settings-updates.js"></script>
   <script src="release-notes.js"></script>
+  <script src="application-updates.js"></script>
   <script src="app.js"></script>
   <script src="interface.js"></script>
 </body>

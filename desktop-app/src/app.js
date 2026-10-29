@@ -2656,7 +2656,8 @@ function bootApp() {
   loadSettings();
   setTimeout(async () => {
     const showedReleaseNotes = await window.showReleaseNotes?.();
-    if (!showedReleaseNotes) checkBetaNotice();
+    const showedUpdatePrompt = window.enableApplicationUpdatePrompts?.();
+    if (!showedReleaseNotes && !showedUpdatePrompt) checkBetaNotice();
   }, 200);
 }
 
