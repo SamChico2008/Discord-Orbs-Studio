@@ -843,6 +843,18 @@
           </div>
         </header>
         <div class="settings-container">
+          <div class="settings-group">
+            <h3>Application Updates</h3>
+            <div class="setting-item">
+              <div class="setting-info">
+                <span class="setting-title">Check for updates</span>
+                <span class="setting-desc" id="update-check-status" role="status" aria-live="polite">Check GitHub for a newer version at any time.</span>
+              </div>
+              <div class="setting-control">
+                <button class="btn btn-primary" id="btn-check-updates" type="button" aria-describedby="update-check-status">Check for updates</button>
+              </div>
+            </div>
+          </div>
           <!-- Automation Presets Group -->
           <div class="settings-group">
             <h3>Session Cadence</h3>
@@ -1206,6 +1218,7 @@
   <div id="toast-container" role="status" aria-live="polite"></div>
 
   <script src="app-version.js"></script>
+  <script src="settings-updates.js"></script>
   <script src="release-notes.js"></script>
   <script src="app.js"></script>
   <script src="interface.js"></script>

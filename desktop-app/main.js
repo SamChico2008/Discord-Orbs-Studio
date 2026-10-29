@@ -176,15 +176,22 @@ async function installApplicationUpdate(updates) {
   }
 }
 
-async function checkBackgroundUpdates() {
-  if (!app.isPackaged || updateCheckInProgress || !mainWindow || mainWindow.isDestroyed()
-    || Date.now() - lastUpdateCheck < updateCheckInterval) return;
+async function checkBackgroundUpdates({ manual = false } = {}) {
+  if (!app.isPackaged) return { status: 'unsupported' };
+  if (updateCheckInProgress) return { status: 'busy' };
+  if (!mainWindow || mainWindow.isDestroyed()) return { status: 'cancelled' };
+  if (!manual && Date.now() - lastUpdateCheck < updateCheckInterval) return { status: 'deferred' };
   updateCheckInProgress = true;
   lastUpdateCheck = Date.now();
   try {
     const result = await checkForUpdates({ packaged: true, appVersion: app.getVersion() });
+    if (result.errors?.length || result.unavailable) return { status: 'error' };
+    if (result.unsupported) return { status: 'unsupported' };
+    if (result.pendingUpdate) return { status: 'pending', latest: result.latestVersion };
     const update = result.updates[0];
-    if (!update || update.latest === deferredUpdateVersion || mainWindow.isDestroyed()) return;
+    if (!update) return { status: 'upToDate', version: app.getVersion() };
+    if (mainWindow.isDestroyed()) return { status: 'cancelled' };
+    if (!manual && update.latest === deferredUpdateVersion) return { status: 'deferred', latest: update.latest };
     deferredUpdateVersion = update.latest;
     const { response } = await dialog.showMessageBox(mainWindow, {
       type: 'info', title: 'Discord Orb Studio update',
@@ -192,12 +199,17 @@ async function checkBackgroundUpdates() {
       detail: `You are running version ${app.getVersion()}. Update now? The studio will close and restart after installation.`,
       buttons: ['Update Now', 'Later'], defaultId: 0, cancelId: 1, noLink: true
     });
-    if (response !== 0 || mainWindow.isDestroyed()) return;
+    if (response !== 0 || mainWindow.isDestroyed()) return { status: 'deferred', latest: update.latest };
     const splash = showStartupSplash();
     await new Promise((resolve) => splash.webContents.once('did-finish-load', resolve));
-    if (!await installApplicationUpdate(result.updates)) closeStartupSplash();
+    if (!await installApplicationUpdate(result.updates)) {
+      closeStartupSplash();
+      return { status: 'failed' };
+    }
+    return { status: 'restarting', latest: update.latest };
   } catch (error) {
     console.error('Background update check failed:', error);
+    return { status: 'error' };
   } finally {
     updateCheckInProgress = false;
   }
@@ -303,6 +315,10 @@ ipcMain.handle('startup-update-choice', (event, choice) => {
 });
 
 ipcMain.handle('app-version', () => app.getVersion());
+ipcMain.handle('updates-check', (event) => {
+  if (!mainWindow || mainWindow.isDestroyed() || event.sender !== mainWindow.webContents) return { status: 'cancelled' };
+  return checkBackgroundUpdates({ manual: true });
+});
 ipcMain.handle('release-notes-get', () => releaseNotesStore.getPendingSummary());
 ipcMain.handle('release-notes-seen', (event, version) => releaseNotesStore.acknowledge(version));
 

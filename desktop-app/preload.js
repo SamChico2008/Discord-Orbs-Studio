@@ -5,6 +5,7 @@ const { contextBridge, ipcRenderer } = require('electron');
 
 contextBridge.exposeInMainWorld('electronAPI', {
   getAppVersion: () => ipcRenderer.invoke('app-version'),
+  checkForUpdates: () => ipcRenderer.invoke('updates-check'),
   getReleaseNotes: () => ipcRenderer.invoke('release-notes-get'),
   acknowledgeReleaseNotes: (version) => ipcRenderer.invoke('release-notes-seen', version),
   // Startup update experience

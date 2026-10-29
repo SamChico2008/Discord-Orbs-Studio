@@ -10,7 +10,8 @@ const test = require('node:test');
 const update = { kind: 'application', name: 'Discord Orb Studio', current: '3.3.8', latest: '3.3.9', release: { tag: 'v3.3.9' } };
 const flush = () => new Promise(setImmediate);
 
-function harness({ result = { updates: [update], autoInstall: false }, failInstall = false, dialogResponse = 1 } = {}) {
+function harness({ result = { updates: [update], autoInstall: false }, failInstall = false, dialogResponse = 1,
+  checkResult = async () => result } = {}) {
   const windows = [];
   const states = [];
   const installs = [];
@@ -65,7 +66,7 @@ function harness({ result = { updates: [update], autoInstall: false }, failInsta
         getPendingSummary: async () => null, acknowledge: () => true
       }) };
       if (name === './update-manager') return {
-        checkForUpdates: async (options) => { checks.push(options); return result; },
+        checkForUpdates: async (options) => { checks.push(options); return checkResult(options); },
         applyUpdates: async (updates, options) => {
           installs.push({ updates, options });
           if (failInstall) throw new Error('Checksum failed');
@@ -183,6 +184,92 @@ test('accepting a background update hands the installer the current installation
 test('version IPC returns Electron installed metadata', () => {
   const subject = harness();
   assert.equal(subject.handlers.get('app-version')(), '3.3.8');
+});
+
+test('manual checks bypass the timer and offer a release again after Later', async () => {
+  const subject = harness();
+  subject.run('createWindow(); startUpdateChecks()');
+  const check = () => subject.handlers.get('updates-check')({ sender: subject.windows[0].webContents });
+  assert.equal((await check()).status, 'deferred');
+  assert.equal((await check()).latest, '3.3.9');
+  assert.equal(subject.checks.length, 2);
+  assert.equal(subject.dialogs.length, 2);
+  assert.equal(subject.installs.length, 0);
+});
+
+test('manual checks distinguish current, incomplete, unavailable and unsupported releases', async () => {
+  for (const [result, expected] of [
+    [{ updates: [] }, 'upToDate'],
+    [{ updates: [], pendingUpdate: true, latestVersion: '3.3.9' }, 'pending'],
+    [{ updates: [], unavailable: true, errors: ['HTTP 404'] }, 'error'],
+    [{ updates: [], errors: ['HTTP 429'] }, 'error'],
+    [{ updates: [], unsupported: true }, 'unsupported']
+  ]) {
+    const subject = harness({ result });
+    subject.run('createWindow()');
+    const response = await subject.handlers.get('updates-check')({ sender: subject.windows[0].webContents });
+    assert.equal(response.status, expected);
+    if (expected === 'upToDate') assert.equal(response.version, '3.3.8');
+    assert.equal(subject.dialogs.length, 0);
+    assert.equal(subject.installs.length, 0);
+  }
+});
+
+test('manual update IPC rejects other windows and development launches', async () => {
+  const subject = harness();
+  subject.run('createWindow(); showStartupSplash()');
+  const check = subject.handlers.get('updates-check');
+  assert.equal((await check({ sender: subject.windows[1].webContents })).status, 'cancelled');
+  assert.equal(subject.checks.length, 0);
+  subject.app.isPackaged = false;
+  assert.equal((await check({ sender: subject.windows[0].webContents })).status, 'unsupported');
+  assert.equal(subject.checks.length, 0);
+});
+
+test('manual and background checks share a lock and recover from network failures', async () => {
+  let resolveCheck;
+  let fail = false;
+  const subject = harness({ checkResult: () => {
+    if (fail) throw new Error('Network failure');
+    return new Promise((resolve) => { resolveCheck = resolve; });
+  } });
+  subject.run('createWindow(); startUpdateChecks()');
+  const check = () => subject.handlers.get('updates-check')({ sender: subject.windows[0].webContents });
+  const pending = check();
+  assert.equal((await check()).status, 'busy');
+  subject.advance();
+  assert.equal((await subject.run('checkBackgroundUpdates()')).status, 'busy');
+  assert.equal(subject.checks.length, 1);
+  resolveCheck({ updates: [] });
+  assert.equal((await pending).status, 'upToDate');
+  fail = true;
+  assert.equal((await check()).status, 'error');
+  assert.equal((await check()).status, 'error');
+  assert.equal(subject.checks.length, 3);
+});
+
+test('manual acceptance uses the existing verified installer and stages the update summary', async () => {
+  const subject = harness({ dialogResponse: 0 });
+  subject.run('createWindow()');
+  await flush();
+  const response = await subject.handlers.get('updates-check')({ sender: subject.windows[0].webContents });
+  assert.equal(response.status, 'restarting');
+  assert.equal(subject.installs.length, 1);
+  assert.equal(subject.notesStaged[0].latest, '3.3.9');
+  assert.equal(subject.app.didQuit, true);
+});
+
+test('a failed manual installation leaves the main window available for another attempt', async () => {
+  const subject = harness({ dialogResponse: 0, failInstall: true });
+  subject.run('createWindow()');
+  await flush();
+  const pending = subject.handlers.get('updates-check')({ sender: subject.windows[0].webContents });
+  await waitForState(subject, 'failed');
+  subject.choose('continue');
+  assert.equal((await pending).status, 'failed');
+  assert.equal(subject.app.didQuit, undefined);
+  assert.equal(subject.windows[0].isDestroyed(), false);
+  assert.deepEqual(subject.notesCancelled, ['3.3.9']);
 });
 
 test('both renderer windows use the Electron sandbox with isolated preloads', () => {

@@ -1,5 +1,14 @@
 # Discord Orb Studio
 
+## 3.3.11
+
+### Manual update checks
+- Added a Check for updates button in Settings, under Application Updates.
+- Check GitHub at any time, including after choosing Later for an available update.
+- See clear feedback when the application is up to date, a release is being prepared, or the update service is unavailable.
+- Available updates still require your confirmation before installation and restart.
+- The installed version appears in the title bar, and the update summary appears on the main menu after installation.
+
 ## 3.3.10
 
 ### Première version officielle
